@@ -1,0 +1,9 @@
+export { default as PersonInfoHeader } from "./PersonInfoHeader";
+export { default as PersonConteiner } from "./PersonConteiner";
+export { default as Bardge } from "./Bardge";
+export { default as PlusButton } from "./PlusButton";
+export { default as MainButton } from "./MainButton";
+export { default as AppointmentCard } from "./AppointmentCard";
+export { default as AddClientsModal } from "./AddClientsModal";
+export { default as AddMastersModal } from "./AddMastersModel";
+export { default as ModalWrapper } from "./ModalWrapper";
