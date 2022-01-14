@@ -5,7 +5,6 @@ const Button = StyleSheet.create({
     width: "auto",
     display: "flex",
     borderRadius: 30,
-    height: 45,
     alignItems: "center",
     justifyContent: "center",
   },

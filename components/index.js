@@ -1,9 +1,12 @@
+export { default as MainButton } from "./MainButton";
 export { default as PersonInfoHeader } from "./PersonInfoHeader";
 export { default as PersonConteiner } from "./PersonConteiner";
 export { default as Bardge } from "./Bardge";
 export { default as PlusButton } from "./PlusButton";
-export { default as MainButton } from "./MainButton";
 export { default as AppointmentCard } from "./AppointmentCard";
-export { default as AddClientsModal } from "./AddClientsModal";
-export { default as AddMastersModal } from "./AddMastersModel";
+export { default as AddModal } from "./AddModal";
 export { default as ModalWrapper } from "./ModalWrapper";
+export { default as CustomHeader } from "./CustomHeader";
+export { default as Avatar } from "./Avatar";
+export { default as Table } from "./Table";
+export { default as SearchBar } from "./SearchBar";

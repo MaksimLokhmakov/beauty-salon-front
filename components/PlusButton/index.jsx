@@ -21,3 +21,5 @@ const PlusButton = ({ openAddModalScreen }) => {
 };
 
 export default PlusButton;
+
+// ! НЕ ИСПОЛЬЗУЕТСЯ

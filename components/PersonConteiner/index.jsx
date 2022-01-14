@@ -1,40 +1,53 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
+import { FontAwesome5 } from "@expo/vector-icons";
 
-import { Bardge } from "..";
-import getAvatarColor from "../../utils/getAvatarColor";
+import Avatar from "../Avatar";
+import Bardge from "../Bardge";
 import Person from "./style";
 
-const PersonConteiner = ({ item, onPress, lastElemMarging = 0 }) => {
+const PersonConteiner = ({ item, onPress, openDeleteModal }) => {
   const textBardge = (item) => {
-    if (item.persent) return item.persent + "%";
-    if (item.date) return item.date.split(" ")[2];
+    if (item.percent) return (item.percent * 100).toFixed() + "%";
+    if (item.start) return item.start.split(" ")[1];
   };
   const textGray = (item) => {
-    if (item.duration) return "Время: " + item.duration + " ч.";
-    return item.phoneNumber;
+    if (item.master) return "Мастер: " + item.master.name.split(" ")[1];
+    return item.tel;
   };
-  const avatarColor = getAvatarColor(item.fullName[0].toUpperCase());
+
   return (
     <TouchableOpacity
-      style={{ ...Person.conteiner, marginBottom: lastElemMarging }}
+      style={Person.conteiner}
       onPress={() => onPress(item)}
+      onLongPress={() => openDeleteModal(item)}
     >
+      <View style={Person.iconConteiner}>
+        <FontAwesome5 name="trash-alt" size={20} color="#C2185B" />
+      </View>
       <View style={{ flexDirection: "row" }}>
+        <Avatar fullName={item.client ? item.client.name : item.name} />
         <View
-          style={{ backgroundColor: avatarColor.background, ...Person.avatar }}
+          style={{
+            borderBottomWidth: 1,
+            borderBottomColor: "#f3f3f3",
+            paddingBottom: 5,
+            flex: 1,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
         >
-          <Text style={{ color: avatarColor.color, ...Person.letter }}>
-            {item.fullName[0].toUpperCase()}
-          </Text>
-        </View>
-        <View>
-          <Text style={Person.fullName}>{item.fullName}</Text>
-          <Text style={Person.textGray}>{textGray(item)}</Text>
+          <View>
+            <Text style={Person.fullName}>
+              {item.client ? item.client.name : item.name}
+            </Text>
+            <Text style={Person.textGray}>{textGray(item)}</Text>
+          </View>
+
+          <Bardge>{textBardge(item)}</Bardge>
         </View>
       </View>
-
-      {textBardge(item) && <Bardge>{textBardge(item)}</Bardge>}
     </TouchableOpacity>
   );
 };

@@ -2,148 +2,87 @@ import "react-native-gesture-handler";
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import axios from "axios";
-import { useNavigation } from "@react-navigation/native";
+
+axios.defaults.baseURL = "https://beauty-salon-serv.herokuapp.com";
 
 import { Context } from "./context";
 import Tabs from "./navigation/Tabs";
 
 export default function App() {
-  const [masters, setMasters] = React.useState([
-    {
-      fullName: "Алина Медведева",
-      phoneNumber: "+375(25)655-84-24",
-      persent: "5",
-    },
-    {
-      fullName: "Ирина Крутько",
-      phoneNumber: "+375(25)365-22-66",
-      persent: "3",
-    },
-  ]);
-  const [appointments, setAppointments] = React.useState([
-    {
-      title: "27 декабря",
-      data: [
-        {
-          fullName: "Максим Поливода",
-          phoneNumber: "+375(25)655-84-24",
-          date: "27.12.2021 - 12:30",
-          duration: "3",
-        },
-        {
-          fullName: "Елена Метельская",
-          phoneNumber: "+375(25)125-22-24",
-          date: "27.12.2019 - 15:30",
-          duration: "2",
-        },
-        {
-          fullName: "Илья Кукушкин",
-          phoneNumber: "+375(25)229-23-21",
-          date: "27.12.2019 - 17:30",
-          duration: "1",
-        },
-      ],
-    },
-    {
-      title: "28 декабря",
-      data: [
-        {
-          fullName: "Денис Никифоров",
-          phoneNumber: "+375(25)655-84-24",
-          date: "28.12.2021 - 12:30",
-          duration: "3",
-        },
-        {
-          fullName: "Юрий Котковец",
-          phoneNumber: "+375(25)125-22-24",
-          date: "28.12.2019 - 15:30",
-          duration: "2",
-        },
-        {
-          fullName: "Владимир Богданов",
-          phoneNumber: "+375(25)229-23-21",
-          date: "28.12.2019 - 17:30",
-          duration: "1",
-        },
-      ],
-    },
-    {
-      title: "29 декабря",
-      data: [
-        {
-          fullName: "Денис Никифоров",
-          phoneNumber: "+375(25)655-84-24",
-          date: "29.12.2021 - 12:30",
-          duration: "3",
-        },
-        {
-          fullName: "Юрий Котковец",
-          phoneNumber: "+375(25)125-22-24",
-          date: "29.12.2019 - 15:30",
-          duration: "2",
-        },
-        {
-          fullName: "Владимир Богданов",
-          phoneNumber: "+375(25)229-23-21",
-          date: "29.12.2019 - 17:30",
-          duration: "1",
-        },
-      ],
-    },
-  ]);
-  const [clients, setClients] = React.useState([
-    {
-      fullName: "Максим Поливода",
-      phoneNumber: "+375(25)655-84-24",
-    },
-    {
-      fullName: "Елена Метельская",
-      phoneNumber: "+375(25)125-22-24",
-    },
-    {
-      fullName: "Илья Кукушкин",
-      phoneNumber: "+375(25)229-23-21",
-    },
-    {
-      fullName: "Денис Никифоров",
-      phoneNumber: "+375(25)655-84-24",
-    },
-    {
-      fullName: "Юрий Котковец",
-      phoneNumber: "+375(25)125-22-24",
-    },
-    {
-      fullName: "Владимир Богданов",
-      phoneNumber: "+375(25)229-23-21",
-    },
-  ]);
+  const [masters, setMasters] = React.useState([]);
+  const [appointments, setAppointments] = React.useState([]);
+  const [clients, setClients] = React.useState([]);
+
   const getMasters = () => {
     axios
-      .get("http://192.168.43.122:8080/masters")
-      .then(({ data }) => console.log(data))
+      .get("/masters/sorted")
+      .then(({ data }) => {
+        setMasters(data);
+      })
       .catch((e) => console.log("mistake --- " + e));
   };
+  const getClients = () => {
+    axios
+      .get("/clients")
+      .then(({ data }) => {
+        setClients(data);
+      })
+      .catch((e) => console.log(e));
+  };
+  const getAppointments = () => {
+    axios("/orders/sorted")
+      .then(({ data }) => {
+        setAppointments(data);
+      })
+      .catch((e) => console.log(e));
+  };
+
+  const [clientsSearchValue, setClientsSearchValue] = React.useState("");
 
   // * modal-add-screens functions
   const [visibleClientsModal, setVisibleClientsModel] = React.useState(false);
+  const [visibleClientsReductModal, setVisibleClientsReductModal] =
+    React.useState(false);
+
   const [visibleMastersModal, setVisibleMastersModel] = React.useState(false);
+  const [visibleMastersReductModal, setVisibleMastersReductModal] =
+    React.useState(false);
+
   const [visibleAppointmentsModal, setVisibleAppointmentsModel] =
     React.useState(false);
+  const [visibleAppointmentsReductModal, setVisibleAppointmentsReductModal] =
+    React.useState(false);
+  const [itemToDelete, setItemToDelete] = React.useState();
 
   return (
     <NavigationContainer>
       <Context.Provider
         value={{
+          itemToDelete,
+          setItemToDelete,
           appointments,
+          setAppointments,
+          getAppointments,
           masters,
-          clients,
+          setMasters,
           getMasters,
+          clients,
+          setClients,
+          getClients,
           visibleClientsModal,
-          visibleMastersModal,
-          visibleAppointmentsModal,
           setVisibleClientsModel,
+          visibleClientsReductModal,
+          setVisibleClientsReductModal,
+          visibleMastersModal,
           setVisibleMastersModel,
+          visibleMastersReductModal,
+          setVisibleMastersReductModal,
+          visibleAppointmentsModal,
           setVisibleAppointmentsModel,
+          visibleAppointmentsReductModal,
+          setVisibleAppointmentsReductModal,
+          clientsSearchValue,
+          setClientsSearchValue,
         }}
       >
         <Tabs />

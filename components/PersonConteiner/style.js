@@ -2,12 +2,13 @@ import { StyleSheet } from "react-native";
 
 const Person = StyleSheet.create({
   conteiner: {
-    padding: 20,
+    paddingTop: 7,
+    paddingLeft: 15,
+    paddingRight: 15,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#f3f3f3",
+    height: 56.5,
   },
   avatar: {
     borderRadius: 50,
@@ -20,7 +21,7 @@ const Person = StyleSheet.create({
   },
   letter: {
     marginTop: -1,
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "600",
   },
   fullName: {
@@ -29,8 +30,18 @@ const Person = StyleSheet.create({
     color: "#000000",
   },
   textGray: {
-    fontSize: 16,
+    paddingBottom: 7,
+    fontSize: 14,
     color: "#8b979f",
+  },
+  iconConteiner: {
+    height: 56.5,
+    width: 50,
+    alignItems: "center",
+    justifyContent: "center",
+    // backgroundColor: "red",
+    position: "absolute",
+    right: "7%",
   },
 });
 

@@ -13,6 +13,7 @@ const MonthlyReportStack = () => {
         name="MonthlyReportingScreen"
         component={MonthlyReportingScreen}
         options={{
+          headerTransparent: false,
           headerTitle: () => (
             <Text style={styleForHeader.mainPage}>Отчетность</Text>
           ),

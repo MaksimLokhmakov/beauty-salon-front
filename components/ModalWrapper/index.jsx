@@ -12,3 +12,5 @@ const ModalWrapper = ({ children, visible }) => {
 };
 
 export default ModalWrapper;
+
+// ! НЕ ИСПОЛЬЗУЕТСЯ

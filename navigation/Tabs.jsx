@@ -1,8 +1,7 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -13,32 +12,9 @@ import {
   MonthlyReportingStack,
   ButtonEmptyScreen,
 } from "../stacks/index";
-import { Context } from "../context";
-import { PlusButton } from "../components";
+import TabsStyle from "./style";
 
 const Tabs = () => {
-  const {
-    setVisibleMastersModel,
-    setVisibleAppointmentsModel,
-    setVisibleClientsModel,
-  } = React.useContext(Context);
-
-  const navigation = useNavigation();
-  const showModal = () => {
-    const { name } = navigation.getCurrentRoute();
-
-    switch (name) {
-      case "MastersScreen":
-        return setVisibleMastersModel(true);
-
-      case "AppointmentsScreen":
-        return setVisibleAppointmentsModel(true);
-
-      case "ClientsScreen":
-        return setVisibleClientsModel(true);
-    }
-  };
-
   return (
     <Tab.Navigator
       initialRouteName="AppointmentsStack"
@@ -46,18 +22,11 @@ const Tabs = () => {
         headerShown: false,
         tabBarShowLabel: false,
         tabBarInactiveTintColor: "#b0aeae",
-        tabBarActiveTintColor: "#FF4081",
+        tabBarActiveTintColor: "#C2185B",
         tabBarStyle: {
-          position: "absolute",
-          bottom: 10,
-          left: 10,
-          right: 10,
           elevation: 0,
           backgroundColor: "#FFFFFF",
           borderRadius: 15,
-          height: 70,
-          ...TabsStyle.shadow,
-          opacity: 0.97,
         },
       }}
     >
@@ -67,12 +36,11 @@ const Tabs = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <View style={TabsStyle.icon}>
-              <Ionicons name="ios-people" size={25} color={color} />
+              <FontAwesome5 name="user-friends" size={20} color={color} />
               <Text
                 style={{
-                  fontSize: 14,
+                  ...TabsStyle.text,
                   color: color,
-                  top: -3,
                 }}
               >
                 Мастера
@@ -87,12 +55,11 @@ const Tabs = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <View style={TabsStyle.icon}>
-              <Ionicons name="body" size={25} color={color} />
+              <FontAwesome5 name="users" size={20} color={color} />
               <Text
                 style={{
-                  fontSize: 14,
+                  ...TabsStyle.text,
                   color: color,
-                  top: -3,
                 }}
               >
                 Клиенты
@@ -102,24 +69,16 @@ const Tabs = () => {
         }}
       />
       <Tab.Screen
-        name="ButtonEmptyScreen"
-        component={ButtonEmptyScreen}
-        options={{
-          tabBarButton: () => <PlusButton openAddModalScreen={showModal} />,
-        }}
-      />
-      <Tab.Screen
         name="AppointmentsStack"
         component={AppointmentsStack}
         options={{
           tabBarIcon: ({ color }) => (
             <View style={TabsStyle.icon}>
-              <Ionicons name="book" size={25} color={color} />
+              <FontAwesome5 name="book-open" size={20} color={color} />
               <Text
                 style={{
-                  fontSize: 14,
+                  ...TabsStyle.text,
                   color: color,
-                  top: -3,
                 }}
               >
                 Приемы
@@ -134,12 +93,11 @@ const Tabs = () => {
         options={{
           tabBarIcon: ({ color }) => (
             <View style={TabsStyle.icon}>
-              <Ionicons name="information-circle" size={25} color={color} />
+              <FontAwesome5 name="info-circle" size={20} color={color} />
               <Text
                 style={{
-                  fontSize: 14,
+                  ...TabsStyle.text,
                   color: color,
-                  top: -3,
                 }}
               >
                 Отчеты
@@ -148,26 +106,32 @@ const Tabs = () => {
           ),
         }}
       />
+      <Tab.Screen
+        name="ButtonEmptyScreen"
+        component={ButtonEmptyScreen}
+        options={{
+          tabBarIcon: ({ color }) => (
+            <View style={TabsStyle.icon}>
+              <FontAwesome5
+                style={{ left: 3 }}
+                name="user-plus"
+                size={20}
+                color={color}
+              />
+              <Text
+                style={{
+                  ...TabsStyle.text,
+                  color: color,
+                }}
+              >
+                Заявки
+              </Text>
+            </View>
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
-
-const TabsStyle = StyleSheet.create({
-  shadow: {
-    shadowColor: "#b0aeae",
-    shadowOffset: {
-      width: 0,
-      height: 8,
-    },
-    shadowOpacity: 0.46,
-    shadowRadius: 11.14,
-
-    elevation: 17,
-  },
-  icon: {
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
 export default Tabs;

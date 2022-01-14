@@ -11,6 +11,7 @@ const MainButton = ({ bColor, flex, text = false, onPress = () => {} }) => {
         ...Button.wrapper,
         backgroundColor: bColor,
         flex: flex,
+        height: 30,
       }}
       onPress={() => onPress()}
     >
@@ -24,3 +25,5 @@ const MainButton = ({ bColor, flex, text = false, onPress = () => {} }) => {
 };
 
 export default MainButton;
+
+// ! НЕ ИСПОЛЬЗУЕТСЯ
