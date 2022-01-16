@@ -36,6 +36,7 @@ const Screen = StyleSheet.create({
     borderBottomWidth: 1,
   },
   infoCardWrapper: {
+    flex: 1,
     paddingHorizontal: 25,
     paddingTop: 10,
     marginBottom: 10,

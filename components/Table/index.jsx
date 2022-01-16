@@ -9,19 +9,23 @@ const Table = ({
   firstValue = () => <Text>firstValue</Text>,
   secondValue = () => <Text>secondValue</Text>,
   title,
+  one,
+  width = "auto",
 }) => {
   return (
     <>
       {title && <Text style={table.title}>{title}</Text>}
       <View style={table.wrapper}>
         <View style={table.line}></View>
-        <View style={table.labelsWrapper}>
-          <Text style={table.label}>{firstLabel}</Text>
-          <Text style={table.label}>{secondLabel}</Text>
+        <View style={{ ...table.labelsWrapper, height: one ? 30 : 60 }}>
+          <Text style={{ ...table.label, width: width }}>{firstLabel}</Text>
+          {!one && (
+            <Text style={{ ...table.label, width: width }}>{secondLabel}</Text>
+          )}
         </View>
-        <View style={table.valuesWrapper}>
+        <View style={{ ...table.valuesWrapper, height: one ? 30 : 60 }}>
           <View>{firstValue()}</View>
-          <View>{secondValue()}</View>
+          {!one && <View>{secondValue()}</View>}
         </View>
       </View>
     </>
