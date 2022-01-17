@@ -38,13 +38,10 @@ const AppointmentScreen = ({ route }) => {
   const [normalNeedles, setNormalNeedles] = React.useState(null);
   const [specialNeedles, setSpecialNeedles] = React.useState(null);
 
-  React.useEffect(() => {
-    setSpecialNeedles(null);
-  }, [normalNeedles]);
-
-  React.useEffect(() => {
-    setNormalNeedles(null);
-  }, [specialNeedles]);
+  const setNeedls = (setState, nullifyState, needle) => {
+    setState((prev) => (prev === needle ? null : needle));
+    nullifyState(null);
+  };
 
   return (
     <ScrollView
@@ -78,9 +75,7 @@ const AppointmentScreen = ({ route }) => {
               firstValue={() => (
                 <TouchableOpacity
                   onPress={() =>
-                    normalNeedles === 1
-                      ? setNormalNeedles(null)
-                      : setNormalNeedles(1)
+                    setNeedls(setNormalNeedles, setSpecialNeedles, 1)
                   }
                 >
                   <FontAwesome5
@@ -102,9 +97,7 @@ const AppointmentScreen = ({ route }) => {
               firstValue={() => (
                 <TouchableOpacity
                   onPress={() =>
-                    normalNeedles === 2
-                      ? setNormalNeedles(null)
-                      : setNormalNeedles(2)
+                    setNeedls(setNormalNeedles, setSpecialNeedles, 2)
                   }
                 >
                   <FontAwesome5
@@ -123,9 +116,7 @@ const AppointmentScreen = ({ route }) => {
             firstValue={() => (
               <TouchableOpacity
                 onPress={() =>
-                  normalNeedles === 3
-                    ? setNormalNeedles(null)
-                    : setNormalNeedles(3)
+                  setNeedls(setNormalNeedles, setSpecialNeedles, 3)
                 }
               >
                 <FontAwesome5
@@ -140,9 +131,7 @@ const AppointmentScreen = ({ route }) => {
             secondValue={() => (
               <TouchableOpacity
                 onPress={() =>
-                  normalNeedles === 4
-                    ? setNormalNeedles(null)
-                    : setNormalNeedles(4)
+                  setNeedls(setNormalNeedles, setSpecialNeedles, 4)
                 }
               >
                 <FontAwesome5
@@ -165,9 +154,7 @@ const AppointmentScreen = ({ route }) => {
               firstValue={() => (
                 <TouchableOpacity
                   onPress={() =>
-                    specialNeedles === 1
-                      ? setSpecialNeedles(null)
-                      : setSpecialNeedles(1)
+                    setNeedls(setSpecialNeedles, setNormalNeedles, 1)
                   }
                 >
                   <FontAwesome5
@@ -189,9 +176,7 @@ const AppointmentScreen = ({ route }) => {
               firstValue={() => (
                 <TouchableOpacity
                   onPress={() =>
-                    specialNeedles === 2
-                      ? setSpecialNeedles(null)
-                      : setSpecialNeedles(2)
+                    setNeedls(setSpecialNeedles, setNormalNeedles, 2)
                   }
                 >
                   <FontAwesome5
@@ -210,9 +195,7 @@ const AppointmentScreen = ({ route }) => {
             firstValue={() => (
               <TouchableOpacity
                 onPress={() =>
-                  specialNeedles === 3
-                    ? setSpecialNeedles(null)
-                    : setSpecialNeedles(3)
+                  setNeedls(setSpecialNeedles, setNormalNeedles, 3)
                 }
               >
                 <FontAwesome5
@@ -227,9 +210,7 @@ const AppointmentScreen = ({ route }) => {
             secondValue={() => (
               <TouchableOpacity
                 onPress={() =>
-                  specialNeedles === 4
-                    ? setSpecialNeedles(null)
-                    : setSpecialNeedles(4)
+                  setNeedls(setSpecialNeedles, setNormalNeedles, 4)
                 }
               >
                 <FontAwesome5
