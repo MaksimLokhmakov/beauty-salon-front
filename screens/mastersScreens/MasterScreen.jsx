@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView, FlatList } from "react-native";
 import { Context } from "../../context";
 
 import { PersonInfoHeader, AddModal, Table } from "../../components/index";
@@ -20,6 +20,7 @@ const MasterScreen = ({ route, navigation }) => {
 
       <View style={Screen.infoCardWrapper}>
         <Table
+          numberOfRows={2}
           title="День:"
           firstLabel="время"
           secondLabel="прибыль"
@@ -29,6 +30,7 @@ const MasterScreen = ({ route, navigation }) => {
       </View>
       <View style={Screen.infoCardWrapper}>
         <Table
+          numberOfRows={2}
           title="Месяц:"
           firstLabel="время"
           secondLabel="прибыль"

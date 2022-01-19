@@ -23,10 +23,7 @@ const AppointmentsStack = ({ navigation }) => {
             <Text style={styleForHeader.mainPage}>Приемы</Text>
           ),
           headerRight: () => (
-            <TouchableOpacity
-              style={{ top: -5 }}
-              onPress={() => setVisibleAppointmentsModel(true)}
-            >
+            <TouchableOpacity onPress={() => setVisibleAppointmentsModel(true)}>
               <Ionicons name="add" size={26} color="#C2185B" />
             </TouchableOpacity>
           ),

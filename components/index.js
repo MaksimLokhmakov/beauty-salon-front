@@ -10,3 +10,4 @@ export { default as CustomHeader } from "./CustomHeader";
 export { default as Avatar } from "./Avatar";
 export { default as Table } from "./Table";
 export { default as SearchBar } from "./SearchBar";
+export { default as AddAppointmentModel } from "./AddAppointmentsModal";

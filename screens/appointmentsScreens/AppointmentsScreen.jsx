@@ -2,7 +2,11 @@ import React from "react";
 import { View, SectionList, Text } from "react-native";
 import { Context } from "../../context";
 
-import { PersonConteiner, SearchBar } from "../../components";
+import {
+  PersonConteiner,
+  SearchBar,
+  AddAppointmentModel,
+} from "../../components";
 import Screen from "../style";
 
 const AppointmentsScreen = ({ navigation }) => {
@@ -69,6 +73,8 @@ const AppointmentsScreen = ({ navigation }) => {
         showsVerticalScrollIndicator={false}
         stickySectionHeadersEnabled={true}
       />
+
+      <AddAppointmentModel />
     </View>
   );
 };

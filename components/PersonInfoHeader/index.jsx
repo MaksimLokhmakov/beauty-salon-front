@@ -50,6 +50,7 @@ const PersonInfoHeader = ({ item, master = false }) => {
       </View>
 
       <Table
+        numberOfRows={2}
         firstLabel="сотовый"
         secondLabel={master ? "процент" : "посещений"}
         firstValue={phoneValue}

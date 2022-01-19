@@ -10,14 +10,15 @@ const AppointmentCard = ({ item }) => {
     <>
       <View style={Card.Wrapper}>
         <Table
-          one
+          width={50}
           title="Дата:"
-          firstLabel="число    "
+          firstLabel="число"
           firstValue={() => <Text>{item.start.split(" ")[0]}</Text>}
         />
       </View>
       <View style={Card.Wrapper}>
         <Table
+          numberOfRows={2}
           title="Время:"
           firstLabel="начало"
           firstValue={() => <Text>{item.start.split(" ")[1]}</Text>}
@@ -27,7 +28,6 @@ const AppointmentCard = ({ item }) => {
       </View>
       <View style={Card.Wrapper}>
         <Table
-          one
           title="Зона:"
           firstLabel="зона"
           firstValue={() => <Text>{item.area ? item.area : "Брови"}</Text>}
@@ -35,7 +35,6 @@ const AppointmentCard = ({ item }) => {
       </View>
       <View style={Card.Wrapper}>
         <Table
-          one
           title="Цена:"
           firstLabel="цена"
           firstValue={() => <Text>{"-"}</Text>}

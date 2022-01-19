@@ -9,7 +9,7 @@ import { Context } from "../context";
 
 const Stack = createNativeStackNavigator();
 
-import { MastersScreen, MasterScreen } from "../screens/index";
+import { MastersScreen, MasterScreen, Timetable } from "../screens/index";
 import styleForHeader from "./style";
 
 const MastersStack = ({ navigation }) => {
@@ -27,11 +27,18 @@ const MastersStack = ({ navigation }) => {
             <Text style={styleForHeader.mainPage}>Мастера</Text>
           ),
           headerRight: () => (
-            <TouchableOpacity
-              style={{ top: -5 }}
-              onPress={() => setVisibleMastersModel(true)}
-            >
+            <TouchableOpacity onPress={() => setVisibleMastersModel(true)}>
               <Ionicons name="add" size={26} color="#C2185B" />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styleForHeader.iconsWrapper}
+              onPress={() => {
+                navigation.navigate("Timetable");
+              }}
+            >
+              <Ionicons name="time-outline" size={24} color="#C2185B" />
             </TouchableOpacity>
           ),
         }}
@@ -59,6 +66,32 @@ const MastersStack = ({ navigation }) => {
               }}
             >
               <FontAwesome5 name="chevron-left" size={21} color="#C2185B" />
+            </TouchableOpacity>
+          ),
+          headerTransparent: false,
+        })}
+      />
+      <Stack.Screen
+        name="Timetable"
+        component={Timetable}
+        options={() => ({
+          presentation: "transparentModal",
+          headerTitle: () => (
+            <Text style={styleForHeader.personInfo}>Расписание</Text>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              style={styleForHeader.iconsWrapper}
+              onPress={() => {
+                navigation.navigate("MastersScreen");
+              }}
+            >
+              <Ionicons name="close" size={24} color="#C2185B" />
+            </TouchableOpacity>
+          ),
+          headerRight: () => (
+            <TouchableOpacity onPress={() => {}}>
+              <Ionicons name="add" size={26} color="#C2185B" />
             </TouchableOpacity>
           ),
           headerTransparent: false,

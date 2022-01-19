@@ -12,6 +12,7 @@ export default function App() {
   const [masters, setMasters] = React.useState([]);
   const [appointments, setAppointments] = React.useState([]);
   const [clients, setClients] = React.useState([]);
+  const [timeTable, setTimeTable] = React.useState([]);
 
   const getMasters = () => {
     axios
@@ -33,6 +34,13 @@ export default function App() {
     axios("/orders/sorted")
       .then(({ data }) => {
         setAppointments(data);
+      })
+      .catch((e) => console.log(e));
+  };
+  const getTimeTable = () => {
+    axios("/masters/timetable")
+      .then(({ data }) => {
+        setTimeTable(data);
       })
       .catch((e) => console.log(e));
   };
@@ -58,6 +66,9 @@ export default function App() {
     <NavigationContainer>
       <Context.Provider
         value={{
+          timeTable,
+          setTimeTable,
+          getTimeTable,
           itemToDelete,
           setItemToDelete,
           appointments,

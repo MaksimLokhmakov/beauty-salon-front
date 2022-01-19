@@ -5,3 +5,4 @@ export { default as MonthlyReportingScreen } from "./monthlyReportScreens/Monthl
 export { default as MasterScreen } from "./mastersScreens/MasterScreen";
 export { default as ClientSrceen } from "./clientsScreens/ClientSrceen";
 export { default as AppointmentScreen } from "./appointmentsScreens/AppointmentScreen";
+export { default as Timetable } from "./mastersScreens/Timetable.jsx";

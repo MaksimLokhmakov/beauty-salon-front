@@ -8,7 +8,6 @@ const styleForHeader = StyleSheet.create({
     fontSize: 18,
     fontWeight: "600",
     color: "#C2185B",
-    top: -5,
   },
   personInfo: {
     fontSize: 20,

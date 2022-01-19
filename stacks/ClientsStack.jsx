@@ -25,7 +25,6 @@ const ClientsStack = ({ navigation }) => {
           ),
           headerRight: () => (
             <TouchableOpacity
-              style={{ top: -5 }}
               onPress={() => setVisibleClientsModel(true)}
             >
               <Ionicons name="add" size={26} color="#C2185B" />

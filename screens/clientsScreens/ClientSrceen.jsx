@@ -9,6 +9,7 @@ const ClientSrceen = ({ route }) => {
   const { visibleClientsReductModal } = React.useContext(Context);
 
   const { client } = route.params;
+  console.log(client);
   const [current, setCurrent] = React.useState(client);
 
   return (

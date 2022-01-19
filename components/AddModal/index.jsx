@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  Modal,
-  TouchableOpacity,
-  TouchableHighlight,
-} from "react-native";
+import { View, Text, TextInput, Modal, TouchableOpacity } from "react-native";
 import { Context } from "../../context";
 import axios from "axios";
 
@@ -29,7 +22,6 @@ const AddModal = ({
     setMasters,
     setVisibleClientsReductModal,
     setVisibleMastersReductModal,
-    clients,
     setItemToDelete,
     itemToDelete,
   } = React.useContext(Context);
@@ -287,10 +279,10 @@ const AddModal = ({
                 style={{
                   ...clientModal.headerSideText,
                   color: canBeAdded() ? "#C2185B" : "#BDBDBD",
-                  fontWeight: canBeAdded() ? "600" : "600",
+                  fontWeight: "600",
                 }}
               >
-                {adit ? "Изменить" : "Добавить"}
+                {adit ? "Готово" : "Добавить"}
               </Text>
             </TouchableOpacity>
           </View>
