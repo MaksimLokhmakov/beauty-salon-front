@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   ScrollView,
   View,
@@ -57,10 +57,11 @@ const AppointmentScreen = ({ route }) => {
       <PersonInfoHeader item={appointment.client} appointment />
       <View style={Screen.infoCardWrapper}>
         <Table
+          numberOfRows={2}
           title="Мастер:"
-          firstLabel="имя/фам."
+          firstLabel={() => "имя/фам."}
           firstValue={() => <Text>{appointment.master.name}</Text>}
-          secondLabel="сотовый"
+          secondLabel={() => "сотовый"}
           secondValue={phoneValue}
         />
       </View>
@@ -76,7 +77,7 @@ const AppointmentScreen = ({ route }) => {
           <Table
             numberOfRows={4}
             title="Обыч. иглы"
-            firstLabel="№1"
+            firstLabel={() => "№1"}
             firstValue={() => (
               <TouchableOpacity
                 onPress={() =>
@@ -91,7 +92,7 @@ const AppointmentScreen = ({ route }) => {
                 />
               </TouchableOpacity>
             )}
-            secondLabel="№2"
+            secondLabel={() => "№2"}
             secondValue={() => (
               <TouchableOpacity
                 onPress={() =>
@@ -106,7 +107,7 @@ const AppointmentScreen = ({ route }) => {
                 />
               </TouchableOpacity>
             )}
-            thirdLabel="№3"
+            thirdLabel={() => "№3"}
             thirdValue={() => (
               <TouchableOpacity
                 onPress={() =>
@@ -121,7 +122,7 @@ const AppointmentScreen = ({ route }) => {
                 />
               </TouchableOpacity>
             )}
-            fourthLabel="№4"
+            fourthLabel={() => "№4"}
             fourthValue={() => (
               <TouchableOpacity
                 onPress={() =>
@@ -143,7 +144,7 @@ const AppointmentScreen = ({ route }) => {
           <Table
             numberOfRows={4}
             title="Изол. иглы"
-            firstLabel="№1"
+            firstLabel={() => "№1"}
             firstValue={() => (
               <TouchableOpacity
                 onPress={() =>
@@ -158,7 +159,7 @@ const AppointmentScreen = ({ route }) => {
                 />
               </TouchableOpacity>
             )}
-            secondLabel="№2"
+            secondLabel={() => "№2"}
             secondValue={() => (
               <TouchableOpacity
                 onPress={() =>
@@ -173,7 +174,7 @@ const AppointmentScreen = ({ route }) => {
                 />
               </TouchableOpacity>
             )}
-            thirdLabel="№3"
+            thirdLabel={() => "№3"}
             thirdValue={() => (
               <TouchableOpacity
                 onPress={() =>
@@ -188,7 +189,7 @@ const AppointmentScreen = ({ route }) => {
                 />
               </TouchableOpacity>
             )}
-            fourthLabel="№4"
+            fourthLabel={() => "№4"}
             fourthValue={() => (
               <TouchableOpacity
                 onPress={() =>
@@ -211,7 +212,7 @@ const AppointmentScreen = ({ route }) => {
         <Table
           numberOfRows={3}
           title="Доп. услуги"
-          firstLabel="инъекционная анестезия"
+          firstLabel={() => "инъекционная анестезия"}
           firstValue={() => (
             <TouchableOpacity
               onPress={() =>
@@ -229,7 +230,7 @@ const AppointmentScreen = ({ route }) => {
               />
             </TouchableOpacity>
           )}
-          secondLabel="аппликационная анестезия"
+          secondLabel={() => "аппликационная анестезия"}
           secondValue={() => (
             <TouchableOpacity
               onPress={() =>
@@ -247,7 +248,7 @@ const AppointmentScreen = ({ route }) => {
               />
             </TouchableOpacity>
           )}
-          thirdLabel="окрашивание"
+          thirdLabel={() => "окрашивание"}
           thirdValue={() => (
             <TouchableOpacity
               onPress={() =>

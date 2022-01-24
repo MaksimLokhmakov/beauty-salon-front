@@ -13,8 +13,11 @@ import { MastersScreen, MasterScreen, Timetable } from "../screens/index";
 import styleForHeader from "./style";
 
 const MastersStack = ({ navigation }) => {
-  const { setVisibleMastersModel, setVisibleMastersReductModal } =
-    React.useContext(Context);
+  const {
+    setVisibleMastersModel,
+    setVisibleMastersReductModal,
+    setVisibleAddTimetableModal,
+  } = React.useContext(Context);
 
   return (
     <Stack.Navigator initialRouteName="MastersScreen">
@@ -90,7 +93,7 @@ const MastersStack = ({ navigation }) => {
             </TouchableOpacity>
           ),
           headerRight: () => (
-            <TouchableOpacity onPress={() => {}}>
+            <TouchableOpacity onPress={() => setVisibleAddTimetableModal(true)}>
               <Ionicons name="add" size={26} color="#C2185B" />
             </TouchableOpacity>
           ),

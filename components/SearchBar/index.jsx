@@ -4,10 +4,10 @@ import { Ionicons } from "@expo/vector-icons";
 
 import searchBar from "./style";
 
-const SearchBar = ({ value, setValue }) => {
+const SearchBar = ({ value, setValue, styleWrapper = {}, styleInput = {} }) => {
   return (
-    <View style={searchBar.searchWrapper}>
-      <View style={searchBar.searchRow}>
+    <View style={[searchBar.searchWrapper, styleWrapper]}>
+      <View style={[searchBar.searchRow, styleInput]}>
         <Ionicons
           style={{ marginRight: 5 }}
           name="search"

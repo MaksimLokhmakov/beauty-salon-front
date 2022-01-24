@@ -31,6 +31,7 @@ const table = StyleSheet.create({
     marginBottom: 5,
   },
   line: {
+    zIndex: 2,
     height: 0.5,
     width: "100%",
     backgroundColor: "#BDBDBD",

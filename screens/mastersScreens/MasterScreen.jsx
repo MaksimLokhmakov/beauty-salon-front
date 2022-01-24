@@ -22,8 +22,8 @@ const MasterScreen = ({ route, navigation }) => {
         <Table
           numberOfRows={2}
           title="День:"
-          firstLabel="время"
-          secondLabel="прибыль"
+          firstLabel={() => "время"}
+          secondLabel={() => "прибыль"}
           firstValue={() => <Text style={{ color: "#757575" }}>7 ч.</Text>}
           secondValue={() => <Text style={{ color: "#757575" }}>110 руб.</Text>}
         />
@@ -32,8 +32,8 @@ const MasterScreen = ({ route, navigation }) => {
         <Table
           numberOfRows={2}
           title="Месяц:"
-          firstLabel="время"
-          secondLabel="прибыль"
+          firstLabel={() => "время"}
+          secondLabel={() => "прибыль"}
           firstValue={() => <Text style={{ color: "#757575" }}>61 ч.</Text>}
           secondValue={() => (
             <Text style={{ color: "#757575" }}>1210 руб.</Text>

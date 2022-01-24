@@ -1,29 +1,6 @@
 import { StyleSheet } from "react-native";
 
 const clientModal = StyleSheet.create({
-  wrapper: {
-    height: "100%",
-    width: "100%",
-    paddingTop: 41.5,
-    paddingHorizontal: 25,
-    backgroundColor: "#fff",
-  },
-  input: {
-    width: "100%",
-    height: 30,
-    backgroundColor: "#fff",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "baseline",
-    marginBottom: 25,
-  },
-  headerSideText: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#C2185B",
-  },
   buttonsWrapper: {
     position: "absolute",
     width: "100%",

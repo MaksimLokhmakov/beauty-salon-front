@@ -51,8 +51,8 @@ const PersonInfoHeader = ({ item, master = false }) => {
 
       <Table
         numberOfRows={2}
-        firstLabel="сотовый"
-        secondLabel={master ? "процент" : "посещений"}
+        firstLabel={() => "сотовый"}
+        secondLabel={() => (master ? "процент" : "посещений")}
         firstValue={phoneValue}
         secondValue={secondValue}
       />

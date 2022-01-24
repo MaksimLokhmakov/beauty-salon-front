@@ -12,7 +12,7 @@ const AppointmentCard = ({ item }) => {
         <Table
           width={50}
           title="Дата:"
-          firstLabel="число"
+          firstLabel={() => "число"}
           firstValue={() => <Text>{item.start.split(" ")[0]}</Text>}
         />
       </View>
@@ -20,23 +20,23 @@ const AppointmentCard = ({ item }) => {
         <Table
           numberOfRows={2}
           title="Время:"
-          firstLabel="начало"
+          firstLabel={() => "начало"}
           firstValue={() => <Text>{item.start.split(" ")[1]}</Text>}
-          secondLabel="конец"
+          secondLabel={() => "конец"}
           secondValue={() => <Text>{item.finish.split(" ")[1]}</Text>}
         />
       </View>
       <View style={Card.Wrapper}>
         <Table
           title="Зона:"
-          firstLabel="зона"
+          firstLabel={() => "зона"}
           firstValue={() => <Text>{item.area ? item.area : "Брови"}</Text>}
         />
       </View>
       <View style={Card.Wrapper}>
         <Table
           title="Цена:"
-          firstLabel="цена"
+          firstLabel={() => "цена"}
           firstValue={() => <Text>{"-"}</Text>}
         />
       </View>

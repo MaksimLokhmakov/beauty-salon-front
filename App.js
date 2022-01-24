@@ -46,6 +46,8 @@ export default function App() {
   };
 
   const [clientsSearchValue, setClientsSearchValue] = React.useState("");
+  const [visibleAddTimetableModal, setVisibleAddTimetableModal] =
+    React.useState(false);
 
   // * modal-add-screens functions
   const [visibleClientsModal, setVisibleClientsModel] = React.useState(false);
@@ -66,6 +68,8 @@ export default function App() {
     <NavigationContainer>
       <Context.Provider
         value={{
+          visibleAddTimetableModal,
+          setVisibleAddTimetableModal,
           timeTable,
           setTimeTable,
           getTimeTable,

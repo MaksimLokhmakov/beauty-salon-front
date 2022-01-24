@@ -1,11 +1,12 @@
 import React from "react";
 import { View, Text, TextInput, Modal, TouchableOpacity } from "react-native";
-import { Context } from "../../context";
+import { Context } from "../../../context";
 import axios from "axios";
 
-import Avatar from "../Avatar";
-import Table from "../Table";
-import clientModal from "./style";
+import Avatar from "../../Avatar";
+import Table from "../../Table";
+import MadalHeader from "../../ModalHeader";
+import style from "../style";
 
 const AddModal = ({
   master = false,
@@ -177,7 +178,7 @@ const AddModal = ({
 
   const phoneInput = () => (
     <TextInput
-      style={{ fontSize: 16 }}
+      style={{ ...style.input, fontSize: 16 }}
       onSubmitEditing={() => master && percentInputRef.current.focus()}
       ref={phoneInputRef}
       placeholder="+375 __ ___-__-__"
@@ -190,6 +191,7 @@ const AddModal = ({
   const secondInput = () =>
     master ? (
       <TextInput
+        style={{ ...style.input, fontSize: 14 }}
         ref={percentInputRef}
         blurOnSubmit={false}
         keyboardType="numeric"
@@ -212,7 +214,7 @@ const AddModal = ({
       transparent={true}
     >
       {itemToDelete ? (
-        <View style={clientModal.buttonsWrapper}>
+        <View style={style.buttonsWrapper}>
           <View
             style={{
               borderBottomColor: "#22112234",
@@ -253,39 +255,13 @@ const AddModal = ({
           </TouchableOpacity>
         </View>
       ) : (
-        <View style={clientModal.wrapper}>
-          <View style={clientModal.header}>
-            <TouchableOpacity onPress={onClose}>
-              <Text
-                style={{
-                  ...clientModal.headerSideText,
-                  fontWeight: "500",
-                }}
-              >
-                Отмена
-              </Text>
-            </TouchableOpacity>
-            <Text
-              style={{
-                fontSize: 18,
-                fontWeight: "500",
-                color: "#212121",
-              }}
-            >
-              {getHeader()}
-            </Text>
-            <TouchableOpacity onPress={canBeAdded() ? onSubmit() : () => {}}>
-              <Text
-                style={{
-                  ...clientModal.headerSideText,
-                  color: canBeAdded() ? "#C2185B" : "#BDBDBD",
-                  fontWeight: "600",
-                }}
-              >
-                {adit ? "Готово" : "Добавить"}
-              </Text>
-            </TouchableOpacity>
-          </View>
+        <View style={style.wrapper}>
+          <MadalHeader
+            onBack={onClose}
+            onComplete={canBeAdded() ? onSubmit() : () => {}}
+            canBeAdded={canBeAdded}
+            headerText={getHeader}
+          />
 
           <View
             style={{
@@ -305,7 +281,7 @@ const AddModal = ({
               <TextInput
                 autoFocus={true}
                 placeholder="Имя"
-                style={{ ...clientModal.input, fontSize: 18 }}
+                style={{ ...style.input, fontSize: 18 }}
                 value={name}
                 onChangeText={(change) => setName(change)}
                 maxLength={10}
@@ -322,7 +298,7 @@ const AddModal = ({
                 ref={secondNameInputRef}
                 onSubmitEditing={() => phoneInputRef.current.focus()}
                 placeholder="Фамилия"
-                style={{ ...clientModal.input, fontSize: 18 }}
+                style={{ ...style.input, fontSize: 18 }}
                 value={secondName}
                 onChangeText={(change) => setSecondName(change)}
                 maxLength={14}
@@ -331,9 +307,10 @@ const AddModal = ({
           </View>
 
           <Table
-            firstLabel="сотовый"
+            numberOfRows={2}
+            firstLabel={() => "сотовый"}
             firstValue={phoneInput}
-            secondLabel={master ? "процент" : ""}
+            secondLabel={() => (master ? "процент" : "")}
             secondValue={secondInput}
           />
         </View>

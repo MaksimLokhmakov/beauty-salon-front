@@ -4,10 +4,10 @@ import { View, Text } from "react-native";
 import table from "./style";
 
 const Table = ({
-  firstLabel = "firstLabel",
-  secondLabel,
-  thirdLabel,
-  fourthLabel,
+  firstLabel = () => false,
+  secondLabel = () => false,
+  thirdLabel = () => false,
+  fourthLabel = () => false,
   firstValue = () => false,
   secondValue = () => false,
   thirdValue = () => false,
@@ -42,15 +42,19 @@ const Table = ({
         {FOURTH_ROW && <View style={{ ...table.line, top: 88.5 }}></View>}
 
         <View style={{ ...table.labelsWrapper, height: HEIGHT }}>
-          <Text style={{ ...table.label, width: width }}>{firstLabel}</Text>
+          <Text style={{ ...table.label, width: width }}>{firstLabel()}</Text>
           {SECOND_ROW && (
-            <Text style={{ ...table.label, width: width }}>{secondLabel}</Text>
+            <Text style={{ ...table.label, width: width }}>
+              {secondLabel()}
+            </Text>
           )}
           {THIRD_ROW && (
-            <Text style={{ ...table.label, width: width }}>{thirdLabel}</Text>
+            <Text style={{ ...table.label, width: width }}>{thirdLabel()}</Text>
           )}
           {FOURTH_ROW && (
-            <Text style={{ ...table.label, width: width }}>{fourthLabel}</Text>
+            <Text style={{ ...table.label, width: width }}>
+              {fourthLabel()}
+            </Text>
           )}
         </View>
         <View style={{ ...table.valuesWrapper, height: HEIGHT }}>
