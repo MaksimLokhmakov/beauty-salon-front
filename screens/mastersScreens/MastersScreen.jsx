@@ -57,6 +57,7 @@ const MastersScreen = ({ navigation }) => {
             item={item}
             onPress={toMasterInfo}
             openDeleteModal={openDeleteModal}
+            onDelete={deleteMaster}
             setIsSwiping={setIsSwiping}
           />
         )}

@@ -12,10 +12,9 @@ const MonthlyReportingScreen = () => {
     getFullStatistic,
     pickerStatVisible,
     setPickerStatVisible,
-    reportingPicker,
-    setReportingPicker,
   } = React.useContext(Context);
   const [refreshing, setRefreshing] = React.useState(false);
+  const [reportingPicker, setReportingPicker] = React.useState("День");
 
   console.log(monthStat);
 

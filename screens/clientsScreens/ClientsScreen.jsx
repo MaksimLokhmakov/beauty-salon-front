@@ -63,6 +63,7 @@ const ClientsScreen = ({ navigation }) => {
           <PersonConteiner
             item={item}
             onPress={toClientInfo}
+            onDelete={deleteClient}
             openDeleteModal={openDeleteModal}
             setIsSwiping={setIsSwiping}
           />

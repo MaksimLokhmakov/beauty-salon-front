@@ -9,7 +9,7 @@ import { MonthlyReportingScreen } from "../screens/index";
 import styleForHeader from "./style";
 
 const MonthlyReportStack = () => {
-  const { setPickerStatVisible, reportingPicker } = React.useContext(Context);
+  const { setPickerStatVisible } = React.useContext(Context);
   return (
     <Stack.Navigator initialRouteName="MonthlyReportingScreen">
       <Stack.Screen
@@ -22,7 +22,7 @@ const MonthlyReportStack = () => {
           ),
           headerLeft: () => (
             <TouchableOpacity onPress={() => setPickerStatVisible(true)}>
-              <Text style={styleForHeader.sideText}>{reportingPicker}</Text>
+              <Text style={styleForHeader.sideText}>Вид</Text>
             </TouchableOpacity>
           ),
         }}

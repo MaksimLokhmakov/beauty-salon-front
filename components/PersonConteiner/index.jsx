@@ -1,15 +1,19 @@
-import React from "react";
-import { View, Text, TouchableOpacity, Linking } from "react-native";
+import React, { useRef } from "react";
+import { View, Text, TouchableOpacity, Linking, Easing } from "react-native";
 import Swipeable from "react-native-swipeable";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 import Avatar from "../Avatar";
 import Bardge from "../Bardge";
 import Person from "./style";
 
-const PersonConteiner = ({ item, onPress, openDeleteModal, setIsSwiping }) => {
-  const [isCalling, setIsCalling] = React.useState(false);
-
+const PersonConteiner = ({
+  item,
+  onPress,
+  openDeleteModal,
+  setIsSwiping,
+  onDelete,
+}) => {
   const textBardge = (item) => {
     if (item.percent) return (item.percent * 100).toFixed() + "%";
     if (item.start)
@@ -23,42 +27,49 @@ const PersonConteiner = ({ item, onPress, openDeleteModal, setIsSwiping }) => {
   const leftContent = (
     <View
       style={{
-        height: 50,
+        height: 55,
         paddingHorizontal: 15,
-        backgroundColor: "#74e674",
+        backgroundColor: "#12c212",
         alignItems: "flex-end",
         justifyContent: "center",
         flexDirection: "column",
       }}
     >
-      {isCalling ? (
-        <MaterialCommunityIcons name="phone-in-talk" size={30} color="#fff" />
-      ) : (
-        <MaterialCommunityIcons name="phone" size={30} color="#fff" />
-      )}
+      <FontAwesome5 name="phone-alt" size={23} color="#fff" />
     </View>
   );
 
-  const rightButtonsSwipeable = [
-    <TouchableOpacity
-      style={{ backgroundColor: "#00c900", height: 57 }}
-    ></TouchableOpacity>,
+  const rightContent = [
+    <View
+      style={{
+        height: 55,
+        paddingHorizontal: 15,
+        backgroundColor: "#c71c41",
+        alignItems: "flex-start",
+        justifyContent: "center",
+        flexDirection: "column",
+      }}
+    >
+      <FontAwesome5 name="trash-alt" size={23} color="#fff" />
+    </View>,
   ];
 
   return (
     <Swipeable
-      onSwipeStart={() => {
-        setIsSwiping(true);
-        setIsCalling(false);
+      onSwipeStart={() => setIsSwiping(true)}
+      swipeReleaseAnimationConfig={{
+        toValue: { x: 0, y: 0 },
+        duration: 250,
+        easing: Easing.elastic(0.5),
+        useNativeDriver: false,
       }}
       onSwipeRelease={() => setIsSwiping(false)}
       leftContent={!item.master && leftContent}
-      rightButtons={rightButtonsSwipeable}
+      rightContent={rightContent}
+      rightActionActivationDistance={90}
       leftActionActivationDistance={90}
-      onLeftActionRelease={() => {
-        setIsCalling(true);
-        Linking.openURL(`tel:${item.tel}`);
-      }}
+      onRightActionRelease={() => onDelete(item)}
+      onLeftActionRelease={() => Linking.openURL(`tel:${item.tel}`)}
     >
       <TouchableOpacity style={Person.conteiner} onPress={() => onPress(item)}>
         <View style={{ flexDirection: "row" }}>

@@ -20,8 +20,6 @@ export default function App() {
   const [sortVisibleAppointmentsList, setSortVisibleAppointmentsList] =
     React.useState(false);
 
-  const [reportingPicker, setReportingPicker] = React.useState("День");
-
   const getFullStatistic = () => {
     axios
       .get("/statistic/day")
@@ -193,8 +191,6 @@ export default function App() {
     <NavigationContainer>
       <Context.Provider
         value={{
-          reportingPicker,
-          setReportingPicker,
           sortVisibleAppointmentsList,
           setSortVisibleAppointmentsList,
           pickerStatVisible,
