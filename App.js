@@ -13,7 +13,124 @@ export default function App() {
   const [appointments, setAppointments] = React.useState([]);
   const [clients, setClients] = React.useState([]);
   const [timeTable, setTimeTable] = React.useState([]);
+  const [dayStat, setDayStat] = React.useState({});
+  const [monthStat, setMonthStat] = React.useState({});
+  const [mastersStat, setMastersStat] = React.useState({});
+  const [pickerStatVisible, setPickerStatVisible] = React.useState(false);
+  const [sortVisibleAppointmentsList, setSortVisibleAppointmentsList] =
+    React.useState(false);
 
+  const [reportingPicker, setReportingPicker] = React.useState("День");
+
+  const getFullStatistic = () => {
+    axios
+      .get("/statistic/day")
+      .then(({ data }) => {
+        const addons = {
+          injection: 0,
+          coloring: 0,
+          ointment: 0,
+        };
+        const needles = {
+          isolated: {
+            first: 0,
+            second: 0,
+            third: 0,
+            fourth: 0,
+          },
+          nonIsolated: {
+            first: 0,
+            second: 0,
+            third: 0,
+            fourth: 0,
+          },
+        };
+
+        data.addons.forEach((item) => {
+          if (item.addon.ticket === "INJECTION") addons.injection = item.count;
+          if (item.addon.ticket === "COLORING") addons.coloring = item.count;
+          if (item.addon.ticket === "OINTMENT") addons.ointment = item.count;
+        });
+        data.needles.forEach((item) => {
+          if (item.needle.type === "ISOLATED") {
+            if (item.needle.number === 1) needles.isolated.first = item.count;
+            if (item.needle.number === 2) needles.isolated.second = item.count;
+            if (item.needle.number === 3) needles.isolated.third = item.count;
+            if (item.needle.number === 4) needles.isolated.fourth = item.count;
+          }
+          if (item.needle.type === "NONISOLATED") {
+            if (item.needle.number === 1)
+              needles.nonIsolated.first = item.count;
+            if (item.needle.number === 2)
+              needles.nonIsolated.second = item.count;
+            if (item.needle.number === 3)
+              needles.nonIsolated.third = item.count;
+            if (item.needle.number === 4)
+              needles.nonIsolated.fourth = item.count;
+          }
+        });
+
+        const currentStat = { ...data, addons: addons, needles: needles };
+        setDayStat(currentStat);
+      })
+      .catch((e) => console.log(e));
+    axios
+      .get("/statistic/month")
+      .then(({ data }) => {
+        console.log("month", data);
+        const addons = {
+          injection: 0,
+          coloring: 0,
+          ointment: 0,
+        };
+        const needles = {
+          isolated: {
+            first: 0,
+            second: 0,
+            third: 0,
+            fourth: 0,
+          },
+          nonIsolated: {
+            first: 0,
+            second: 0,
+            third: 0,
+            fourth: 0,
+          },
+        };
+
+        data.addons.forEach((item) => {
+          if (item.addon.ticket === "INJECTION") addons.injection = item.count;
+          if (item.addon.ticket === "COLORING") addons.coloring = item.count;
+          if (item.addon.ticket === "OINTMENT") addons.ointment = item.count;
+        });
+        data.needles.forEach((item) => {
+          if (item.needle.type === "ISOLATED") {
+            if (item.needle.number === 1) needles.isolated.first = item.count;
+            if (item.needle.number === 2) needles.isolated.second = item.count;
+            if (item.needle.number === 3) needles.isolated.third = item.count;
+            if (item.needle.number === 4) needles.isolated.fourth = item.count;
+          }
+          if (item.needle.type === "NONISOLATED") {
+            if (item.needle.number === 1)
+              needles.nonIsolated.first = item.count;
+            if (item.needle.number === 2)
+              needles.nonIsolated.second = item.count;
+            if (item.needle.number === 3)
+              needles.nonIsolated.third = item.count;
+            if (item.needle.number === 4)
+              needles.nonIsolated.fourth = item.count;
+          }
+        });
+
+        const currentStat = { ...data, addons: addons, needles: needles };
+        setMonthStat(currentStat);
+      })
+      .catch((e) => console.log(e));
+    axios
+      .get("/statistic/masters")
+      .then(({ data }) => setMastersStat(data))
+      .catch((e) => console.log(e));
+  };
   const getMasters = () => {
     axios
       .get("/masters/sorted")
@@ -45,6 +162,14 @@ export default function App() {
       .catch((e) => console.log(e));
   };
 
+  React.useEffect(() => {
+    getAppointments();
+    getMasters();
+    getClients();
+    getTimeTable();
+    getFullStatistic();
+  }, []);
+
   const [clientsSearchValue, setClientsSearchValue] = React.useState("");
   const [visibleAddTimetableModal, setVisibleAddTimetableModal] =
     React.useState(false);
@@ -68,6 +193,16 @@ export default function App() {
     <NavigationContainer>
       <Context.Provider
         value={{
+          reportingPicker,
+          setReportingPicker,
+          sortVisibleAppointmentsList,
+          setSortVisibleAppointmentsList,
+          pickerStatVisible,
+          setPickerStatVisible,
+          getFullStatistic,
+          dayStat,
+          monthStat,
+          mastersStat,
           visibleAddTimetableModal,
           setVisibleAddTimetableModal,
           timeTable,

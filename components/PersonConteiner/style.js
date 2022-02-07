@@ -2,6 +2,8 @@ import { StyleSheet } from "react-native";
 
 const Person = StyleSheet.create({
   conteiner: {
+    width: "100%",
+    zIndex: 1,
     paddingTop: 7,
     paddingLeft: 15,
     paddingRight: 15,
@@ -39,7 +41,6 @@ const Person = StyleSheet.create({
     width: 50,
     alignItems: "center",
     justifyContent: "center",
-    // backgroundColor: "red",
     position: "absolute",
     right: "7%",
   },

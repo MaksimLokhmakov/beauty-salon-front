@@ -1,8 +1,6 @@
-export { default as MainButton } from "./MainButton";
 export { default as PersonInfoHeader } from "./PersonInfoHeader";
 export { default as PersonConteiner } from "./PersonConteiner";
 export { default as Bardge } from "./Bardge";
-export { default as PlusButton } from "./PlusButton";
 export { default as AppointmentCard } from "./AppointmentCard";
 export { default as AddModal } from "./Modals/AddModal";
 export { default as ModalWrapper } from "./ModalWrapper";
@@ -12,3 +10,5 @@ export { default as Table } from "./Table";
 export { default as SearchBar } from "./SearchBar";
 export { default as AddAppointmentModel } from "./Modals/AddAppointmentsModal";
 export { default as AddTimeTableModal } from "./Modals/AddTimeTableModal";
+export { default as StatisticInfoSection } from "./StatisticInfoSection";
+export { default as ModalList } from "./Modals/ModalList";

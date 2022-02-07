@@ -6,13 +6,23 @@ import {
   PersonConteiner,
   SearchBar,
   AddAppointmentModel,
+  ModalList,
 } from "../../components";
 import Screen from "../style";
 
 const AppointmentsScreen = ({ navigation }) => {
-  const { appointments, getAppointments } = React.useContext(Context);
+  const {
+    masters,
+    appointments,
+    getAppointments,
+    setSortVisibleAppointmentsList,
+    sortVisibleAppointmentsList,
+  } = React.useContext(Context);
 
+  const [isSwiping, setIsSwiping] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
+
+  const [sortValue, setSortValue] = React.useState("Все");
 
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -27,6 +37,23 @@ const AppointmentsScreen = ({ navigation }) => {
   }, []);
 
   // ! ПЕРЕДЕЛАТЬ ПОИСК
+
+  const onPressListItem = (value) => {
+    setSortValue(value);
+    setSortVisibleAppointmentsList(false);
+  };
+
+  const onSort = (section, currentValue) => {
+    const value = currentValue;
+    if (sortValue === "Все") return section;
+    if (section.data.find((item) => item.master.name === value)) {
+      return {
+        title: section.title,
+        data: section.data.filter((item) => item.master.name === value),
+      };
+    }
+    return false;
+  };
 
   const onSearch = (section, currentValue) => {
     const value = currentValue.toLowerCase();
@@ -55,7 +82,13 @@ const AppointmentsScreen = ({ navigation }) => {
       <SearchBar value={searchValue} setValue={setSearchValue} />
 
       <SectionList
+        scrollEnabled={!isSwiping}
         sections={appointments
+          .filter((item) => onSort(item, sortValue))
+          .map((item) => {
+            if (onSort(item, sortValue)) return onSort(item, sortValue);
+            return item;
+          })
           .map((item) => {
             if (onSearch(item, searchValue)) return onSearch(item, searchValue);
             return item;
@@ -65,7 +98,13 @@ const AppointmentsScreen = ({ navigation }) => {
         onRefresh={refresh}
         refreshing={isLoading}
         renderItem={({ item }) => {
-          return <PersonConteiner item={item} onPress={toAppointmentInfo} />;
+          return (
+            <PersonConteiner
+              item={item}
+              onPress={toAppointmentInfo}
+              setIsSwiping={setIsSwiping}
+            />
+          );
         }}
         renderSectionHeader={({ section: { title } }) => (
           <Text style={Screen.sectionTitle}>{title}</Text>
@@ -75,6 +114,12 @@ const AppointmentsScreen = ({ navigation }) => {
       />
 
       <AddAppointmentModel />
+      <ModalList
+        sortValue={sortValue}
+        list={[{ name: "Все" }, ...masters]}
+        visible={sortVisibleAppointmentsList}
+        onPressListItem={onPressListItem}
+      />
     </View>
   );
 };

@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { Context } from "../context";
 
 const Stack = createNativeStackNavigator();
@@ -11,7 +12,8 @@ import { AppointmentsScreen, AppointmentScreen } from "../screens/index";
 import styleForHeader from "./style";
 
 const AppointmentsStack = ({ navigation }) => {
-  const { setVisibleAppointmentsModel } = React.useContext(Context);
+  const { setVisibleAppointmentsModel, setSortVisibleAppointmentsList } =
+    React.useContext(Context);
   return (
     <Stack.Navigator initialRouteName="AppointmentsScreen">
       <Stack.Screen
@@ -25,6 +27,14 @@ const AppointmentsStack = ({ navigation }) => {
           headerRight: () => (
             <TouchableOpacity onPress={() => setVisibleAppointmentsModel(true)}>
               <Ionicons name="add" size={26} color="#C2185B" />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ ...styleForHeader.iconsWrapper, width: 100 }}
+              onPress={() => setSortVisibleAppointmentsList(true)}
+            >
+              <Text style={styleForHeader.sideText}>Мастера</Text>
             </TouchableOpacity>
           ),
         }}

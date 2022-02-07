@@ -7,10 +7,11 @@ const table = StyleSheet.create({
     justifyContent: "space-around",
     borderColor: "#BDBDBD",
     borderRightWidth: 0.5,
-    marginRight: 5,
+    // marginRight: 5,
   },
   valuesWrapper: {
-    width: "auto",
+    paddingLeft: 5,
+    width: "100%",
     height: 60,
     justifyContent: "space-around",
   },

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, FlatList } from "react-native";
+import { View, Text, FlatList, TouchableOpacity } from "react-native";
 import { Context } from "../../context";
 
 import Screen from "../style";
@@ -9,11 +9,12 @@ const Timetable = () => {
   const { timeTable, getTimeTable } = React.useContext(Context);
   const [isLoading, setIsLoading] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
+  const [reductItem, setReductItem] = React.useState(false);
+
   React.useEffect(() => {
     getTimeTable();
   }, []);
 
-  console.log(timeTable);
   const onRefresh = () => {
     setIsLoading(true);
     getTimeTable();
@@ -33,6 +34,13 @@ const Timetable = () => {
     return false;
   };
 
+  // !  отсюда будет происходить добавление
+  const label = (masterName) => (
+    <TouchableOpacity>
+      <Text style={{ color: "#C2185B" }}>{masterName}</Text>
+    </TouchableOpacity>
+  );
+
   function formatDateToH2dM2d(date, locale = "ru") {
     return date.toLocaleString(locale, {
       hour: "2-digit",
@@ -41,11 +49,18 @@ const Timetable = () => {
   }
 
   return (
-    <View style={{ ...Screen.wrapper, backgroundColor: "#f1f3f4" }}>
+    <View
+      style={{
+        ...Screen.wrapper,
+        backgroundColor: "#f1f3f4",
+      }}
+    >
       <View style={{ paddingBottom: 10, backgroundColor: "#fff" }}>
         <SearchBar value={searchValue} setValue={setSearchValue} />
       </View>
       <FlatList
+        showsVerticalScrollIndicator={false}
+        style={{ paddingBottom: 20 }}
         onRefresh={onRefresh}
         refreshing={isLoading}
         data={timeTable.filter((item) => onSearch(item))}
@@ -69,15 +84,22 @@ const Timetable = () => {
                 }}
               >
                 <Table
+                  editable
+                  item={item}
+                  onEdit={setReductItem}
                   title={item.title}
                   numberOfRows={NUMBER_OF_ROWS}
-                  firstLabel={() => item.firstMaster.name}
-                  secondLabel={() =>
-                    item.secondMaster && item.secondMaster.name
+                  firstLabel={() =>
+                    item.firstMaster && label(item.firstMaster.name)
                   }
-                  thirdLabel={() => item.thirdMaster && item.thirdMaster.name}
+                  secondLabel={() =>
+                    item.secondMaster && label(item.secondMaster.name)
+                  }
+                  thirdLabel={() =>
+                    item.thirdMaster && label(item.thirdMaster.name)
+                  }
                   fourthLabel={() =>
-                    item.fourthMaster && item.fourthMaster.name
+                    item.fourthMaster && label(item.fourthMaster.name)
                   }
                   firstValue={() => (
                     <Text>
@@ -115,7 +137,7 @@ const Timetable = () => {
         }}
       />
 
-      <AddTimeTableModal />
+      <AddTimeTableModal item={reductItem} setItem={setReductItem} />
     </View>
   );
 };

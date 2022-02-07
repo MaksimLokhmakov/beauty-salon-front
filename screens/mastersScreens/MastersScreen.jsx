@@ -16,6 +16,7 @@ const MastersScreen = ({ navigation }) => {
     setItemToDelete,
   } = React.useContext(Context);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [isSwiping, setIsSwiping] = React.useState(false);
 
   const refresh = () => {
     setIsLoading(true);
@@ -46,6 +47,7 @@ const MastersScreen = ({ navigation }) => {
   return (
     <View style={Screen.wrapper}>
       <FlatList
+        scrollEnabled={!isSwiping}
         data={masters}
         keyExtractor={(item) => item.id}
         onRefresh={refresh}
@@ -55,6 +57,7 @@ const MastersScreen = ({ navigation }) => {
             item={item}
             onPress={toMasterInfo}
             openDeleteModal={openDeleteModal}
+            setIsSwiping={setIsSwiping}
           />
         )}
       />

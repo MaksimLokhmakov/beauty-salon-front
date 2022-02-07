@@ -15,7 +15,7 @@ const ClientsScreen = ({ navigation }) => {
     setItemToDelete,
     setVisibleClientsModel,
   } = React.useContext(Context);
-
+  const [isSwiping, setIsSwiping] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
 
   const refresh = () => {
@@ -50,10 +50,12 @@ const ClientsScreen = ({ navigation }) => {
     <View style={Screen.wrapper}>
       <SearchBar value={searchValue} setValue={setSearchValue} />
       <FlatList
+        scrollEnabled={!isSwiping}
         style={{ paddingTop: 10 }}
         data={clients.filter((item) =>
           item.name.toLowerCase().includes(searchValue.toLowerCase())
         )}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(item) => item.id}
         onRefresh={refresh}
         refreshing={isLoading}
@@ -62,6 +64,7 @@ const ClientsScreen = ({ navigation }) => {
             item={item}
             onPress={toClientInfo}
             openDeleteModal={openDeleteModal}
+            setIsSwiping={setIsSwiping}
           />
         )}
       />

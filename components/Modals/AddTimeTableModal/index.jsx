@@ -15,7 +15,7 @@ import MadalHeader from "../../ModalHeader";
 import SearchBar from "../../SearchBar";
 import style from "../style";
 
-const AddTimeTableModal = () => {
+const AddTimeTableModal = ({ item = false, setItem }) => {
   const {
     visibleAddTimetableModal,
     setVisibleAddTimetableModal,
@@ -32,6 +32,7 @@ const AddTimeTableModal = () => {
 
   // Данные объекта формы
   const [date, setDate] = React.useState({});
+
   const [firstMaster, setFirstMaster] = React.useState({});
   const [secondMaster, setSecondMaster] = React.useState({});
   const [thirdMaster, setThirdMaster] = React.useState({});
@@ -50,12 +51,61 @@ const AddTimeTableModal = () => {
     setIsLoading(false);
   }, []);
   React.useEffect(() => {
-    setDate(emptyDays[0]);
+    if (item !== false) {
+      setPickingDate(false);
+      setDate({ rowDate: item.rawDate, title: item.title });
+      setFirstMaster({ id: item.firstMaster.id, name: item.firstMaster.name });
+      setSecondMaster(
+        item.secondMaster
+          ? {
+              id: item.secondMaster.id,
+              name: item.secondMaster.name,
+            }
+          : {}
+      );
+      setThirdMaster(
+        item.thirdMaster
+          ? {
+              id: item.thirdMaster.id,
+              name: item.thirdMaster.name,
+            }
+          : {}
+      );
+      setFourthMaster(
+        item.fourthMaster
+          ? {
+              id: item.fourthMaster.id,
+              name: item.fourthMaster.name,
+            }
+          : {}
+      );
+      setFirstInputValue(
+        item.firstMaster.start + " - " + item.firstMaster.finish
+      );
+      setSecondInputValue(
+        item.secondMaster
+          ? item.secondMaster.start + " - " + item.secondMaster.finish
+          : ""
+      );
+      setThirdInputValue(
+        item.thirdMaster
+          ? item.thirdMaster.start + " - " + item.thirdMaster.finish
+          : ""
+      );
+      setFourthInputValue(
+        item.fourthMaster
+          ? item.fourthMaster.start + " - " + item.fourthMaster.finish
+          : ""
+      );
+    }
+  }, [item]);
+  React.useEffect(() => {
+    if (item === false) setDate(emptyDays[0]);
+    getTimeTable();
   }, [emptyDays]);
 
   const nullifyForm = () => {
     setDate({});
-    setPickingDate(true);
     setFirstInputValue("");
     setSecondInputValue("");
     setThirdInputValue("");
@@ -65,94 +115,52 @@ const AddTimeTableModal = () => {
     setThirdMaster({});
     setFourthMaster({});
     setMasterNumber(1);
-    setDate({});
+    setPickingMasters(false);
     setPickingDate(true);
   };
 
   const requests = async () => {
-    if (Object.keys(firstMaster).length !== 0) {
-      const first = await axios
-        .put(`masters/${firstMaster.id}/timetable`, {
-          date: date.rowDate,
-          start: firstInputValue.split(" - ")[0],
-          finish: firstInputValue.split(" - ")[1],
-        })
-        .then(() => console.log("OK"))
-        .catch((e) => console.log(e));
-    }
-    if (Object.keys(secondMaster).length !== 0) {
-      const second = await axios
-        .put(`masters/${secondMaster.id}/timetable`, {
-          date: date.rowDate,
-          start: secondInputValue.split(" - ")[0],
-          finish: secondInputValue.split(" - ")[1],
-        })
-        .then(() => console.log("OK"))
-        .catch((e) => console.log(e));
-    }
-    if (Object.keys(thirdMaster).length !== 0) {
-      const third = await axios
-        .put(`masters/${thirdMaster.id}/timetable`, {
-          date: date.rowDate,
-          start: thirdInputValue.split(" - ")[0],
-          finish: thirdInputValue.split(" - ")[1],
-        })
-        .then(() => console.log("OK"))
-        .catch((e) => console.log(e));
-    }
-    if (Object.keys(fourthMaster).length !== 0) {
-      const fourth = await axios
-        .put(`masters/${fourthMaster.id}/timetable`, {
-          date: date.rowDate,
-          start: fourthInputValue.split(" - ")[0],
-          finish: fourthInputValue.split(" - ")[1],
-        })
-        .then(() => console.log("OK"))
-        .catch((e) => console.log(e));
-    }
-    return;
+    return await axios
+      .put("/masters/timetable", {
+        rawDate: date.rowDate,
+        firstMaster:
+          Object.keys(firstMaster).length !== 0
+            ? {
+                id: firstMaster.id,
+                start: firstInputValue.split(" - ")[0],
+                finish: firstInputValue.split(" - ")[1],
+              }
+            : null,
+        secondMaster:
+          Object.keys(secondMaster).length !== 0
+            ? {
+                id: secondMaster.id,
+                start: secondInputValue.split(" - ")[0],
+                finish: secondInputValue.split(" - ")[1],
+              }
+            : null,
+        thirdMaster:
+          Object.keys(thirdMaster).length !== 0
+            ? {
+                id: thirdMaster.id,
+                start: thirdInputValue.split(" - ")[0],
+                finish: thirdInputValue.split(" - ")[1],
+              }
+            : null,
+        fourthMaster:
+          Object.keys(fourthMaster).length !== 0
+            ? {
+                id: fourthMaster.id,
+                start: fourthInputValue.split(" - ")[0],
+                finish: fourthInputValue.split(" - ")[1],
+              }
+            : null,
+      })
+      .then(() => console.log("YES"))
+      .catch((e) => console.log(e));
   };
 
   const onSubmit = () => {
-    // setTimeTable((prev) => [
-    //   ...prev,
-    //   {
-    //     title: date.title,
-    //     rowDate: date.rowDate,
-    //     firstMaster:
-    //       Object.keys(firstMaster).length !== 0
-    //         ? {
-    //             name: firstMaster.name,
-    //             start: firstInputValue.split(" - ")[0],
-    //             finish: firstInputValue.split(" - ")[1],
-    //           }
-    //         : null,
-    //     secondMaster:
-    //       Object.keys(secondMaster).length !== 0
-    //         ? {
-    //             name: secondMaster.name,
-    //             start: secondInputValue.split(" - ")[0],
-    //             finish: secondInputValue.split(" - ")[1],
-    //           }
-    //         : null,
-    //     thirdMaster:
-    //       Object.keys(thirdMaster).length !== 0
-    //         ? {
-    //             name: thirdMaster.name,
-    //             start: thirdInputValue.split(" - ")[0],
-    //             finish: thirdInputValue.split(" - ")[1],
-    //           }
-    //         : null,
-    //     fourthMaster:
-    //       Object.keys(fourthMaster).length !== 0
-    //         ? {
-    //             name: fourthMaster.name,
-    //             start: fourthInputValue.split(" - ")[0],
-    //             finish: fourthInputValue.split(" - ")[1],
-    //           }
-    //         : null,
-    //   },
-    // ]);
     setEmptyDays((prev) =>
       prev.filter((item) => item.rowDate !== date.rowDate)
     );
@@ -179,17 +187,23 @@ const AddTimeTableModal = () => {
   );
   const pickMaster = (setMaster, current) => {
     setMaster((prev) => {
-      if (prev === current) return {};
+      if (prev.id === current.id) {
+        if (masterNumber === 1) setFirstInputValue("");
+        if (masterNumber === 2) setSecondInputValue("");
+        if (masterNumber === 3) setThirdInputValue("");
+        if (masterNumber === 4) setFourthInputValue("");
+        return {};
+      }
       return current;
     });
   };
   const checkPickedElement = (item) => {
+    if (item.rowDate) return item.title === date.title;
     return (
-      item === date ||
-      item === firstMaster ||
-      item === secondMaster ||
-      item === thirdMaster ||
-      item === fourthMaster
+      item.id === firstMaster.id ||
+      item.id === secondMaster.id ||
+      item.id === thirdMaster.id ||
+      item.id === fourthMaster.id
     );
   };
   const TableLabel = (masterName, masterNumber) => (
@@ -210,7 +224,7 @@ const AddTimeTableModal = () => {
         autoFocus={masterNumber === number && true}
         value={value}
         onChangeText={(e) => setValue(e)}
-        placeholder="$$:$$ - $$:$$"
+        placeholder="00:00 - 00:00"
       />
     );
   };
@@ -224,6 +238,12 @@ const AddTimeTableModal = () => {
     if (!pickingDate && !pickingMasters) return onSubmit();
   };
 
+  const onBack = (value) => {
+    setVisibleAddTimetableModal(value);
+    nullifyForm();
+    item && setItem(false);
+  };
+
   return (
     <Modal
       visible={visibleAddTimetableModal}
@@ -232,11 +252,11 @@ const AddTimeTableModal = () => {
     >
       <View style={{ ...style.wrapper, paddingHorizontal: 20 }}>
         <MadalHeader
-          onBack={setVisibleAddTimetableModal}
+          onBack={onBack}
           onComplete={() => onComplete()}
           canBeAdded={() => true}
           headerText={() => ""}
-          rigthButton={pickingDate ? "Выбрать" : "Добавить"}
+          rigthButton={pickingDate ? "Выбрать" : "Применить"}
         />
 
         {pickingDate || pickingMasters ? (

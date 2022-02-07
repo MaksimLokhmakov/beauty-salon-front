@@ -5,14 +5,14 @@ const styleForHeader = StyleSheet.create({
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "600",
-    color: "#C2185B",
+    color: "#212",
   },
   personInfo: {
     fontSize: 20,
     fontWeight: "400",
-    color: "#C2185B",
+    color: "#212",
   },
   personInfoHeaderSideText: {
     fontSize: 17,
@@ -24,6 +24,10 @@ const styleForHeader = StyleSheet.create({
     height: 40,
     alignItems: "flex-start",
     justifyContent: "center",
+  },
+  sideText: {
+    color: "#C2185B",
+    fontSize: 16,
   },
 });
 

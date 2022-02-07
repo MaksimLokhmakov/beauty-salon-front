@@ -1,9 +1,16 @@
 import React from "react";
-import { View, Text } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { Context } from "../../context";
 
 import table from "./style";
 
 const Table = ({
+  two = false,
+  backgroundColor = "#fff",
+  editable,
+  onEdit,
+  item = false,
   firstLabel = () => false,
   secondLabel = () => false,
   thirdLabel = () => false,
@@ -16,6 +23,7 @@ const Table = ({
   numberOfRows = false,
   width = "auto",
 }) => {
+  const { setVisibleAddTimetableModal } = React.useContext(Context);
   const NUMBER_OF_ROWS = numberOfRows;
   const HEIGHT =
     numberOfRows === 2
@@ -35,13 +43,34 @@ const Table = ({
 
   return (
     <>
-      {title && <Text style={table.title}>{title}</Text>}
+      {title && (
+        <View style={{ flexDirection: "row" }}>
+          <Text style={table.title}>{title}</Text>
+          {editable && (
+            <TouchableOpacity
+              onPress={() => {
+                onEdit(item);
+                setVisibleAddTimetableModal(true);
+              }}
+              style={{ right: 13, width: 30, height: 30 }}
+            >
+              <MaterialIcons name="more-vert" size={24} color="#b0aeae" />
+            </TouchableOpacity>
+          )}
+        </View>
+      )}
       <View style={table.wrapper}>
         <View style={table.line}></View>
         {THIRD_ROW && <View style={{ ...table.line, top: 59 }}></View>}
         {FOURTH_ROW && <View style={{ ...table.line, top: 88.5 }}></View>}
 
-        <View style={{ ...table.labelsWrapper, height: HEIGHT }}>
+        <View
+          style={{
+            ...table.labelsWrapper,
+            height: HEIGHT,
+            backgroundColor: backgroundColor,
+          }}
+        >
           <Text style={{ ...table.label, width: width }}>{firstLabel()}</Text>
           {SECOND_ROW && (
             <Text style={{ ...table.label, width: width }}>
@@ -57,7 +86,14 @@ const Table = ({
             </Text>
           )}
         </View>
-        <View style={{ ...table.valuesWrapper, height: HEIGHT }}>
+        <View
+          style={{
+            ...table.valuesWrapper,
+            height: HEIGHT,
+            backgroundColor: backgroundColor,
+            flex: 1,
+          }}
+        >
           <View>{firstValue()}</View>
           {SECOND_ROW && <View>{secondValue()}</View>}
           {THIRD_ROW && <View>{thirdValue()}</View>}
