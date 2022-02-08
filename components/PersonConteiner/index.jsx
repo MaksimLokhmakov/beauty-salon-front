@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { View, Text, TouchableOpacity, Linking, Easing } from "react-native";
 import Swipeable from "react-native-swipeable";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -13,7 +13,40 @@ const PersonConteiner = ({
   openDeleteModal,
   setIsSwiping,
   onDelete,
+  isScrollStart,
 }) => {
+  const [onRightAction, setOnRightAction] = React.useState(false);
+  const [swipeRef, setSwipeRef] = React.useState(null);
+
+  const recenter = () => {
+    // * скрыть активный свайп
+    const animationFn = swipeRef.props.swipeReleaseAnimationFn;
+    const animationConfig = swipeRef.props.swipeReleaseAnimationConfig;
+
+    const { pan } = swipeRef.state;
+    swipeRef.setState({
+      lastOffset: { x: 0, y: 0 },
+      leftActionActivated: false,
+      leftButtonsActivated: false,
+      leftButtonsOpen: false,
+      rightActionActivated: false,
+      rightButtonsActivated: false,
+      rightButtonsOpen: false,
+    });
+    pan.flattenOffset();
+    animationFn(pan, animationConfig).start();
+  };
+  const onCall = () => {
+    recenter();
+    Linking.openURL(`tel:${item.tel}`);
+  };
+  const swipeReleaseAnimationConfig = {
+    toValue: { x: 0, y: 0 },
+    duration: 250,
+    easing: Easing.elastic(0.5),
+    useNativeDriver: false,
+  };
+
   const textBardge = (item) => {
     if (item.percent) return (item.percent * 100).toFixed() + "%";
     if (item.start)
@@ -23,68 +56,56 @@ const PersonConteiner = ({
     if (item.master) return "Мастер: " + item.master.name.split(" ")[1];
     return item.tel;
   };
-
-  const leftContent = (
-    <View
+  const rightButtons = [
+    <TouchableOpacity
+      onPress={onCall}
       style={{
-        height: 55,
-        paddingHorizontal: 15,
-        backgroundColor: "#12c212",
-        alignItems: "flex-end",
-        justifyContent: "center",
-        flexDirection: "column",
+        backgroundColor: "#00c900",
+        ...Person.swopeableButtons,
       }}
     >
       <FontAwesome5 name="phone-alt" size={23} color="#fff" />
-    </View>
-  );
-
-  const rightContent = [
-    <View
+    </TouchableOpacity>,
+    <TouchableOpacity
+      onPress={recenter}
       style={{
-        height: 55,
-        paddingHorizontal: 15,
-        backgroundColor: "#c71c41",
-        alignItems: "flex-start",
-        justifyContent: "center",
-        flexDirection: "column",
+        backgroundColor: "#ef9a36",
+        display: onRightAction ? "none" : "flex",
+        ...Person.swopeableButtons,
+      }}
+    >
+      <FontAwesome5 name="pencil-alt" size={23} color="#fff" />
+    </TouchableOpacity>,
+    <TouchableOpacity
+      onPress={recenter}
+      style={{
+        backgroundColor: "#fe3724",
+        display: onRightAction ? "none" : "flex",
+        ...Person.swopeableButtons,
       }}
     >
       <FontAwesome5 name="trash-alt" size={23} color="#fff" />
-    </View>,
+    </TouchableOpacity>,
   ];
 
   return (
     <Swipeable
+      onRef={(ref) => setSwipeRef(ref)}
       onSwipeStart={() => setIsSwiping(true)}
-      swipeReleaseAnimationConfig={{
-        toValue: { x: 0, y: 0 },
-        duration: 250,
-        easing: Easing.elastic(0.5),
-        useNativeDriver: false,
-      }}
+      swipeReleaseAnimationConfig={swipeReleaseAnimationConfig}
       onSwipeRelease={() => setIsSwiping(false)}
-      leftContent={!item.master && leftContent}
-      rightContent={rightContent}
-      rightActionActivationDistance={90}
-      leftActionActivationDistance={90}
-      onRightActionRelease={() => onDelete(item)}
-      onLeftActionRelease={() => Linking.openURL(`tel:${item.tel}`)}
+      rightButtons={rightButtons}
+      rightButtonWidth={80}
+      rightActionActivationDistance={240}
+      onRightActionActivate={() => setOnRightAction(true)}
+      onRightActionDeactivate={() => setOnRightAction(false)}
+      onRightActionRelease={onCall}
+      onRightActionComplete={recenter}
     >
       <TouchableOpacity style={Person.conteiner} onPress={() => onPress(item)}>
         <View style={{ flexDirection: "row" }}>
           <Avatar fullName={item.client ? item.client.name : item.name} />
-          <View
-            style={{
-              borderBottomWidth: 1,
-              borderBottomColor: "#f3f3f3",
-              paddingBottom: 5,
-              flex: 1,
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+          <View style={Person.innerWrapper}>
             <View>
               <Text style={Person.fullName}>
                 {item.client ? item.client.name : item.name}

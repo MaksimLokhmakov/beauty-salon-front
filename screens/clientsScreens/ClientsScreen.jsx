@@ -17,6 +17,7 @@ const ClientsScreen = ({ navigation }) => {
   } = React.useContext(Context);
   const [isSwiping, setIsSwiping] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
+  const [searchValue, setSearchValue] = React.useState("");
 
   const refresh = () => {
     setIsLoading(true);
@@ -43,8 +44,6 @@ const ClientsScreen = ({ navigation }) => {
   const openDeleteModal = (currentItem) => {
     setItemToDelete(currentItem), setVisibleClientsModel(true);
   };
-
-  const [searchValue, setSearchValue] = React.useState("");
 
   return (
     <View style={Screen.wrapper}>

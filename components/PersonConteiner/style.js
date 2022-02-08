@@ -44,6 +44,20 @@ const Person = StyleSheet.create({
     position: "absolute",
     right: "7%",
   },
+  innerWrapper: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#f3f3f3",
+    paddingBottom: 5,
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  swopeableButtons: {
+    height: 56.5,
+    paddingLeft: (80 - 23) / 2,
+    justifyContent: "center",
+  },
 });
 
 export default Person;
