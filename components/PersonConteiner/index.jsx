@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, TouchableOpacity, Linking, Easing } from "react-native";
 import Swipeable from "react-native-swipeable";
 import { FontAwesome5 } from "@expo/vector-icons";
+import recenter from "../../utils/forSwipeable/recenter";
 
 import Avatar from "../Avatar";
 import Bardge from "../Bardge";
@@ -14,32 +15,16 @@ const PersonConteiner = ({
   setIsSwiping,
   onDelete,
   isScrollStart,
+  onClose = () => {},
+  onOpen = () => {},
 }) => {
-  const [onRightAction, setOnRightAction] = React.useState(false);
   const [swipeRef, setSwipeRef] = React.useState(null);
 
-  const recenter = () => {
-    // * скрыть активный свайп
-    const animationFn = swipeRef.props.swipeReleaseAnimationFn;
-    const animationConfig = swipeRef.props.swipeReleaseAnimationConfig;
-
-    const { pan } = swipeRef.state;
-    swipeRef.setState({
-      lastOffset: { x: 0, y: 0 },
-      leftActionActivated: false,
-      leftButtonsActivated: false,
-      leftButtonsOpen: false,
-      rightActionActivated: false,
-      rightButtonsActivated: false,
-      rightButtonsOpen: false,
-    });
-    pan.flattenOffset();
-    animationFn(pan, animationConfig).start();
-  };
   const onCall = () => {
-    recenter();
+    recenter(swipeRef);
     Linking.openURL(`tel:${item.tel}`);
   };
+
   const swipeReleaseAnimationConfig = {
     toValue: { x: 0, y: 0 },
     duration: 250,
@@ -57,30 +42,30 @@ const PersonConteiner = ({
     return item.tel;
   };
   const rightButtons = [
+    !item.client && (
+      <TouchableOpacity
+        onPress={onCall}
+        style={{
+          backgroundColor: "#00c900",
+          ...Person.swopeableButtons,
+        }}
+      >
+        <FontAwesome5 name="phone-alt" size={23} color="#fff" />
+      </TouchableOpacity>
+    ),
     <TouchableOpacity
-      onPress={onCall}
-      style={{
-        backgroundColor: "#00c900",
-        ...Person.swopeableButtons,
-      }}
-    >
-      <FontAwesome5 name="phone-alt" size={23} color="#fff" />
-    </TouchableOpacity>,
-    <TouchableOpacity
-      onPress={recenter}
+      onPress={() => recenter(swipeRef)}
       style={{
         backgroundColor: "#ef9a36",
-        display: onRightAction ? "none" : "flex",
         ...Person.swopeableButtons,
       }}
     >
       <FontAwesome5 name="pencil-alt" size={23} color="#fff" />
     </TouchableOpacity>,
     <TouchableOpacity
-      onPress={recenter}
+      onPress={() => recenter(swipeRef)}
       style={{
         backgroundColor: "#fe3724",
-        display: onRightAction ? "none" : "flex",
         ...Person.swopeableButtons,
       }}
     >
@@ -92,15 +77,14 @@ const PersonConteiner = ({
     <Swipeable
       onRef={(ref) => setSwipeRef(ref)}
       onSwipeStart={() => setIsSwiping(true)}
-      swipeReleaseAnimationConfig={swipeReleaseAnimationConfig}
       onSwipeRelease={() => setIsSwiping(false)}
+      swipeReleaseAnimationConfig={swipeReleaseAnimationConfig}
       rightButtons={rightButtons}
       rightButtonWidth={80}
-      rightActionActivationDistance={240}
-      onRightActionActivate={() => setOnRightAction(true)}
-      onRightActionDeactivate={() => setOnRightAction(false)}
-      onRightActionRelease={onCall}
-      onRightActionComplete={recenter}
+      rightActionActivationDistance={250}
+      // onRightActionComplete={recenter(swipeRef)}
+      onRightButtonsOpenRelease={() => onOpen(swipeRef)}
+      onRightButtonsCloseRelease={() => onClose}
     >
       <TouchableOpacity style={Person.conteiner} onPress={() => onPress(item)}>
         <View style={{ flexDirection: "row" }}>

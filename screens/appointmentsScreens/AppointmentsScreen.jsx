@@ -1,6 +1,7 @@
 import React from "react";
 import { View, SectionList, Text } from "react-native";
 import { Context } from "../../context";
+import recenter from "../../utils/forSwipeable/recenter";
 
 import {
   PersonConteiner,
@@ -21,10 +22,9 @@ const AppointmentsScreen = ({ navigation }) => {
 
   const [isSwiping, setIsSwiping] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
-
   const [sortValue, setSortValue] = React.useState("Все");
-
   const [isLoading, setIsLoading] = React.useState(true);
+  const [currentSwipeRef, setCurrentSwipeRef] = React.useState(null);
 
   const refresh = () => {
     setIsLoading(true);
@@ -77,11 +77,23 @@ const AppointmentsScreen = ({ navigation }) => {
     navigation.navigate("AppointmentScreen", { appointment });
   };
 
+  const handleScroll = () => {
+    if (currentSwipeRef) recenter(currentSwipeRef);
+  };
+  const onOpen = (newRef) => {
+    if (currentSwipeRef && currentSwipeRef !== newRef)
+      recenter(currentSwipeRef);
+
+    setCurrentSwipeRef(newRef);
+  };
+  const onClose = () => setCurrentSwipeRef(null);
+
   return (
     <View style={Screen.wrapper}>
       <SearchBar value={searchValue} setValue={setSearchValue} />
 
       <SectionList
+        onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}
         sections={appointments
           .filter((item) => onSort(item, sortValue))
@@ -103,6 +115,9 @@ const AppointmentsScreen = ({ navigation }) => {
               item={item}
               onPress={toAppointmentInfo}
               setIsSwiping={setIsSwiping}
+              onOpen={onOpen}
+              onClose={onClose}
+              currentSwipeRef={currentSwipeRef}
             />
           );
         }}

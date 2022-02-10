@@ -2,6 +2,7 @@ import React from "react";
 import { View, FlatList } from "react-native";
 import { Context } from "../../context";
 import axios from "axios";
+import recenter from "../../utils/forSwipeable/recenter";
 
 import { PersonConteiner, AddModal, SearchBar } from "../../components";
 import Screen from "../style";
@@ -18,6 +19,7 @@ const ClientsScreen = ({ navigation }) => {
   const [isSwiping, setIsSwiping] = React.useState(false);
   const [isLoading, setIsLoading] = React.useState(true);
   const [searchValue, setSearchValue] = React.useState("");
+  const [currentSwipeRef, setCurrentSwipeRef] = React.useState(null);
 
   const refresh = () => {
     setIsLoading(true);
@@ -45,10 +47,22 @@ const ClientsScreen = ({ navigation }) => {
     setItemToDelete(currentItem), setVisibleClientsModel(true);
   };
 
+  const handleScroll = () => {
+    if (currentSwipeRef) recenter(currentSwipeRef);
+  };
+  const onOpen = (newRef) => {
+    if (currentSwipeRef && currentSwipeRef !== newRef)
+      recenter(currentSwipeRef);
+
+    setCurrentSwipeRef(newRef);
+  };
+  const onClose = () => setCurrentSwipeRef(null);
+
   return (
     <View style={Screen.wrapper}>
       <SearchBar value={searchValue} setValue={setSearchValue} />
       <FlatList
+        onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}
         style={{ paddingTop: 10 }}
         data={clients.filter((item) =>
@@ -65,6 +79,9 @@ const ClientsScreen = ({ navigation }) => {
             onDelete={deleteClient}
             openDeleteModal={openDeleteModal}
             setIsSwiping={setIsSwiping}
+            onClose={onClose}
+            onOpen={onOpen}
+            currentSwipeRef={currentSwipeRef}
           />
         )}
       />
