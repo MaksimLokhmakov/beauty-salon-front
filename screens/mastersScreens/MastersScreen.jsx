@@ -3,7 +3,6 @@ import { View, FlatList } from "react-native";
 import { Context } from "../../context";
 import axios from "axios";
 import recenter from "../../utils/forSwipeable/recenter";
-
 import { PersonConteiner, AddModal } from "../../components/index";
 import Screen from "../style";
 
@@ -19,32 +18,24 @@ const MastersScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = React.useState(true);
   const [isSwiping, setIsSwiping] = React.useState(false);
   const [currentSwipeRef, setCurrentSwipeRef] = React.useState(null);
+  const currentRef = React.useRef();
+  currentRef.current = currentSwipeRef;
+  React.useEffect(() => {
+    refresh();
+  }, []);
 
-  const handleScroll = () => {
-    if (currentSwipeRef) recenter(currentSwipeRef);
-  };
-  const onOpen = (newRef) => {
-    if (currentSwipeRef && currentSwipeRef !== newRef)
-      recenter(currentSwipeRef);
-
-    setCurrentSwipeRef(newRef);
-  };
-  const onClose = () => setCurrentSwipeRef(null);
+  console.log("MastersScreen");
+  // ! UNACTIVE
+  const setSwiping = (value) => setIsSwiping(value);
 
   const refresh = () => {
     setIsLoading(true);
     getMasters();
     setIsLoading(false);
   };
-
-  React.useEffect(() => {
-    refresh();
-  }, []);
-
   const toMasterInfo = (master) => {
     navigation.navigate("MasterScreen", { master });
   };
-
   const deleteMaster = (currentItem) => {
     setMasters((prev) => prev.filter((item) => item.id !== currentItem.id));
     axios
@@ -52,10 +43,34 @@ const MastersScreen = ({ navigation }) => {
       .then(() => console.log("OK"))
       .catch((e) => console.log(e));
   };
-
   const openDeleteModal = (currentItem) => {
-    setItemToDelete(currentItem), setVisibleMastersModel(true);
+    setItemToDelete(currentItem);
+    setVisibleMastersModel(true);
   };
+  // * SWIPEABLE
+  const handleScroll = () => {
+    if (currentSwipeRef) recenter(currentSwipeRef);
+  };
+  const onOpen = (newRef) => {
+    if (currentRef.current && currentRef.current !== newRef)
+      recenter(currentRef.current);
+
+    setCurrentSwipeRef(newRef);
+  };
+  const onClose = () => setCurrentSwipeRef(null);
+  // * FLATLIST
+  const flatListItem = ({ item }) => (
+    <PersonConteiner
+      item={item}
+      onPress={toMasterInfo}
+      openDeleteModal={openDeleteModal}
+      onDelete={deleteMaster}
+      setIsSwiping={setSwiping}
+      onOpen={onOpen}
+      onClose={onClose}
+    />
+  );
+  const flatListItemId = (item) => item.id;
 
   return (
     <View style={Screen.wrapper}>
@@ -63,21 +78,10 @@ const MastersScreen = ({ navigation }) => {
         onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}
         data={masters}
-        keyExtractor={(item) => item.id}
+        keyExtractor={flatListItemId}
         onRefresh={refresh}
         refreshing={isLoading}
-        renderItem={({ item }) => (
-          <PersonConteiner
-            item={item}
-            onPress={toMasterInfo}
-            openDeleteModal={openDeleteModal}
-            onDelete={deleteMaster}
-            setIsSwiping={setIsSwiping}
-            onOpen={onOpen}
-            onClose={onClose}
-            currentSwipeRef={currentSwipeRef}
-          />
-        )}
+        renderItem={flatListItem}
       />
 
       <AddModal

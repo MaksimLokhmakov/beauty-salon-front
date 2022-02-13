@@ -24,10 +24,16 @@ const ClientsStack = ({ navigation }) => {
             <Text style={styleForHeader.mainPage}>Клиенты</Text>
           ),
           headerRight: () => (
-            <TouchableOpacity
-              onPress={() => setVisibleClientsModel(true)}
-            >
+            <TouchableOpacity onPress={() => setVisibleClientsModel(true)}>
               <Ionicons name="add" size={26} color="#C2185B" />
+            </TouchableOpacity>
+          ),
+          headerLeft: () => (
+            <TouchableOpacity
+              style={{ ...styleForHeader.iconsWrapper, width: 100 }}
+              onPress={() => {}}
+            >
+              <Text style={styleForHeader.sideText}>Сортировка</Text>
             </TouchableOpacity>
           ),
         }}

@@ -4,7 +4,6 @@ import Swipeable from "react-native-swipeable";
 import { FontAwesome5 } from "@expo/vector-icons";
 import recenter from "../../utils/forSwipeable/recenter";
 import Avatar from "../Avatar";
-import Bardge from "../Bardge";
 import Person from "./style";
 
 const PersonConteiner = ({
@@ -19,7 +18,6 @@ const PersonConteiner = ({
   const handlePress = () => onPress(item);
   const handleOpen = () => onOpen(swipeRef);
   const handleClose = () => onClose;
-  const setSwipe = (value) => setIsSwiping(value);
   const setRef = (ref) => setSwipeRef(ref);
   const recenterSwipe = () => recenter(swipeRef);
   const onCall = () => {
@@ -34,8 +32,6 @@ const PersonConteiner = ({
   const masterName = item.master && "Мастер: " + item.master.name.split(" ")[1];
   const secondText = masterName || item.tel;
   const primeryText = item.client ? item.client.name : item.name;
-
-  console.log(onClose);
 
   const swipeReleaseAnimationConfig = {
     toValue: { x: 0, y: 0 },
@@ -78,8 +74,8 @@ const PersonConteiner = ({
   return (
     <Swipeable
       onRef={setRef}
-      onSwipeStart={setIsSwiping(true)}
-      onSwipeRelease={setIsSwiping(false)}
+      // onSwipeStart={() => setIsSwiping(true)}
+      // onSwipeRelease={() => setIsSwiping(false)}
       swipeReleaseAnimationConfig={swipeReleaseAnimationConfig}
       rightButtons={rightButtons}
       rightButtonWidth={80}
@@ -95,7 +91,7 @@ const PersonConteiner = ({
               <Text style={Person.textGray}>{secondText}</Text>
             </View>
 
-            <Bardge>{bardge}</Bardge>
+            <Text style={Person.textRight}>{bardge}</Text>
           </View>
         </View>
       </TouchableOpacity>
@@ -104,9 +100,6 @@ const PersonConteiner = ({
 };
 
 function arePropsEqual(prevProps, nextProps) {
-  // console.log("prevProps", prevProps);
-  // console.log("nextProps", nextProps);
-  // console.log(prevProps.item === nextProps.item);
   return prevProps.item === nextProps.item;
 }
 

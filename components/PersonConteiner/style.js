@@ -58,6 +58,11 @@ const Person = StyleSheet.create({
     paddingLeft: (80 - 23) / 2,
     justifyContent: "center",
   },
+  textRight: {
+    color: "#757575",
+    fontSize: 14,
+    fontWeight: "600",
+  },
 });
 
 export default Person;

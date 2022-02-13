@@ -9,7 +9,7 @@ export default function StatisticInfoSection({ stat, type }) {
   return (
     <View style={style.wrapper}>
       <Text style={{ fontSize: 19, marginBottom: 10, marginLeft: 10 }}>
-        {type === "day" && `Сегодня,`} {stat.date}
+        {type === "day" ? "Сегодня," : "Месяц,"} {stat.date}
       </Text>
       <View style={{ ...Screen.infoCardWrapper, backgroundColor: "#f1f3f4" }}>
         <Table

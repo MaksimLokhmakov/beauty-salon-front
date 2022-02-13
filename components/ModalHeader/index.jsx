@@ -2,39 +2,27 @@ import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import style from "./style";
 
-export default function MadalHeader({
+const MadalHeader = ({
   onBack,
   onComplete,
   canBeAdded,
   headerText,
   rigthButton = "Добавить",
   leftButton = "Отмена",
-}) {
+}) => {
+  const goBack = () => onBack(false);
+  const onSubmit = () => onComplete();
+
   return (
     <View style={style.header}>
-      <TouchableOpacity onPress={() => onBack(false)}>
-        <Text
-          style={{
-            ...style.headerSideText,
-            fontWeight: "500",
-          }}
-        >
-          {leftButton}
-        </Text>
+      <TouchableOpacity onPress={goBack}>
+        <Text style={style.sideText}>{leftButton}</Text>
       </TouchableOpacity>
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "500",
-          color: "#212121",
-        }}
-      >
-        {headerText()}
-      </Text>
-      <TouchableOpacity onPress={() => onComplete()}>
+      <Text style={style.text}>{headerText()}</Text>
+      <TouchableOpacity onPress={onSubmit}>
         <Text
           style={{
-            ...style.headerSideText,
+            ...style.sideText,
             color: canBeAdded() ? "#C2185B" : "#8b979f76",
             fontWeight: "600",
           }}
@@ -44,4 +32,6 @@ export default function MadalHeader({
       </TouchableOpacity>
     </View>
   );
-}
+};
+
+export default MadalHeader;

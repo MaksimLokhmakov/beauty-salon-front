@@ -7,9 +7,14 @@ const style = StyleSheet.create({
     alignItems: "baseline",
     marginBottom: 25,
   },
-  headerSideText: {
+  text: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "#212121",
+  },
+  sideText: {
     fontSize: 15,
-    fontWeight: "600",
+    fontWeight: "500",
     color: "#C2185B",
   },
 });

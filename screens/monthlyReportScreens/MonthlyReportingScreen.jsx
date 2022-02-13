@@ -16,8 +16,6 @@ const MonthlyReportingScreen = () => {
   const [refreshing, setRefreshing] = React.useState(false);
   const [reportingPicker, setReportingPicker] = React.useState("День");
 
-  console.log(monthStat);
-
   const onRefresh = () => {
     setRefreshing(true);
     getFullStatistic();

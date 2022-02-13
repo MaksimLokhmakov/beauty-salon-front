@@ -2,7 +2,6 @@ import React from "react";
 import { View, SectionList, Text } from "react-native";
 import { Context } from "../../context";
 import recenter from "../../utils/forSwipeable/recenter";
-
 import {
   PersonConteiner,
   SearchBar,
@@ -19,30 +18,35 @@ const AppointmentsScreen = ({ navigation }) => {
     setSortVisibleAppointmentsList,
     sortVisibleAppointmentsList,
   } = React.useContext(Context);
-
   const [isSwiping, setIsSwiping] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
   const [sortValue, setSortValue] = React.useState("Все");
   const [isLoading, setIsLoading] = React.useState(true);
   const [currentSwipeRef, setCurrentSwipeRef] = React.useState(null);
-
-  const refresh = () => {
-    setIsLoading(true);
-    getAppointments();
-    setIsLoading(false);
-  };
-
+  const currentRef = React.useRef();
+  currentRef.current = currentSwipeRef;
   React.useEffect(() => {
     refresh();
   }, []);
 
   // ! ПЕРЕДЕЛАТЬ ПОИСК
+  console.log("AppointmentsScreen");
+  // ! UNACTIVE
+  const setSwiping = (value) => setIsSwiping(value);
 
-  const onPressListItem = (value) => {
+  const onSortSelection = React.useCallback((value) => {
     setSortValue(value);
     setSortVisibleAppointmentsList(false);
+  }, []);
+  const toAppointmentInfo = (appointment) => {
+    navigation.navigate("AppointmentScreen", { appointment });
   };
-
+  const refresh = () => {
+    setIsLoading(true);
+    getAppointments();
+    setIsLoading(false);
+  };
+  // * SORT || SEARCH
   const onSort = (section, currentValue) => {
     const value = currentValue;
     if (sortValue === "Все") return section;
@@ -54,7 +58,6 @@ const AppointmentsScreen = ({ navigation }) => {
     }
     return false;
   };
-
   const onSearch = (section, currentValue) => {
     const value = currentValue.toLowerCase();
     if (section.title.toLowerCase().includes(value)) return section;
@@ -72,21 +75,48 @@ const AppointmentsScreen = ({ navigation }) => {
     }
     return false;
   };
-
-  const toAppointmentInfo = (appointment) => {
-    navigation.navigate("AppointmentScreen", { appointment });
-  };
-
+  // * SWIPEABLE
   const handleScroll = () => {
     if (currentSwipeRef) recenter(currentSwipeRef);
   };
   const onOpen = (newRef) => {
-    if (currentSwipeRef && currentSwipeRef !== newRef)
-      recenter(currentSwipeRef);
+    if (currentRef.current && currentRef.current !== newRef)
+      recenter(currentRef.current);
 
     setCurrentSwipeRef(newRef);
   };
   const onClose = () => setCurrentSwipeRef(null);
+  // * SECTIONLIST
+  const sectionHeader = ({ section: { title } }) => (
+    <Text style={Screen.sectionTitle}>{title}</Text>
+  );
+  const sectionListItem = ({ item }) => {
+    return (
+      <PersonConteiner
+        item={item}
+        onPress={toAppointmentInfo}
+        setIsSwiping={setSwiping}
+        onOpen={onOpen}
+        onClose={onClose}
+      />
+    );
+  };
+  const sectionListItemKey = (item) => item.id;
+  const sortedSections = appointments
+    .filter((item) => onSort(item, sortValue))
+    .map((item) => {
+      if (onSort(item, sortValue)) return onSort(item, sortValue);
+      return item;
+    });
+  const searchInSections = sortedSections
+    .map((item) => {
+      if (onSearch(item, searchValue)) return onSearch(item, searchValue);
+      return item;
+    })
+    .filter((item) => onSearch(item, searchValue));
+  const sections = searchInSections;
+  // * MODALLIST
+  const listData = [{ name: "Все" }, ...masters];
 
   return (
     <View style={Screen.wrapper}>
@@ -95,35 +125,12 @@ const AppointmentsScreen = ({ navigation }) => {
       <SectionList
         onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}
-        sections={appointments
-          .filter((item) => onSort(item, sortValue))
-          .map((item) => {
-            if (onSort(item, sortValue)) return onSort(item, sortValue);
-            return item;
-          })
-          .map((item) => {
-            if (onSearch(item, searchValue)) return onSearch(item, searchValue);
-            return item;
-          })
-          .filter((item) => onSearch(item, searchValue))}
-        keyExtractor={(item) => item.id}
+        sections={sections}
+        keyExtractor={sectionListItemKey}
         onRefresh={refresh}
         refreshing={isLoading}
-        renderItem={({ item }) => {
-          return (
-            <PersonConteiner
-              item={item}
-              onPress={toAppointmentInfo}
-              setIsSwiping={setIsSwiping}
-              onOpen={onOpen}
-              onClose={onClose}
-              currentSwipeRef={currentSwipeRef}
-            />
-          );
-        }}
-        renderSectionHeader={({ section: { title } }) => (
-          <Text style={Screen.sectionTitle}>{title}</Text>
-        )}
+        renderItem={sectionListItem}
+        renderSectionHeader={sectionHeader}
         showsVerticalScrollIndicator={false}
         stickySectionHeadersEnabled={true}
       />
@@ -131,9 +138,9 @@ const AppointmentsScreen = ({ navigation }) => {
       <AddAppointmentModel />
       <ModalList
         sortValue={sortValue}
-        list={[{ name: "Все" }, ...masters]}
+        list={listData}
         visible={sortVisibleAppointmentsList}
-        onPressListItem={onPressListItem}
+        onPressListItem={onSortSelection}
       />
     </View>
   );

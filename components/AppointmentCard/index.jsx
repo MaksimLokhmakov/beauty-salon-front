@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text } from "react-native";
 
 import Table from "../Table";
-
 import Card from "./style";
 
 const AppointmentCard = ({ item }) => {
