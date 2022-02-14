@@ -1,10 +1,10 @@
 import React from "react";
 import { View, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-
 import searchBar from "./style";
 
 const SearchBar = ({ value, setValue, styleWrapper = {}, styleInput = {} }) => {
+  const onChange = (e) => setValue(e);
   return (
     <View style={[searchBar.searchWrapper, styleWrapper]}>
       <View style={[searchBar.searchRow, styleInput]}>
@@ -18,7 +18,7 @@ const SearchBar = ({ value, setValue, styleWrapper = {}, styleInput = {} }) => {
           style={searchBar.searchInput}
           placeholder="Поиск"
           value={value}
-          onChangeText={(e) => setValue(e)}
+          onChangeText={onChange}
         />
       </View>
     </View>

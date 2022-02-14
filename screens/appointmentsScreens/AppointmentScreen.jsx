@@ -7,7 +7,6 @@ import {
   Text,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-
 import { AppointmentCard, PersonInfoHeader, Table } from "../../components";
 import Screen from "../style";
 

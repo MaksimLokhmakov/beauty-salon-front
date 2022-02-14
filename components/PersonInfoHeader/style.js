@@ -14,6 +14,26 @@ const HeaderInfo = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  rowDerection: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 15,
+  },
+  nameConteiner: {
+    flex: 1,
+    marginLeft: 5,
+  },
+  line: {
+    height: 0.5,
+    width: "100%",
+    backgroundColor: "#BDBDBD",
+    marginTop: 5,
+    marginBottom: 5,
+  },
+  text: {
+    fontSize: 18,
+  },
 });
 
 export default HeaderInfo;

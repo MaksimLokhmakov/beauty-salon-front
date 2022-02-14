@@ -1,58 +1,42 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Linking } from "react-native";
-
-import HeaderInfo from "./style";
 import Avatar from "../Avatar";
 import Table from "../Table";
+import HeaderInfo from "./style";
 
-const PersonInfoHeader = ({ item, master = false }) => {
+const PersonInfoHeader = ({ item }) => {
   const phoneValue = () => (
     <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.tel}`)}>
       <Text style={{ fontSize: 16, color: "#1976D2" }}>{item.tel}</Text>
     </TouchableOpacity>
   );
-
   const secondValue = () =>
-    !master ? (
-      <Text style={{ fontSize: 15, color: "#757575" }}>{5}</Text>
-    ) : (
+    item.percent ? (
       <Text style={{ fontSize: 15, color: "#757575" }}>
         {(item.percent * 100).toFixed() + "%"}
       </Text>
+    ) : (
+      <Text style={{ fontSize: 15, color: "#757575" }}>{5}</Text>
     );
+  const nameSplit = item.name.split(" ");
+  const firstName = nameSplit[0];
+  const secondName = nameSplit[1] ? nameSplit[1] : "";
 
   return (
     <View style={HeaderInfo.CardInfoWrapper}>
-      <View
-        style={{
-          flexDirection: "row",
-          width: "100%",
-          alignItems: "center",
-          marginBottom: 15,
-        }}
-      >
+      <View style={HeaderInfo.rowDerection}>
         <Avatar fullName={item.name} width={85} height={85} size={36} />
-        <View style={{ flex: 1, marginLeft: 5 }}>
-          <Text style={{ fontSize: 18 }}>{item.name.split(" ")[0]}</Text>
-          <View
-            style={{
-              height: 0.5,
-              width: "100%",
-              backgroundColor: "#BDBDBD",
-              marginTop: 5,
-              marginBottom: 5,
-            }}
-          ></View>
-          <Text style={{ fontSize: 18 }}>
-            {item.name.split(" ")[1] ? item.name.split(" ")[1] : ""}
-          </Text>
+        <View style={HeaderInfo.nameConteiner}>
+          <Text style={HeaderInfo.text}>{firstName}</Text>
+          <View style={HeaderInfo.line} />
+          <Text style={HeaderInfo.text}>{secondName}</Text>
         </View>
       </View>
 
       <Table
         numberOfRows={2}
         firstLabel={() => "сотовый"}
-        secondLabel={() => (master ? "процент" : "посещений")}
+        secondLabel={() => (item.percent ? "процент" : "посещений")}
         firstValue={phoneValue}
         secondValue={secondValue}
       />

@@ -2,7 +2,6 @@ export { default as PersonInfoHeader } from "./PersonInfoHeader";
 export { default as PersonConteiner } from "./PersonConteiner";
 export { default as AppointmentCard } from "./AppointmentCard";
 export { default as AddModal } from "./Modals/AddModal";
-export { default as ModalWrapper } from "./ModalWrapper";
 export { default as Avatar } from "./Avatar";
 export { default as Table } from "./Table";
 export { default as SearchBar } from "./SearchBar";

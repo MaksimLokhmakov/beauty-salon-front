@@ -3,7 +3,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Text, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { MaterialIcons } from "@expo/vector-icons";
 import { Context } from "../context";
 
 const Stack = createNativeStackNavigator();
@@ -42,7 +41,7 @@ const AppointmentsStack = ({ navigation }) => {
       <Stack.Screen
         name="AppointmentScreen"
         component={AppointmentScreen}
-        options={() => ({
+        options={{
           headerRight: () => (
             <TouchableOpacity
               style={styleForHeader.iconsWrapper}
@@ -65,7 +64,7 @@ const AppointmentsStack = ({ navigation }) => {
             </TouchableOpacity>
           ),
           headerTransparent: false,
-        })}
+        }}
       />
     </Stack.Navigator>
   );

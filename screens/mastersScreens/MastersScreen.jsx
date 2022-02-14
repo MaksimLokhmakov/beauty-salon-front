@@ -38,10 +38,10 @@ const MastersScreen = ({ navigation }) => {
   };
   const deleteMaster = (currentItem) => {
     setMasters((prev) => prev.filter((item) => item.id !== currentItem.id));
-    axios
-      .delete(`/masters/${currentItem.id}`)
-      .then(() => console.log("OK"))
-      .catch((e) => console.log(e));
+    // axios
+    // .delete(`/masters/${currentItem.id}`)
+    // .then(() => console.log("OK"))
+    // .catch((e) => console.log(e));
   };
   const openDeleteModal = (currentItem) => {
     setItemToDelete(currentItem);

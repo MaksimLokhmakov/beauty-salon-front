@@ -1,6 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Linking, Easing } from "react-native";
 import Swipeable from "react-native-swipeable";
+import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
 import { FontAwesome5 } from "@expo/vector-icons";
 import recenter from "../../utils/forSwipeable/recenter";
 import Avatar from "../Avatar";
@@ -10,6 +11,7 @@ const PersonConteiner = ({
   item = {},
   onPress,
   setIsSwiping,
+  onDelete = () => {},
   onClose = () => {},
   onOpen = () => {},
 }) => {
@@ -23,6 +25,9 @@ const PersonConteiner = ({
   const onCall = () => {
     recenter(swipeRef);
     Linking.openURL(`tel:${item.tel}`);
+  };
+  const deleteItem = () => {
+    onDelete(item);
   };
 
   const percent = item.percent && (item.percent * 100).toFixed() + "%";
@@ -61,7 +66,7 @@ const PersonConteiner = ({
       <FontAwesome5 name="pencil-alt" size={23} color="#fff" />
     </TouchableOpacity>,
     <TouchableOpacity
-      onPress={recenterSwipe}
+      onPress={deleteItem}
       style={{
         backgroundColor: "#fe3724",
         ...Person.swopeableButtons,
@@ -72,30 +77,32 @@ const PersonConteiner = ({
   ];
 
   return (
-    <Swipeable
-      onRef={setRef}
-      // onSwipeStart={() => setIsSwiping(true)}
-      // onSwipeRelease={() => setIsSwiping(false)}
-      swipeReleaseAnimationConfig={swipeReleaseAnimationConfig}
-      rightButtons={rightButtons}
-      rightButtonWidth={80}
-      onRightButtonsOpenRelease={handleOpen}
-      onRightButtonsCloseRelease={handleClose}
-    >
-      <TouchableOpacity style={Person.conteiner} onPress={handlePress}>
-        <View style={{ flexDirection: "row" }}>
-          <Avatar fullName={primeryText} />
-          <View style={Person.innerWrapper}>
-            <View>
-              <Text style={Person.fullName}>{primeryText}</Text>
-              <Text style={Person.textGray}>{secondText}</Text>
-            </View>
+    <Animated.View exiting={FadeOut} entering={FadeIn} layout={Layout}>
+      <Swipeable
+        onRef={setRef}
+        // onSwipeStart={() => setIsSwiping(true)}
+        // onSwipeRelease={() => setIsSwiping(false)}
+        swipeReleaseAnimationConfig={swipeReleaseAnimationConfig}
+        rightButtons={rightButtons}
+        rightButtonWidth={80}
+        onRightButtonsOpenRelease={handleOpen}
+        onRightButtonsCloseRelease={handleClose}
+      >
+        <TouchableOpacity style={Person.conteiner} onPress={handlePress}>
+          <View style={{ flexDirection: "row" }}>
+            <Avatar fullName={primeryText} />
+            <View style={Person.innerWrapper}>
+              <View>
+                <Text style={Person.fullName}>{primeryText}</Text>
+                <Text style={Person.textGray}>{secondText}</Text>
+              </View>
 
-            <Text style={Person.textRight}>{bardge}</Text>
+              <Text style={Person.textRight}>{bardge}</Text>
+            </View>
           </View>
-        </View>
-      </TouchableOpacity>
-    </Swipeable>
+        </TouchableOpacity>
+      </Swipeable>
+    </Animated.View>
   );
 };
 

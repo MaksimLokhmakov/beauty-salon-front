@@ -2,7 +2,6 @@ import React from "react";
 import { View, Text, ScrollView } from "react-native";
 import { Context } from "../../context";
 import axios from "axios";
-
 import { PersonInfoHeader, AddModal, Table } from "../../components/index";
 import Screen from "../style";
 

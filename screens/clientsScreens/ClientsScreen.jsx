@@ -37,10 +37,10 @@ const ClientsScreen = ({ navigation }) => {
   };
   const deleteClient = (currentItem) => {
     setClients((prev) => prev.filter((item) => item.id !== currentItem.id));
-    axios
-      .delete(`/clients/${currentItem.id}`)
-      .then(() => console.log("OK"))
-      .catch((e) => console.log(e));
+    // axios
+    // .delete(`/clients/${currentItem.id}`)
+    // .then(() => console.log("OK"))
+    // .catch((e) => console.log(e));
   };
   // ! UNACTIVE
   const openDeleteModal = (currentItem) => {
@@ -66,6 +66,7 @@ const ClientsScreen = ({ navigation }) => {
       setIsSwiping={setSwiping}
       onClose={onClose}
       onOpen={onOpen}
+      onDelete={deleteClient}
     />
   );
   const flatListItemKey = (item) => item.id;
