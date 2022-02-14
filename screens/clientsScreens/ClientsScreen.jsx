@@ -1,6 +1,7 @@
 import React from "react";
-import { View, FlatList } from "react-native";
+import { View } from "react-native";
 import { Context } from "../../context";
+import Animated, { Layout } from "react-native-reanimated";
 import axios from "axios";
 import recenter from "../../utils/forSwipeable/recenter";
 import { PersonConteiner, AddModal, SearchBar } from "../../components";
@@ -79,7 +80,8 @@ const ClientsScreen = ({ navigation }) => {
     <View style={Screen.wrapper}>
       <SearchBar value={searchValue} setValue={setSearchValue} />
 
-      <FlatList
+      <Animated.FlatList
+        itemLayoutAnimation={Layout.springify()}
         onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}
         style={{ paddingTop: 10 }}

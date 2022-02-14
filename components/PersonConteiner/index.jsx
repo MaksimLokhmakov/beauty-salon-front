@@ -1,7 +1,14 @@
 import React from "react";
-import { View, Text, TouchableOpacity, Linking, Easing } from "react-native";
+import { View, Text, TouchableOpacity, Linking } from "react-native";
 import Swipeable from "react-native-swipeable";
-import Animated, { FadeIn, FadeOut, Layout } from "react-native-reanimated";
+import Animated, {
+  FadeIn,
+  FadeOutRight,
+  Layout,
+  FadingTransition,
+  Keyframe,
+  Easing,
+} from "react-native-reanimated";
 import { FontAwesome5 } from "@expo/vector-icons";
 import recenter from "../../utils/forSwipeable/recenter";
 import Avatar from "../Avatar";
@@ -27,7 +34,10 @@ const PersonConteiner = ({
     recenter(swipeRef);
     Linking.openURL(`tel:${item.tel}`);
   };
+  const delay = async (ms) =>
+    await new Promise((resolve) => setTimeout(resolve, ms));
   const deleteItem = () => {
+    // recenter(swipeRef);
     onDelete(item);
   };
 
@@ -77,11 +87,20 @@ const PersonConteiner = ({
     </TouchableOpacity>,
   ];
 
+  const keyframe = new Keyframe({
+    0: {
+      opacity: 1,
+    },
+    100: {
+      opacity: 0,
+    },
+  });
+
   return (
     <Animated.View
-      exiting={FadeOut}
-      entering={FadeIn.delay(100 * index)}
-      layout={Layout}
+      exiting={keyframe.duration(50)}
+      entering={FadeIn.delay(50 * index)}
+      // layout={Layout.springify()}
     >
       <Swipeable
         onRef={setRef}

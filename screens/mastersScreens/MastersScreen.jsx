@@ -1,6 +1,7 @@
 import React from "react";
-import { View, FlatList } from "react-native";
+import { View } from "react-native";
 import { Context } from "../../context";
+import Animated, { Layout } from "react-native-reanimated";
 import axios from "axios";
 import recenter from "../../utils/forSwipeable/recenter";
 import { PersonConteiner, AddModal } from "../../components/index";
@@ -75,7 +76,8 @@ const MastersScreen = ({ navigation }) => {
 
   return (
     <View style={Screen.wrapper}>
-      <FlatList
+      <Animated.FlatList
+        itemLayoutAnimation={Layout.springify()}
         onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}
         data={masters}
