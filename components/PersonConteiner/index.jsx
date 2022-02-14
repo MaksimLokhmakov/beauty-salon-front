@@ -9,6 +9,7 @@ import Person from "./style";
 
 const PersonConteiner = ({
   item = {},
+  index,
   onPress,
   setIsSwiping,
   onDelete = () => {},
@@ -77,7 +78,11 @@ const PersonConteiner = ({
   ];
 
   return (
-    <Animated.View exiting={FadeOut} entering={FadeIn} layout={Layout}>
+    <Animated.View
+      exiting={FadeOut}
+      entering={FadeIn.delay(100 * index)}
+      layout={Layout}
+    >
       <Swipeable
         onRef={setRef}
         // onSwipeStart={() => setIsSwiping(true)}

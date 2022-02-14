@@ -59,9 +59,10 @@ const ClientsScreen = ({ navigation }) => {
   }, []);
   const onClose = () => recenter(currentSwipeRef);
   // * FLATLIST
-  const flatListItem = ({ item }) => (
+  const flatListItem = ({ item, index }) => (
     <PersonConteiner
       item={item}
+      index={index}
       onPress={toClientInfo}
       setIsSwiping={setSwiping}
       onClose={onClose}

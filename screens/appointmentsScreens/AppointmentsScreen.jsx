@@ -90,10 +90,11 @@ const AppointmentsScreen = ({ navigation }) => {
   const sectionHeader = ({ section: { title } }) => (
     <Text style={Screen.sectionTitle}>{title}</Text>
   );
-  const sectionListItem = ({ item }) => {
+  const sectionListItem = ({ item, index }) => {
     return (
       <PersonConteiner
         item={item}
+        index={index}
         onPress={toAppointmentInfo}
         setIsSwiping={setSwiping}
         onOpen={onOpen}

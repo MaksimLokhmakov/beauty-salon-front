@@ -59,9 +59,10 @@ const MastersScreen = ({ navigation }) => {
   };
   const onClose = () => setCurrentSwipeRef(null);
   // * FLATLIST
-  const flatListItem = ({ item }) => (
+  const flatListItem = ({ item, index }) => (
     <PersonConteiner
       item={item}
+      index={index}
       onPress={toMasterInfo}
       openDeleteModal={openDeleteModal}
       onDelete={deleteMaster}
