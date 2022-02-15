@@ -1,13 +1,18 @@
-import { View, Text, Modal, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, FlatList } from "react-native";
 import React from "react";
+import Animated, { ZoomInEasyUp, ZoomOutEasyUp } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
 
 import style from "./style";
 
 const ModalList = ({ list, onPressListItem, visible, sortValue }) => {
   return (
-    <Modal visible={visible} animationType="fade" transparent={true}>
-      <View style={style.wrapper}>
+    visible && (
+      <Animated.View
+        style={style.wrapper}
+        entering={ZoomInEasyUp.duration(200)}
+        exiting={ZoomOutEasyUp.duration(200)}
+      >
         <FlatList
           data={list}
           showsVerticalScrollIndicator={false}
@@ -31,8 +36,8 @@ const ModalList = ({ list, onPressListItem, visible, sortValue }) => {
             </TouchableOpacity>
           )}
         />
-      </View>
-    </Modal>
+      </Animated.View>
+    )
   );
 };
 

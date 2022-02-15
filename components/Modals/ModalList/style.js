@@ -2,14 +2,15 @@ import { StyleSheet } from "react-native";
 
 const style = StyleSheet.create({
   wrapper: {
-    left: 15,
-    top: 75,
+    left: 20,
+    top: 10,
     zIndex: 99,
     width: 200,
     backgroundColor: "#fff",
     maxHeight: 215,
     borderRadius: 18,
     paddingHorizontal: 5,
+    position: "absolute",
 
     shadowColor: "#000",
     shadowOffset: {

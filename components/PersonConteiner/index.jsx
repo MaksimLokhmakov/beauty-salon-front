@@ -97,6 +97,7 @@ const PersonConteiner = ({
         swipeReleaseAnimationConfig={swipeReleaseAnimationConfig}
         rightButtons={rightButtons}
         rightButtonWidth={80}
+        swipeStartMinDistance={15}
         onRightButtonsOpenRelease={handleOpen}
         onRightButtonsCloseRelease={handleClose}
       >
