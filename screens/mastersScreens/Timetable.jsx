@@ -82,7 +82,7 @@ const Timetable = () => {
           return (
             item.firstMaster && (
               <Animated.View
-                entering={FadeIn.delay(450 + 50 * index)}
+                entering={FadeIn.delay(50 * index)}
                 exiting={FadeOutRight}
                 style={{
                   ...Screen.infoCardWrapper,
