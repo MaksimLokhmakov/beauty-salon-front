@@ -7,6 +7,12 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
+import Animated, {
+  Layout,
+  FadeIn,
+  FadeOutRight,
+  FadeOutDown,
+} from "react-native-reanimated";
 import axios from "axios";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Context } from "../../../context";
@@ -176,15 +182,6 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
       .then(({ data }) => setEmptyDays(data))
       .catch((e) => console.log(e));
   };
-  const Line = (
-    <View
-      style={{
-        width: "100%",
-        height: 0.5,
-        backgroundColor: "#8b979f",
-      }}
-    />
-  );
   const pickMaster = (setMaster, current) => {
     setMaster((prev) => {
       if (prev.id === current.id) {
@@ -273,7 +270,8 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
                 styleInput={{ width: "100%" }}
               />
             </View>
-            <FlatList
+            <Animated.FlatList
+              itemLayoutAnimation={Layout.springify()}
               style={{ paddingTop: 10 }}
               showsVerticalScrollIndicator={false}
               data={
@@ -282,58 +280,64 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
                   : masters.filter((item) => item.name.includes(searchValue))
               }
               keyExtractor={(item) => (pickingDate ? item.rowDate : item.id)}
-              ItemSeparatorComponent={() => Line}
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (pickingMasters) {
-                      return masterNumber === 1
-                        ? pickMaster(setFirstMaster, item)
-                        : masterNumber === 2
-                        ? pickMaster(setSecondMaster, item)
-                        : masterNumber === 3
-                        ? pickMaster(setThirdMaster, item)
-                        : pickMaster(setFourthMaster, item);
-                    }
-                    setDate(item);
-                  }}
+              renderItem={({ item, index }) => (
+                <Animated.View
+                  entering={FadeIn.delay(25 * index)}
+                  exiting={FadeOutRight}
                 >
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      height: 40,
-                      width: "100%",
+                  <TouchableOpacity
+                    onPress={() => {
+                      if (pickingMasters) {
+                        return masterNumber === 1
+                          ? pickMaster(setFirstMaster, item)
+                          : masterNumber === 2
+                          ? pickMaster(setSecondMaster, item)
+                          : masterNumber === 3
+                          ? pickMaster(setThirdMaster, item)
+                          : pickMaster(setFourthMaster, item);
+                      }
+                      setDate(item);
                     }}
                   >
                     <View
                       style={{
-                        borderColor: checkPickedElement(item)
-                          ? "#5bdd8f"
-                          : "#8b979f",
-                        borderWidth: 1,
-                        width: 20,
-                        height: 20,
-                        backgroundColor: checkPickedElement(item)
-                          ? "#5bdd8f"
-                          : "#fff",
-                        borderRadius: 40,
-                        marginRight: 10,
+                        flexDirection: "row",
                         alignItems: "center",
-                        justifyContent: "center",
+                        height: 40,
+                        width: "100%",
+                        borderBottomColor: "#8b979f",
+                        borderBottomWidth: 0.5,
                       }}
                     >
-                      <FontAwesome5
-                        style={{ top: 0.5 }}
-                        name="check"
-                        size={11}
-                        color="#fff"
-                      />
-                    </View>
+                      <View
+                        style={{
+                          borderColor: checkPickedElement(item)
+                            ? "#5bdd8f"
+                            : "#8b979f",
+                          borderWidth: 1,
+                          width: 20,
+                          height: 20,
+                          backgroundColor: checkPickedElement(item)
+                            ? "#5bdd8f"
+                            : "#fff",
+                          borderRadius: 40,
+                          marginRight: 10,
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <FontAwesome5
+                          style={{ top: 0.5 }}
+                          name="check"
+                          size={11}
+                          color="#fff"
+                        />
+                      </View>
 
-                    <Text>{pickingMasters ? item.name : item.title}</Text>
-                  </View>
-                </TouchableOpacity>
+                      <Text>{pickingMasters ? item.name : item.title}</Text>
+                    </View>
+                  </TouchableOpacity>
+                </Animated.View>
               )}
             />
           </>

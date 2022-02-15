@@ -11,15 +11,15 @@ export default function App() {
   const [masters, setMasters] = React.useState([]);
   const [appointments, setAppointments] = React.useState([]);
   const [clients, setClients] = React.useState([]);
-  const [timeTable, setTimeTable] = React.useState([]);
   const [dayStat, setDayStat] = React.useState({});
   const [monthStat, setMonthStat] = React.useState({});
   const [mastersStat, setMastersStat] = React.useState({});
+  const [timeTable, setTimeTable] = React.useState([]);
   const [pickerStatVisible, setPickerStatVisible] = React.useState(false);
   const [sortVisibleAppointmentsList, setSortVisibleAppointmentsList] =
     React.useState(false);
 
-  const getFullStatistic = () => {
+  const getDayStatistic = () =>
     axios
       .get("/statistic/day")
       .then(({ data }) => {
@@ -42,7 +42,6 @@ export default function App() {
             fourth: 0,
           },
         };
-
         data.addons.forEach((item) => {
           if (item.addon.ticket === "INJECTION") addons.injection = item.count;
           if (item.addon.ticket === "COLORING") addons.coloring = item.count;
@@ -71,6 +70,7 @@ export default function App() {
         setDayStat(currentStat);
       })
       .catch((e) => console.log(e));
+  const getMonthStatistic = () =>
     axios
       .get("/statistic/month")
       .then(({ data }) => {
@@ -123,11 +123,18 @@ export default function App() {
         setMonthStat(currentStat);
       })
       .catch((e) => console.log(e));
+  const getMastersStatistic = () => {
     axios
       .get("/statistic/masters")
       .then(({ data }) => setMastersStat(data))
       .catch((e) => console.log(e));
   };
+  const getFullStat = () => {
+    getDayStatistic();
+    getMonthStatistic();
+    getMastersStatistic();
+  };
+
   const getMasters = () => {
     axios
       .get("/masters/sorted")
@@ -164,7 +171,7 @@ export default function App() {
     getMasters();
     getClients();
     getTimeTable();
-    getFullStatistic();
+    getFullStat();
   }, []);
 
   const [clientsSearchValue, setClientsSearchValue] = React.useState("");
@@ -190,14 +197,14 @@ export default function App() {
     <NavigationContainer>
       <Context.Provider
         value={{
+          mastersStat,
+          monthStat,
+          dayStat,
+          getFullStat,
           sortVisibleAppointmentsList,
           setSortVisibleAppointmentsList,
           pickerStatVisible,
           setPickerStatVisible,
-          getFullStatistic,
-          dayStat,
-          monthStat,
-          mastersStat,
           visibleAddTimetableModal,
           setVisibleAddTimetableModal,
           timeTable,

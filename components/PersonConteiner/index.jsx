@@ -4,9 +4,6 @@ import Swipeable from "react-native-swipeable";
 import Animated, {
   FadeIn,
   FadeOutRight,
-  Layout,
-  FadingTransition,
-  Keyframe,
   Easing,
 } from "react-native-reanimated";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -37,8 +34,8 @@ const PersonConteiner = ({
   const delay = async (ms) =>
     await new Promise((resolve) => setTimeout(resolve, ms));
   const deleteItem = () => {
-    // recenter(swipeRef);
-    onDelete(item);
+    recenter(swipeRef);
+    delay(330).then(() => onDelete(item));
   };
 
   const percent = item.percent && (item.percent * 100).toFixed() + "%";
@@ -87,25 +84,16 @@ const PersonConteiner = ({
     </TouchableOpacity>,
   ];
 
-  const keyframe = new Keyframe({
-    0: {
-      opacity: 1,
-    },
-    100: {
-      opacity: 0,
-    },
-  });
-
   return (
     <Animated.View
-      exiting={keyframe.duration(50)}
-      entering={FadeIn.delay(50 * index)}
+      exiting={FadeOutRight.duration(300)}
+      entering={FadeIn.delay(25 * index)}
       // layout={Layout.springify()}
     >
       <Swipeable
         onRef={setRef}
-        // onSwipeStart={() => setIsSwiping(true)}
-        // onSwipeRelease={() => setIsSwiping(false)}
+        onSwipeStart={() => setIsSwiping(true)}
+        onSwipeRelease={() => setIsSwiping(false)}
         swipeReleaseAnimationConfig={swipeReleaseAnimationConfig}
         rightButtons={rightButtons}
         rightButtonWidth={80}

@@ -6,3 +6,4 @@ export { default as MasterScreen } from "./mastersScreens/MasterScreen";
 export { default as ClientSrceen } from "./clientsScreens/ClientSrceen";
 export { default as AppointmentScreen } from "./appointmentsScreens/AppointmentScreen";
 export { default as Timetable } from "./mastersScreens/Timetable.jsx";
+export { default as ReportingScreen } from "./reportingScreens/ReportingScreen";

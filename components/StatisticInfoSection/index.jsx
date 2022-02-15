@@ -1,10 +1,11 @@
 import { View, Text } from "react-native";
 import React from "react";
+
 import Table from "../Table";
 import style from "./style";
 import Screen from "../../screens/style";
 
-const StatisticInfoSection = ({ stat, type }) => {
+export default function StatisticInfoSection({ stat, type }) {
   return (
     <View style={style.wrapper}>
       <Text style={{ fontSize: 19, marginBottom: 10, marginLeft: 10 }}>
@@ -26,7 +27,6 @@ const StatisticInfoSection = ({ stat, type }) => {
         />
       </View>
 
-      {/* Иглы */}
       <View style={{ flexDirection: "row" }}>
         <View
           style={{
@@ -93,6 +93,4 @@ const StatisticInfoSection = ({ stat, type }) => {
       </View>
     </View>
   );
-};
-
-export default StatisticInfoSection;
+}

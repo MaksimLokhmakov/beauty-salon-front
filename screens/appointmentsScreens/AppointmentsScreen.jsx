@@ -14,6 +14,7 @@ const AppointmentsScreen = ({ navigation }) => {
   const {
     masters,
     appointments,
+    setAppointments,
     getAppointments,
     setSortVisibleAppointmentsList,
     sortVisibleAppointmentsList,
@@ -30,7 +31,6 @@ const AppointmentsScreen = ({ navigation }) => {
   }, []);
 
   // ! ПЕРЕДЕЛАТЬ ПОИСК
-  console.log("AppointmentsScreen");
   // ! UNACTIVE
   const setSwiping = (value) => setIsSwiping(value);
 
@@ -85,6 +85,16 @@ const AppointmentsScreen = ({ navigation }) => {
 
     setCurrentSwipeRef(newRef);
   };
+  const onDelete = ({ id }) => {
+    setAppointments((prev) =>
+      prev.filter((group) => {
+        group.data = group.data.filter((item) => item.id !== id);
+        if (group.data.length !== 0) {
+          return group;
+        }
+      })
+    );
+  };
   const onClose = () => setCurrentSwipeRef(null);
   // * SECTIONLIST
   const sectionHeader = ({ section: { title } }) => (
@@ -99,6 +109,7 @@ const AppointmentsScreen = ({ navigation }) => {
         setIsSwiping={setSwiping}
         onOpen={onOpen}
         onClose={onClose}
+        onDelete={onDelete}
       />
     );
   };
@@ -124,6 +135,7 @@ const AppointmentsScreen = ({ navigation }) => {
       <SearchBar value={searchValue} setValue={setSearchValue} />
 
       <SectionList
+        initialNumToRender={15}
         onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}
         sections={sections}

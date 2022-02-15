@@ -36,13 +36,13 @@ const ClientsScreen = ({ navigation }) => {
   const toClientInfo = (client) => {
     navigation.navigate("ClientSrceen", { client });
   };
-  const deleteClient = (currentItem) => {
+  const deleteClient = React.useCallback((currentItem) => {
     setClients((prev) => prev.filter((item) => item.id !== currentItem.id));
-    // axios
-    // .delete(`/clients/${currentItem.id}`)
-    // .then(() => console.log("OK"))
-    // .catch((e) => console.log(e));
-  };
+    axios
+      .delete(`/clients/${currentItem.id}`)
+      .then(() => console.log("OK"))
+      .catch((e) => console.log(e));
+  }, []);
   // ! UNACTIVE
   const openDeleteModal = (currentItem) => {
     setItemToDelete(currentItem), setVisibleClientsModel(true);
@@ -63,6 +63,7 @@ const ClientsScreen = ({ navigation }) => {
   const flatListItem = ({ item, index }) => (
     <PersonConteiner
       item={item}
+      key={flatListItemKey}
       index={index}
       onPress={toClientInfo}
       setIsSwiping={setSwiping}
@@ -77,10 +78,11 @@ const ClientsScreen = ({ navigation }) => {
   );
 
   return (
-    <View style={Screen.wrapper}>
+    <View style={{ ...Screen.wrapper }}>
       <SearchBar value={searchValue} setValue={setSearchValue} />
 
       <Animated.FlatList
+        initialNumToRender={15}
         itemLayoutAnimation={Layout.springify()}
         onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}

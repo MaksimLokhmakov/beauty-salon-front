@@ -1,9 +1,13 @@
 import React from "react";
-import { View, Text, FlatList, TouchableOpacity } from "react-native";
+import { View, Text, TouchableOpacity } from "react-native";
 import { Context } from "../../context";
-
-import Screen from "../style";
+import Animated, {
+  Layout,
+  FadeIn,
+  FadeOutRight,
+} from "react-native-reanimated";
 import { Table, SearchBar, AddTimeTableModal } from "../../components";
+import Screen from "../style";
 
 const Timetable = () => {
   const { timeTable, getTimeTable } = React.useContext(Context);
@@ -58,14 +62,15 @@ const Timetable = () => {
       <View style={{ paddingBottom: 10, backgroundColor: "#fff" }}>
         <SearchBar value={searchValue} setValue={setSearchValue} />
       </View>
-      <FlatList
+      <Animated.FlatList
+        itemLayoutAnimation={Layout.springify()}
         showsVerticalScrollIndicator={false}
         style={{ paddingBottom: 20 }}
         onRefresh={onRefresh}
         refreshing={isLoading}
         data={timeTable.filter((item) => onSearch(item))}
         keyExtractor={(item) => item.title}
-        renderItem={({ item }) => {
+        renderItem={({ item, index }) => {
           const NUMBER_OF_ROWS = item.fourthMaster
             ? 4
             : item.thirdMaster
@@ -76,7 +81,9 @@ const Timetable = () => {
 
           return (
             item.firstMaster && (
-              <View
+              <Animated.View
+                entering={FadeIn.delay(450 + 50 * index)}
+                exiting={FadeOutRight}
                 style={{
                   ...Screen.infoCardWrapper,
                   marginTop: 10,
@@ -131,7 +138,7 @@ const Timetable = () => {
                     </Text>
                   )}
                 />
-              </View>
+              </Animated.View>
             )
           );
         }}
