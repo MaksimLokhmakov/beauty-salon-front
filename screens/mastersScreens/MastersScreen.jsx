@@ -1,7 +1,7 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 import { Context } from "../../context";
-import Animated, { Layout, withTiming } from "react-native-reanimated";
+import Animated, { Layout } from "react-native-reanimated";
 import recenter from "../../utils/forSwipeable/recenter";
 import { PersonConteiner, AddModal } from "../../components/index";
 import Screen from "../style";
@@ -24,10 +24,11 @@ const MastersScreen = ({ navigation }) => {
     refresh();
   }, []);
 
+  const ITEM_HEIGHT = 56.5;
+
   console.log("MastersScreen");
   // ! UNACTIVE
   const setSwiping = (value) => setIsSwiping(value);
-
   const refresh = () => {
     setIsLoading(true);
     getMasters();
@@ -59,6 +60,11 @@ const MastersScreen = ({ navigation }) => {
   };
   const onClose = () => setCurrentSwipeRef(null);
   // * FLATLIST
+  const getItemLayout = (data, index) => ({
+    length: ITEM_HEIGHT,
+    offset: ITEM_HEIGHT * index,
+    index,
+  });
   const flatListItem = ({ item, index }) => (
     <PersonConteiner
       item={item}
@@ -74,8 +80,14 @@ const MastersScreen = ({ navigation }) => {
   const flatListItemId = (item) => item.id;
 
   return (
-    <View style={Screen.wrapper}>
+    <View
+      style={[
+        Screen.wrapper,
+        Platform.OS === "android" && Screen.androidPaddingTop,
+      ]}
+    >
       <Animated.FlatList
+        getItemLayout={getItemLayout}
         initialNumToRender={15}
         itemLayoutAnimation={Layout.springify()}
         onScrollBeginDrag={handleScroll}
@@ -96,4 +108,4 @@ const MastersScreen = ({ navigation }) => {
   );
 };
 
-export default MastersScreen;
+export default React.memo(MastersScreen);

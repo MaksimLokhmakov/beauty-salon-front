@@ -43,6 +43,9 @@ const Screen = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 16,
   },
+  androidPaddingTop: {
+    paddingTop: 95,
+  },
 });
 
 export default Screen;

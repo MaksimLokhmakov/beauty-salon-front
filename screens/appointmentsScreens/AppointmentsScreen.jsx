@@ -1,5 +1,5 @@
 import React from "react";
-import { View, SectionList, Text } from "react-native";
+import { View, SectionList, Text, Platform } from "react-native";
 import { Context } from "../../context";
 import recenter from "../../utils/forSwipeable/recenter";
 import {
@@ -131,7 +131,12 @@ const AppointmentsScreen = ({ navigation }) => {
   const listData = [{ name: "Все" }, ...masters];
 
   return (
-    <View style={Screen.wrapper}>
+    <View
+      style={[
+        Screen.wrapper,
+        Platform.OS === "android" && Screen.androidPaddingTop,
+      ]}
+    >
       <SearchBar value={searchValue} setValue={setSearchValue} />
 
       <SectionList
@@ -144,7 +149,6 @@ const AppointmentsScreen = ({ navigation }) => {
         refreshing={isLoading}
         renderItem={sectionListItem}
         renderSectionHeader={sectionHeader}
-        showsVerticalScrollIndicator={false}
         stickySectionHeadersEnabled={true}
       />
 

@@ -2,8 +2,7 @@ import { StyleSheet } from "react-native";
 
 const style = StyleSheet.create({
   wrapper: {
-    left: 20,
-    top: 10,
+    left: 5,
     zIndex: 99,
     width: 200,
     backgroundColor: "#fff",

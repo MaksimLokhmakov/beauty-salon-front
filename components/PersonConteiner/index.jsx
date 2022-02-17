@@ -1,11 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity, Linking } from "react-native";
 import Swipeable from "react-native-swipeable";
-import Animated, {
-  FadeIn,
-  FadeOutRight,
-  Easing,
-} from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut, Easing } from "react-native-reanimated";
 import { FontAwesome5 } from "@expo/vector-icons";
 import recenter from "../../utils/forSwipeable/recenter";
 import Avatar from "../Avatar";
@@ -85,11 +81,7 @@ const PersonConteiner = ({
   ];
 
   return (
-    <Animated.View
-      exiting={FadeOutRight.duration(300)}
-      entering={FadeIn.delay(25 * index)}
-      // layout={Layout.springify()}
-    >
+    <Animated.View exiting={FadeOut} entering={FadeIn.delay(25 * index)}>
       <Swipeable
         onRef={setRef}
         onSwipeStart={() => setIsSwiping(true)}

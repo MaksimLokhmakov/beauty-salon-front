@@ -26,11 +26,11 @@ export default function ButtonEmptyScreen() {
   return (
     <View style={{ paddingTop: 100 }}>
       <Animated.FlatList
-        itemLayoutAnimation={Layout.springify()}
+        itemLayoutAnimation={Layout}
         data={items}
         renderItem={({ item }) => (
           <Animated.View
-            // layout={Layout.springify()}
+            layout={Layout}
             entering={LightSpeedInLeft}
             key={item.id}
             style={{

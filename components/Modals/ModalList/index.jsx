@@ -1,17 +1,16 @@
-import { View, Text, TouchableOpacity, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, FlatList, Platform } from "react-native";
 import React from "react";
-import Animated, { ZoomInEasyUp, ZoomOutEasyUp } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
-
 import style from "./style";
 
 const ModalList = ({ list, onPressListItem, visible, sortValue }) => {
   return (
     visible && (
       <Animated.View
-        style={style.wrapper}
-        entering={ZoomInEasyUp.duration(200)}
-        exiting={ZoomOutEasyUp.duration(200)}
+        style={{ ...style.wrapper, top: Platform.OS === "android" ? 95 : 10 }}
+        entering={FadeIn.duration(200)}
+        exiting={FadeOut.duration(200)}
       >
         <FlatList
           data={list}

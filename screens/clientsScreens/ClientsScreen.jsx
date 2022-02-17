@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { View, Platform } from "react-native";
 import { Context } from "../../context";
 import Animated, { Layout } from "react-native-reanimated";
 import axios from "axios";
@@ -27,6 +27,8 @@ const ClientsScreen = ({ navigation }) => {
   }, []);
 
   console.log("ClientsScreen");
+
+  const ITEM_HEIGHT = 56.5;
 
   const refresh = () => {
     setIsLoading(true);
@@ -73,22 +75,34 @@ const ClientsScreen = ({ navigation }) => {
     />
   );
   const flatListItemKey = (item) => item.id;
+  const getItemLayout = (item, index) => {
+    return {
+      length: ITEM_HEIGHT,
+      offset: ITEM_HEIGHT * index,
+      index,
+    };
+  };
   const flatListDataWithSearch = clients.filter((item) =>
     item.name.toLowerCase().includes(searchValue.toLowerCase())
   );
 
   return (
-    <View style={{ ...Screen.wrapper }}>
+    <View
+      style={[
+        Screen.wrapper,
+        Platform.OS === "android" && Screen.androidPaddingTop,
+      ]}
+    >
       <SearchBar value={searchValue} setValue={setSearchValue} />
 
       <Animated.FlatList
+        getItemLayout={getItemLayout}
         initialNumToRender={15}
         itemLayoutAnimation={Layout.springify()}
         onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}
         style={{ paddingTop: 10 }}
         data={flatListDataWithSearch}
-        showsVerticalScrollIndicator={false}
         keyExtractor={flatListItemKey}
         onRefresh={refresh}
         refreshing={isLoading}
