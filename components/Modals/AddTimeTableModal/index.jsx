@@ -1,25 +1,28 @@
 import React from "react";
-import {
-  View,
-  Modal,
-  FlatList,
-  Text,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
+import { View, Modal, Text, TouchableOpacity, TextInput } from "react-native";
 import Animated, {
   Layout,
   FadeIn,
-  FadeOutRight,
-  FadeOutDown,
+  FadeInUp,
+  FadeOut,
 } from "react-native-reanimated";
+import MaskInput from "react-native-mask-input";
 import axios from "axios";
-import { FontAwesome5 } from "@expo/vector-icons";
 import { Context } from "../../../context";
-import Table from "../../Table";
-import MadalHeader from "../../ModalHeader";
-import SearchBar from "../../SearchBar";
+import Table from "../../shared/Table";
+import MadalHeader from "../../shared/ModalHeader";
+import SearchBar from "../../shared/SearchBar";
+import { MaterialIcons } from "@expo/vector-icons";
+import AddItemConteiner from "../../shared/AddItemConteiner";
 import style from "../style";
+import addTableStyle from "./style";
+import Screen from "../../../screens/style";
+
+// TODO:  ВЫБОР ДАТЫ ! ГОТОВО
+// TODO:  ВЫБОР МАСТЕРА
+// TODO:  ВВОД ВРЕМЕНИ РАБОТЫ МАСТЕРА
+// TODO:
+// TODO:
 
 const AddTimeTableModal = ({ item = false, setItem }) => {
   const {
@@ -31,25 +34,124 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   } = React.useContext(Context);
   const [emptyDays, setEmptyDays] = React.useState([]);
 
+  const [pickedMaster, setPickedMaster] = React.useState({
+    master: {},
+    index: "",
+  });
+
+  const [mastersList, setMastersList] = React.useState(masters);
   const [isLoading, setIsLoading] = React.useState(false);
   const [pickingDate, setPickingDate] = React.useState(true);
   const [pickingMasters, setPickingMasters] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
 
-  // Данные объекта формы
-  const [date, setDate] = React.useState({});
+  const [time, setTime] = React.useState("");
 
-  const [firstMaster, setFirstMaster] = React.useState({});
-  const [secondMaster, setSecondMaster] = React.useState({});
-  const [thirdMaster, setThirdMaster] = React.useState({});
-  const [fourthMaster, setFourthMaster] = React.useState({});
+  const [addTimeTableData, setAddTimeTableData] = React.useState({
+    date: { title: "", rowDate: "" },
+    data: [
+      {
+        master: { id: Math.random(), name: "выбрать мастера" },
+        start: "",
+        finish: "",
+        inputValue: "",
+      },
+    ],
+  });
 
-  const [firstInputValue, setFirstInputValue] = React.useState("");
-  const [secondInputValue, setSecondInputValue] = React.useState("");
-  const [thirdInputValue, setThirdInputValue] = React.useState("");
-  const [fourthInputValue, setFourthInputValue] = React.useState("");
+  const deleteMasterFromTimeTable = (master) => {
+    setMastersList((prev) => [master, ...prev]);
+    setAddTimeTableData((prev) => {
+      const newMasters = prev.data.filter(
+        (item) => item.master.id !== master.id
+      );
+      return {
+        date: prev.date,
+        data: newMasters,
+      };
+    });
+  };
 
-  const [masterNumber, setMasterNumber] = React.useState(1);
+  const inputMask = [
+    /\d/,
+    /\d/,
+    ":",
+    /\d/,
+    /\d/,
+    " ",
+    "-",
+    " ",
+    /\d/,
+    /\d/,
+    ":",
+    /\d/,
+    /\d/,
+  ];
+  const handleChangeInput = (e, index) => {
+    setAddTimeTableData((prev) => {
+      const newData = prev.data.map((item, currentIndex) => {
+        if (currentIndex === index) {
+          item.inputValue = e;
+        }
+        return item;
+      });
+
+      return {
+        date: prev.date,
+        data: newData,
+      };
+    });
+  };
+
+  const tableData = addTimeTableData.data.map((item, index) => {
+    return {
+      label: (
+        <View
+          style={{
+            ...addTableStyle.rowDerection,
+            minWidth: 170,
+            justifyContent: "flex-start",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => deleteMasterFromTimeTable(item.master)}
+            style={{
+              ...addTableStyle.iconWrapper,
+            }}
+          >
+            <MaterialIcons name="do-not-disturb-on" size={24} color="#fe3c30" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => {
+              setPickingMasters(true);
+              setPickedMaster({ master: item.master, index: index });
+            }}
+          >
+            <Text style={{ color: "#097fff", fontSize: 15 }}>
+              {item.master.name}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      ),
+      value: (
+        <View style={{ paddingVertical: 8 }}>
+          <MaskInput
+            style={{ fontSize: 15 }}
+            value={item.inputValue}
+            onChangeText={(e) => handleChangeInput(e, index)}
+            keyboardType="numeric"
+            autoFocus
+            mask={inputMask}
+          />
+        </View>
+      ),
+    };
+  });
+
+  const tableAddTimeTableData = {
+    title: addTimeTableData.date && addTimeTableData.date.title,
+    data: tableData,
+  };
 
   React.useEffect(() => {
     setIsLoading(true);
@@ -57,61 +159,17 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     setIsLoading(false);
   }, []);
   React.useEffect(() => {
-    if (item !== false) {
-      setPickingDate(false);
-      setDate({ rowDate: item.rawDate, title: item.title });
-      setFirstMaster({ id: item.firstMaster.id, name: item.firstMaster.name });
-      setSecondMaster(
-        item.secondMaster
-          ? {
-              id: item.secondMaster.id,
-              name: item.secondMaster.name,
-            }
-          : {}
-      );
-      setThirdMaster(
-        item.thirdMaster
-          ? {
-              id: item.thirdMaster.id,
-              name: item.thirdMaster.name,
-            }
-          : {}
-      );
-      setFourthMaster(
-        item.fourthMaster
-          ? {
-              id: item.fourthMaster.id,
-              name: item.fourthMaster.name,
-            }
-          : {}
-      );
-      setFirstInputValue(
-        item.firstMaster.start + " - " + item.firstMaster.finish
-      );
-      setSecondInputValue(
-        item.secondMaster
-          ? item.secondMaster.start + " - " + item.secondMaster.finish
-          : ""
-      );
-      setThirdInputValue(
-        item.thirdMaster
-          ? item.thirdMaster.start + " - " + item.thirdMaster.finish
-          : ""
-      );
-      setFourthInputValue(
-        item.fourthMaster
-          ? item.fourthMaster.start + " - " + item.fourthMaster.finish
-          : ""
-      );
-    }
-  }, [item]);
-  React.useEffect(() => {
-    if (item === false) setDate(emptyDays[0]);
+    if (item === false)
+      setAddTimeTableData((prev) => {
+        return {
+          date: emptyDays[0],
+          data: prev.data,
+        };
+      });
     getTimeTable();
   }, [emptyDays]);
 
   const nullifyForm = () => {
-    setDate({});
     setFirstInputValue("");
     setSecondInputValue("");
     setThirdInputValue("");
@@ -128,7 +186,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   const requests = async () => {
     return await axios
       .put("/masters/timetable", {
-        rawDate: date.rowDate,
+        rawDate: addTimeTableData.date.rowDate,
         firstMaster:
           Object.keys(firstMaster).length !== 0
             ? {
@@ -168,7 +226,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
 
   const onSubmit = () => {
     setEmptyDays((prev) =>
-      prev.filter((item) => item.rowDate !== date.rowDate)
+      prev.filter((item) => item.rowDate !== addTimeTableData.date.rowDate)
     );
     setVisibleAddTimetableModal(false);
     requests();
@@ -182,63 +240,93 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
       .then(({ data }) => setEmptyDays(data))
       .catch((e) => console.log(e));
   };
-  const pickMaster = (setMaster, current) => {
-    setMaster((prev) => {
-      if (prev.id === current.id) {
-        if (masterNumber === 1) setFirstInputValue("");
-        if (masterNumber === 2) setSecondInputValue("");
-        if (masterNumber === 3) setThirdInputValue("");
-        if (masterNumber === 4) setFourthInputValue("");
-        return {};
-      }
-      return current;
-    });
-  };
-  const checkPickedElement = (item) => {
-    if (item.rowDate) return item.title === date.title;
-    return (
-      item.id === firstMaster.id ||
-      item.id === secondMaster.id ||
-      item.id === thirdMaster.id ||
-      item.id === fourthMaster.id
-    );
-  };
-  const TableLabel = (masterName, masterNumber) => (
-    <TouchableOpacity
-      onPress={() => {
-        setPickingMasters(true);
-        setMasterNumber(masterNumber);
-      }}
-    >
-      <Text style={{ fontSize: 15, color: "#1976D2", top: 1 }}>
-        {masterName ? masterName : "Мастер не выбран"}
-      </Text>
-    </TouchableOpacity>
-  );
-  const TableValue = (value, setValue, number) => {
-    return (
-      <TextInput
-        autoFocus={masterNumber === number && true}
-        value={value}
-        onChangeText={(e) => setValue(e)}
-        placeholder="00:00 - 00:00"
-      />
-    );
-  };
   const hidePickingDate = () => {
     setPickingDate(false);
-    setPickingMasters(true);
   };
   const onComplete = () => {
-    if (pickingMasters) return setPickingMasters(false);
+    if (pickingMasters) {
+      setPickingMasters(false);
+      setMastersList((prev) =>
+        prev.filter((master) => master.id !== pickedMaster.master.id)
+      );
+      setAddTimeTableData((prev) => {
+        const newData = prev.data.map((item, index) => {
+          if (index === pickedMaster.index) item.master = pickedMaster.master;
+          return item;
+        });
+
+        return {
+          date: prev.date,
+          data: newData,
+        };
+      });
+      return;
+    }
     if (pickingDate) return hidePickingDate();
     if (!pickingDate && !pickingMasters) return onSubmit();
   };
-
   const onBack = (value) => {
     setVisibleAddTimetableModal(value);
     nullifyForm();
     item && setItem(false);
+  };
+
+  const onPickDate = (item) => {
+    setAddTimeTableData((prev) => {
+      return {
+        date: item,
+        data: prev.data,
+      };
+    });
+  };
+
+  const onPickMaster = (item) => {
+    setPickedMaster((prev) => {
+      return {
+        master: item,
+        index: prev.index,
+      };
+    });
+  };
+
+  const pickedObject = pickingMasters
+    ? pickedMaster.master
+    : addTimeTableData.date;
+  const onPress = pickingMasters ? onPickMaster : onPickDate;
+
+  const getRenderItem = ({ item }) => (
+    <Animated.View entering={FadeIn} exiting={FadeOut}>
+      <AddItemConteiner
+        item={item}
+        pickedObject={pickedObject}
+        pickingMasters={pickingMasters}
+        onPress={onPress}
+      />
+    </Animated.View>
+  );
+  const getKey = (item) => (pickingDate ? item.rowDate : item.id);
+  const filteredData = pickingDate
+    ? emptyDays.filter((item) => item.title.includes(searchValue))
+    : mastersList.filter((item) => item.name.includes(searchValue));
+
+  const addMasterToTimetable = () => {
+    setAddTimeTableData((prev) => {
+      return {
+        date: prev.date,
+        data: [
+          ...prev.data,
+          {
+            master: {
+              id: Math.random(),
+              name: "выбрать мастера",
+            },
+            start: "",
+            finish: "",
+            inputValue: "",
+          },
+        ],
+      };
+    });
   };
 
   return (
@@ -247,7 +335,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
       animationType="slide"
       transparent={false}
     >
-      <View style={{ ...style.wrapper, paddingHorizontal: 20 }}>
+      <View style={[style.wrapper, addTableStyle.wrapper]}>
         <MadalHeader
           onBack={onBack}
           onComplete={() => onComplete()}
@@ -258,110 +346,45 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
 
         {pickingDate || pickingMasters ? (
           <>
-            <View style={{ width: "100%" }}>
+            <View style={addTableStyle.fullWidth}>
               <SearchBar
                 value={searchValue}
                 setValue={setSearchValue}
-                styleWrapper={{
-                  paddingTop: 0,
-                  width: "105%",
-                  right: "2.5%",
-                }}
-                styleInput={{ width: "100%" }}
+                styleWrapper={addTableStyle.searchBarWrapper}
+                styleInput={addTableStyle.fullWidth}
               />
             </View>
-            <Animated.FlatList
-              itemLayoutAnimation={Layout.springify()}
-              style={{ paddingTop: 10 }}
-              showsVerticalScrollIndicator={false}
-              data={
-                pickingDate
-                  ? emptyDays.filter((item) => item.title.includes(searchValue))
-                  : masters.filter((item) => item.name.includes(searchValue))
-              }
-              keyExtractor={(item) => (pickingDate ? item.rowDate : item.id)}
-              renderItem={({ item, index }) => (
-                <Animated.View
-                  entering={FadeIn.delay(25 * index)}
-                  exiting={FadeOutRight}
-                >
-                  <TouchableOpacity
-                    onPress={() => {
-                      if (pickingMasters) {
-                        return masterNumber === 1
-                          ? pickMaster(setFirstMaster, item)
-                          : masterNumber === 2
-                          ? pickMaster(setSecondMaster, item)
-                          : masterNumber === 3
-                          ? pickMaster(setThirdMaster, item)
-                          : pickMaster(setFourthMaster, item);
-                      }
-                      setDate(item);
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        height: 40,
-                        width: "100%",
-                        borderBottomColor: "#8b979f",
-                        borderBottomWidth: 0.5,
-                      }}
-                    >
-                      <View
-                        style={{
-                          borderColor: checkPickedElement(item)
-                            ? "#5bdd8f"
-                            : "#8b979f",
-                          borderWidth: 1,
-                          width: 20,
-                          height: 20,
-                          backgroundColor: checkPickedElement(item)
-                            ? "#5bdd8f"
-                            : "#fff",
-                          borderRadius: 40,
-                          marginRight: 10,
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <FontAwesome5
-                          style={{ top: 0.5 }}
-                          name="check"
-                          size={11}
-                          color="#fff"
-                        />
-                      </View>
 
-                      <Text>{pickingMasters ? item.name : item.title}</Text>
-                    </View>
-                  </TouchableOpacity>
-                </Animated.View>
-              )}
+            <Animated.FlatList
+              itemLayoutAnimation={Layout}
+              style={addTableStyle.paddingTopTen}
+              data={filteredData}
+              keyExtractor={getKey}
+              renderItem={getRenderItem}
+              showsVerticalScrollIndicator={false}
             />
           </>
         ) : (
-          <Table
-            numberOfRows={4}
-            title={date.title}
-            firstLabel={() => TableLabel(firstMaster.name, 1)}
-            secondLabel={() => TableLabel(secondMaster.name, 2)}
-            thirdLabel={() => TableLabel(thirdMaster.name, 3)}
-            fourthLabel={() => TableLabel(fourthMaster.name, 4)}
-            firstValue={() =>
-              TableValue(firstInputValue, setFirstInputValue, 1)
-            }
-            secondValue={() =>
-              TableValue(secondInputValue, setSecondInputValue, 2)
-            }
-            thirdValue={() =>
-              TableValue(thirdInputValue, setThirdInputValue, 3)
-            }
-            fourthValue={() =>
-              TableValue(fourthInputValue, setFourthInputValue, 4)
-            }
-          />
+          <View>
+            <Table tableValues={tableAddTimeTableData} />
+
+            <TouchableOpacity onPress={addMasterToTimetable}>
+              <Animated.View
+                entering={FadeInUp}
+                style={[
+                  addTableStyle.rowDerection,
+                  addTableStyle.buttonConteiner,
+                ]}
+              >
+                <View style={addTableStyle.iconWrapper}>
+                  <MaterialIcons name="add-circle" size={24} color="#007afe" />
+                </View>
+                <View style={addTableStyle.button}>
+                  <Text style={addTableStyle.buttonText}>добавить мастера</Text>
+                </View>
+              </Animated.View>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     </Modal>

@@ -4,7 +4,7 @@ import Swipeable from "react-native-swipeable";
 import Animated, { FadeIn, FadeOut, Easing } from "react-native-reanimated";
 import { FontAwesome5 } from "@expo/vector-icons";
 import recenter from "../../utils/forSwipeable/recenter";
-import Avatar from "../Avatar";
+import Avatar from "../shared/Avatar";
 import Person from "./style";
 
 const PersonConteiner = ({
@@ -41,15 +41,16 @@ const PersonConteiner = ({
   const masterName = item.master && "Мастер: " + item.master.name.split(" ")[1];
   const secondText = masterName || item.tel;
   const primeryText = item.client ? item.client.name : item.name;
+  const isAppointmentsScreen = !item.client;
 
   const swipeReleaseAnimationConfig = {
     toValue: { x: 0, y: 0 },
-    duration: 250,
+    duration: 150,
     easing: Easing.elastic(0.5),
     useNativeDriver: false,
   };
   const rightButtons = [
-    !item.client && (
+    isAppointmentsScreen && (
       <TouchableOpacity
         onPress={onCall}
         style={{
@@ -72,7 +73,7 @@ const PersonConteiner = ({
     <TouchableOpacity
       onPress={deleteItem}
       style={{
-        backgroundColor: "#fe3724",
+        backgroundColor: "#fe3c30",
         ...Person.swopeableButtons,
       }}
     >
@@ -89,7 +90,7 @@ const PersonConteiner = ({
         swipeReleaseAnimationConfig={swipeReleaseAnimationConfig}
         rightButtons={rightButtons}
         rightButtonWidth={80}
-        swipeStartMinDistance={15}
+        swipeStartMinDistance={5}
         onRightButtonsOpenRelease={handleOpen}
         onRightButtonsCloseRelease={handleClose}
       >

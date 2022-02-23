@@ -2,10 +2,9 @@ import React from "react";
 import { View, Text, TextInput, Modal, TouchableOpacity } from "react-native";
 import { Context } from "../../../context";
 import axios from "axios";
-
-import Avatar from "../../Avatar";
-import Table from "../../Table";
-import MadalHeader from "../../ModalHeader";
+import Avatar from "../../shared/Avatar";
+import Table from "../../shared/Table";
+import MadalHeader from "../../shared/ModalHeader";
 import style from "../style";
 
 const AddModal = ({

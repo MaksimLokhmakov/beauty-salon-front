@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, Modal, TouchableOpacity } from "react-native";
 import { Context } from "../../../context";
-import MadalHeader from "../../ModalHeader";
+import MadalHeader from "../../shared/ModalHeader";
 import style from "../style";
 
 const AddAppointmentModel = () => {

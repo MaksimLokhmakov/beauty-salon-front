@@ -2,7 +2,7 @@ import React from "react";
 import { View, Text, ScrollView, RefreshControl, Platform } from "react-native";
 import { Context } from "../../context";
 import { Table, StatisticInfoSection, ModalList } from "../../components";
-import Animated, { FadeInUp, FadeOutDown } from "react-native-reanimated";
+import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import Screen from "../style";
 
 const MonthlyReportingScreen = () => {
@@ -44,22 +44,49 @@ const MonthlyReportingScreen = () => {
       >
         <View>
           {reportingPicker === "День" && (
-            <Animated.View entering={FadeInUp} exiting={FadeOutDown}>
+            <Animated.View entering={FadeIn} exiting={FadeOut}>
               <StatisticInfoSection type="day" stat={dayStat} />
             </Animated.View>
           )}
           {reportingPicker === "Месяц" && (
-            <Animated.View entering={FadeInUp} exiting={FadeOutDown}>
+            <Animated.View entering={FadeIn} exiting={FadeOut}>
               <StatisticInfoSection type="month" stat={monthStat} />
             </Animated.View>
           )}
 
           {reportingPicker === "Мастера" &&
             mastersStat.map((item, index) => {
+              const mastersDayInfoTableData = {
+                title: "Сегодня: ",
+                data: [
+                  {
+                    label: <Text style={{ color: "#C2185B" }}>время</Text>,
+                    value: <Text>{item.dayHours} ч.</Text>,
+                  },
+                  {
+                    label: <Text style={{ color: "#C2185B" }}>прибыль</Text>,
+                    value: <Text>{item.dayIncome} руб.</Text>,
+                  },
+                ],
+              };
+
+              const mastersMonthInfoTableData = {
+                title: "Месяц:",
+                data: [
+                  {
+                    label: <Text style={{ color: "#C2185B" }}>время</Text>,
+                    value: <Text>{item.monthHours} ч.</Text>,
+                  },
+                  {
+                    label: <Text style={{ color: "#C2185B" }}>прибыль</Text>,
+                    value: <Text>{item.monthIncome} руб.</Text>,
+                  },
+                ],
+              };
               return (
                 <Animated.View
-                  entering={FadeInUp.delay(50 * index)}
-                  exiting={FadeOutDown}
+                  entering={FadeIn.delay(50 * index)}
+                  exiting={FadeOut}
                   key={item.master.id}
                   style={{
                     ...Screen.infoCardWrapper,
@@ -81,13 +108,8 @@ const MonthlyReportingScreen = () => {
                       }}
                     >
                       <Table
-                        title={`Сегодня:`}
                         backgroundColor="#f1f3f4"
-                        numberOfRows={2}
-                        firstLabel={() => "время"}
-                        secondLabel={() => "прибыль"}
-                        firstValue={() => <Text>{item.dayHours} ч.</Text>}
-                        secondValue={() => <Text>{item.dayIncome} руб.</Text>}
+                        tableValues={mastersDayInfoTableData}
                       />
                     </View>
                     <View
@@ -98,13 +120,8 @@ const MonthlyReportingScreen = () => {
                       }}
                     >
                       <Table
-                        title="Месяц:"
                         backgroundColor="#f1f3f4"
-                        numberOfRows={2}
-                        firstLabel={() => "время"}
-                        secondLabel={() => "прибыль"}
-                        firstValue={() => <Text>{item.monthHours} ч.</Text>}
-                        secondValue={() => <Text>{item.monthIncome} руб.</Text>}
+                        tableValues={mastersMonthInfoTableData}
                       />
                     </View>
                   </View>

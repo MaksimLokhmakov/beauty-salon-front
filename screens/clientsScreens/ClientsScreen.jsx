@@ -98,7 +98,7 @@ const ClientsScreen = ({ navigation }) => {
       <Animated.FlatList
         getItemLayout={getItemLayout}
         initialNumToRender={15}
-        itemLayoutAnimation={Layout.springify()}
+        itemLayoutAnimation={Layout}
         onScrollBeginDrag={handleScroll}
         scrollEnabled={!isSwiping}
         style={{ paddingTop: 10 }}
