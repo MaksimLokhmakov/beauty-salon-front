@@ -3,11 +3,11 @@ import React from "react";
 import { FontAwesome5 } from "@expo/vector-icons";
 import style from "./style";
 
-const CheckBox = ({ item, pickedObject }) => {
+const CheckBox = ({ item, pickedObject, colored = false }) => {
   const isPickedDate = item === pickedObject;
   const dynamicStyle = {
-    borderColor: isPickedDate ? "#5bdd8f" : "#8b979f",
-    backgroundColor: isPickedDate ? "#5bdd8f" : "#fff",
+    borderColor: isPickedDate || colored ? "#5bdd8f" : "#8b979f",
+    backgroundColor: isPickedDate || colored ? "#5bdd8f" : "#fff",
   };
 
   console.log("item", item, "  ----  ", pickedObject);

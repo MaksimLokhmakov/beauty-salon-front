@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import Animated, { FadeInUp, FadeOut } from "react-native-reanimated";
+import Animated, { FadeInUp, FadeOut, Layout } from "react-native-reanimated";
 import { Context } from "../../../context";
 import table from "./style";
 
@@ -43,18 +43,23 @@ const Table = ({
         </Animated.View>
       )}
       <View style={{ ...table.wrapper, backgroundColor: backgroundColor }}>
-        {tableValues.data.map((item, index) => (
-          <Animated.View
-            entering={FadeInUp}
-            style={table.rowDerection}
-            key={index}
-          >
-            <View style={table.label}>{item.label}</View>
-            <View style={[table.line, table.vertical]}></View>
-            <View style={table.value}>{item.value}</View>
-            <View style={[table.line, table.horisontal]}></View>
-          </Animated.View>
-        ))}
+        {tableValues.data.map((item, index) => {
+          const lastElement = tableValues.data.length - 1 !== index;
+          return (
+            <Animated.View
+              entering={FadeInUp}
+              style={table.rowDerection}
+              key={index}
+            >
+              <View style={table.label}>{item.label}</View>
+              <View style={[table.line, table.vertical]}></View>
+              <View style={table.value}>{item.value}</View>
+              {lastElement && (
+                <View style={[table.line, table.horisontal]}></View>
+              )}
+            </Animated.View>
+          );
+        })}
       </View>
     </>
   );

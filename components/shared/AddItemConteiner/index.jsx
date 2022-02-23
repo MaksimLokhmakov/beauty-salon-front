@@ -1,20 +1,19 @@
 import { View, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import CheckBox from "../CheckBox";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import style from "./style";
 
-const AddItemConteiner = ({ item, pickedObject, pickingMasters, onPress }) => {
-  const text = pickingMasters ? item.name : item.title;
+const AddItemConteiner = ({ item, pickedObject, pickingDate, onPress }) => {
+  const text = pickingDate ? item.title : item.name;
   const handlePress = () => onPress(item);
-
-  console.log(item);
 
   return (
     <TouchableOpacity onPress={handlePress}>
-      <View style={style.wrapper}>
+      <Animated.View entering={FadeInUp} style={style.wrapper}>
         <CheckBox item={item} pickedObject={pickedObject} />
         <Text>{text}</Text>
-      </View>
+      </Animated.View>
     </TouchableOpacity>
   );
 };

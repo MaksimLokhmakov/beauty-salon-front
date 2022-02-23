@@ -12,8 +12,8 @@ import { Context } from "../../../context";
 import Table from "../../shared/Table";
 import MadalHeader from "../../shared/ModalHeader";
 import SearchBar from "../../shared/SearchBar";
-import { MaterialIcons } from "@expo/vector-icons";
 import AddItemConteiner from "../../shared/AddItemConteiner";
+import CheckBox from "../../shared/CheckBox";
 import style from "../style";
 import addTableStyle from "./style";
 import Screen from "../../../screens/style";
@@ -45,22 +45,16 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   const [pickingMasters, setPickingMasters] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
 
-  const [time, setTime] = React.useState("");
+  const initialTimetableData = {
+    date: {},
+    data: [],
+  };
 
-  const [addTimeTableData, setAddTimeTableData] = React.useState({
-    date: { title: "", rowDate: "" },
-    data: [
-      {
-        master: { id: Math.random(), name: "выбрать мастера" },
-        start: "",
-        finish: "",
-        inputValue: "",
-      },
-    ],
-  });
+  const [addTimeTableData, setAddTimeTableData] =
+    React.useState(initialTimetableData);
 
   const deleteMasterFromTimeTable = (master) => {
-    setMastersList((prev) => [master, ...prev]);
+    setMastersList((prev) => [...prev, master]);
     setAddTimeTableData((prev) => {
       const newMasters = prev.data.filter(
         (item) => item.master.id !== master.id
@@ -119,7 +113,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
               ...addTableStyle.iconWrapper,
             }}
           >
-            <MaterialIcons name="do-not-disturb-on" size={24} color="#fe3c30" />
+            <CheckBox colored={true} />
           </TouchableOpacity>
           <TouchableOpacity
             onPress={() => {
@@ -127,7 +121,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
               setPickedMaster({ master: item.master, index: index });
             }}
           >
-            <Text style={{ color: "#097fff", fontSize: 15 }}>
+            <Text style={{ color: "#212", fontSize: 15 }}>
               {item.master.name}
             </Text>
           </TouchableOpacity>
@@ -170,17 +164,10 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   }, [emptyDays]);
 
   const nullifyForm = () => {
-    setFirstInputValue("");
-    setSecondInputValue("");
-    setThirdInputValue("");
-    setFourthInputValue("");
-    setFirstMaster({});
-    setSecondMaster({});
-    setThirdMaster({});
-    setFourthMaster({});
-    setMasterNumber(1);
     setPickingMasters(false);
     setPickingDate(true);
+    setMastersList(masters);
+    setAddTimeTableData(initialTimetableData);
   };
 
   const requests = async () => {
@@ -229,8 +216,9 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
       prev.filter((item) => item.rowDate !== addTimeTableData.date.rowDate)
     );
     setVisibleAddTimetableModal(false);
-    requests();
-    getTimeTable();
+
+    // requests();
+    // getTimeTable();
     nullifyForm();
   };
 
@@ -245,22 +233,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   };
   const onComplete = () => {
     if (pickingMasters) {
-      setPickingMasters(false);
-      setMastersList((prev) =>
-        prev.filter((master) => master.id !== pickedMaster.master.id)
-      );
-      setAddTimeTableData((prev) => {
-        const newData = prev.data.map((item, index) => {
-          if (index === pickedMaster.index) item.master = pickedMaster.master;
-          return item;
-        });
-
-        return {
-          date: prev.date,
-          data: newData,
-        };
-      });
-      return;
+      return setPickingMasters(false);
     }
     if (pickingDate) return hidePickingDate();
     if (!pickingDate && !pickingMasters) return onSubmit();
@@ -280,11 +253,19 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     });
   };
 
-  const onPickMaster = (item) => {
-    setPickedMaster((prev) => {
+  const onPickMaster = (currentItem) => {
+    setMastersList((prev) =>
+      prev.filter((master) => master.id !== currentItem.id)
+    );
+    setAddTimeTableData((prev) => {
+      const newData = [
+        ...prev.data,
+        { master: currentItem, start: "", finish: "", inputValue: "" },
+      ];
+
       return {
-        master: item,
-        index: prev.index,
+        date: prev.date,
+        data: newData,
       };
     });
   };
@@ -292,22 +273,30 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   const pickedObject = pickingMasters
     ? pickedMaster.master
     : addTimeTableData.date;
-  const onPress = pickingMasters ? onPickMaster : onPickDate;
+  const onPress = pickingDate ? onPickDate : onPickMaster;
 
   const getRenderItem = ({ item }) => (
     <Animated.View entering={FadeIn} exiting={FadeOut}>
       <AddItemConteiner
         item={item}
         pickedObject={pickedObject}
-        pickingMasters={pickingMasters}
+        pickingDate={pickingDate}
         onPress={onPress}
       />
     </Animated.View>
   );
   const getKey = (item) => (pickingDate ? item.rowDate : item.id);
-  const filteredData = pickingDate
-    ? emptyDays.filter((item) => item.title.includes(searchValue))
-    : mastersList.filter((item) => item.name.includes(searchValue));
+  // const filteredData = pickingDate
+  //   ? emptyDays.filter((item) => item.title.includes(searchValue))
+  //   : mastersList.filter((item) => item.name.includes(searchValue));
+
+  const filtredEmptyDays = emptyDays.filter((item) =>
+    item.title.includes(searchValue)
+  );
+
+  const filteredMatsersList = mastersList.filter((item) =>
+    item.name.includes(searchValue)
+  );
 
   const addMasterToTimetable = () => {
     setAddTimeTableData((prev) => {
@@ -335,7 +324,13 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
       animationType="slide"
       transparent={false}
     >
-      <View style={[style.wrapper, addTableStyle.wrapper]}>
+      <View
+        style={[
+          style.wrapper,
+          addTableStyle.wrapper,
+          { backgroundColor: "#f1f3f4" },
+        ]}
+      >
         <MadalHeader
           onBack={onBack}
           onComplete={() => onComplete()}
@@ -344,7 +339,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
           rigthButton={pickingDate ? "Выбрать" : "Применить"}
         />
 
-        {pickingDate || pickingMasters ? (
+        {pickingDate ? (
           <>
             <View style={addTableStyle.fullWidth}>
               <SearchBar
@@ -356,9 +351,8 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
             </View>
 
             <Animated.FlatList
-              itemLayoutAnimation={Layout}
               style={addTableStyle.paddingTopTen}
-              data={filteredData}
+              data={filtredEmptyDays}
               keyExtractor={getKey}
               renderItem={getRenderItem}
               showsVerticalScrollIndicator={false}
@@ -366,9 +360,21 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
           </>
         ) : (
           <View>
-            <Table tableValues={tableAddTimeTableData} />
+            <View
+              style={{
+                backgroundColor: "#ffffff",
+                borderRadius: 15,
+                paddingHorizontal: 15,
+                paddingTop: 15,
+              }}
+            >
+              <Table
+                tableValues={tableAddTimeTableData}
+                backgroundColor="#fff"
+              />
+            </View>
 
-            <TouchableOpacity onPress={addMasterToTimetable}>
+            {/* <TouchableOpacity onPress={addMasterToTimetable}>
               <Animated.View
                 entering={FadeInUp}
                 style={[
@@ -383,7 +389,15 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
                   <Text style={addTableStyle.buttonText}>добавить мастера</Text>
                 </View>
               </Animated.View>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            <Animated.FlatList
+              itemLayoutAnimation={Layout}
+              style={addTableStyle.paddingTopTen}
+              data={filteredMatsersList}
+              keyExtractor={getKey}
+              renderItem={getRenderItem}
+              showsVerticalScrollIndicator={false}
+            />
           </View>
         )}
       </View>
