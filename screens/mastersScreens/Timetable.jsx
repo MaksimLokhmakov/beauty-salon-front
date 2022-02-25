@@ -10,13 +10,19 @@ import { Table, SearchBar, AddTimeTableModal } from "../../components";
 import Screen from "../style";
 
 const Timetable = () => {
-  const { getTimeTable } = React.useContext(Context);
+  const { getTimeTable, timeTable, setVisibleAddTimetableModal } =
+    React.useContext(Context);
   const [isLoading, setIsLoading] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
   const [reductItem, setReductItem] = React.useState(false);
   React.useEffect(() => {
     getTimeTable();
   }, []);
+
+  const getEditDay = (day) => {
+    setReductItem(day);
+    setVisibleAddTimetableModal(true);
+  };
 
   const onRefresh = () => {
     setIsLoading(true);
@@ -29,7 +35,7 @@ const Timetable = () => {
   };
   const getKey = (item) => item.title;
   const getItemToRender = ({ item, index }) => {
-    const tableItemData = item.data.map((item) => {
+    const tableItemData = item.masters.map((item) => {
       return {
         label: <Label>{item.master.name}</Label>,
         value: <Text>{item.start + " - " + item.finish}</Text>,
@@ -39,56 +45,23 @@ const Timetable = () => {
       title: item.title,
       data: tableItemData,
     };
-    const isItemNotEmpty = item.data.length > 0;
 
     return (
-      isItemNotEmpty && (
-        <Animated.View
-          entering={FadeIn.delay(50 * index)}
-          exiting={FadeOutRight}
-          style={[Screen.infoCardWrapper, timeTableStyle.tableWrapperStyle]}
-        >
-          <Table editable onEdit={setReductItem} tableValues={tableData} />
-        </Animated.View>
-      )
+      <Animated.View
+        entering={FadeIn.delay(50 * index)}
+        exiting={FadeOutRight}
+        style={[Screen.infoCardWrapper, timeTableStyle.tableWrapperStyle]}
+      >
+        <Table
+          editable
+          onEdit={getEditDay}
+          tableValues={tableData}
+          item={item}
+        />
+      </Animated.View>
     );
   };
 
-  const timeTable = [
-    {
-      title: "22 февраля",
-      data: [
-        { master: { name: "Ирина" }, start: "13:00", finish: "21:00" },
-        {
-          master: { name: "Денис" },
-          start: "13:00",
-          finish: "21:00",
-        },
-      ],
-    },
-    {
-      title: "23 февраля",
-      data: [
-        { master: { name: "Ирина" }, start: "13:00", finish: "21:00" },
-        {
-          master: { name: "Денис" },
-          start: "13:00",
-          finish: "21:00",
-        },
-      ],
-    },
-    {
-      title: "24 февраля",
-      data: [
-        { master: { name: "Ирина" }, start: "13:00", finish: "21:00" },
-        {
-          master: { name: "Денис" },
-          start: "13:00",
-          finish: "21:00",
-        },
-      ],
-    },
-  ];
   const filtredData = timeTable.filter((item) => onSearch(item));
 
   return (

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Modal, Text, TouchableOpacity, TextInput } from "react-native";
+import { View, Modal, Text, TouchableOpacity, ScrollView } from "react-native";
 import Animated, {
   Layout,
   FadeIn,
@@ -29,39 +29,44 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     visibleAddTimetableModal,
     setVisibleAddTimetableModal,
     masters,
+    timeTable,
     setTimeTable,
     getTimeTable,
   } = React.useContext(Context);
   const [emptyDays, setEmptyDays] = React.useState([]);
 
-  const [pickedMaster, setPickedMaster] = React.useState({
-    master: {},
-    index: "",
-  });
-
   const [mastersList, setMastersList] = React.useState(masters);
-  const [isLoading, setIsLoading] = React.useState(false);
-  const [pickingDate, setPickingDate] = React.useState(true);
-  const [pickingMasters, setPickingMasters] = React.useState(false);
-  const [searchValue, setSearchValue] = React.useState("");
+  const [pickingDate, setPickingDate] = React.useState(false);
 
   const initialTimetableData = {
     date: {},
-    data: [],
+    masters: [],
   };
 
   const [addTimeTableData, setAddTimeTableData] =
     React.useState(initialTimetableData);
 
+  React.useEffect(() => {
+    setAddTimeTableData({
+      date: {
+        rowDate: item.rawDate,
+        title: item.title,
+      },
+      masters: item.masters ? item.masters : [],
+    });
+  }, [visibleAddTimetableModal]);
+
+  console.log(item, "--- addTimeTableData:", addTimeTableData);
+
   const deleteMasterFromTimeTable = (master) => {
     setMastersList((prev) => [...prev, master]);
     setAddTimeTableData((prev) => {
-      const newMasters = prev.data.filter(
+      const newMasters = prev.masters.filter(
         (item) => item.master.id !== master.id
       );
       return {
         date: prev.date,
-        data: newMasters,
+        masters: newMasters,
       };
     });
   };
@@ -83,21 +88,23 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   ];
   const handleChangeInput = (e, index) => {
     setAddTimeTableData((prev) => {
-      const newData = prev.data.map((item, currentIndex) => {
+      const newData = prev.masters.map((item, currentIndex) => {
         if (currentIndex === index) {
           item.inputValue = e;
+          item.start = item.inputValue.split(" - ")[0];
+          item.finish = item.inputValue.split(" - ")[1];
         }
         return item;
       });
 
       return {
         date: prev.date,
-        data: newData,
+        masters: newData,
       };
     });
   };
 
-  const tableData = addTimeTableData.data.map((item, index) => {
+  const tableData = addTimeTableData.masters.map((item, index) => {
     return {
       label: (
         <View
@@ -113,14 +120,9 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
               ...addTableStyle.iconWrapper,
             }}
           >
-            <CheckBox colored={true} />
+            <CheckBox />
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              setPickingMasters(true);
-              setPickedMaster({ master: item.master, index: index });
-            }}
-          >
+          <TouchableOpacity>
             <Text style={{ color: "#212", fontSize: 15 }}>
               {item.master.name}
             </Text>
@@ -148,24 +150,10 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   };
 
   React.useEffect(() => {
-    setIsLoading(true);
     getEmptyDays();
-    setIsLoading(false);
   }, []);
-  React.useEffect(() => {
-    if (item === false)
-      setAddTimeTableData((prev) => {
-        return {
-          date: emptyDays[0],
-          data: prev.data,
-        };
-      });
-    getTimeTable();
-  }, [emptyDays]);
 
   const nullifyForm = () => {
-    setPickingMasters(false);
-    setPickingDate(true);
     setMastersList(masters);
     setAddTimeTableData(initialTimetableData);
   };
@@ -211,14 +199,24 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
       .catch((e) => console.log(e));
   };
 
+  // console.log(" time", timeTable[0]);
+
   const onSubmit = () => {
     setEmptyDays((prev) =>
       prev.filter((item) => item.rowDate !== addTimeTableData.date.rowDate)
     );
     setVisibleAddTimetableModal(false);
 
-    // requests();
-    // getTimeTable();
+    setTimeTable((prev) =>
+      prev.map((day) => {
+        if (day.rawDate === addTimeTableData.date.rowDate) {
+          day.masters = addTimeTableData.masters;
+        }
+
+        return day;
+      })
+    );
+
     nullifyForm();
   };
 
@@ -231,24 +229,18 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   const hidePickingDate = () => {
     setPickingDate(false);
   };
-  const onComplete = () => {
-    if (pickingMasters) {
-      return setPickingMasters(false);
-    }
-    if (pickingDate) return hidePickingDate();
-    if (!pickingDate && !pickingMasters) return onSubmit();
-  };
+  const onComplete = () => (pickingDate ? hidePickingDate() : onSubmit());
+
   const onBack = (value) => {
     setVisibleAddTimetableModal(value);
     nullifyForm();
-    item && setItem(false);
   };
 
   const onPickDate = (item) => {
     setAddTimeTableData((prev) => {
       return {
         date: item,
-        data: prev.data,
+        masters: prev.masters,
       };
     });
   };
@@ -259,44 +251,33 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     );
     setAddTimeTableData((prev) => {
       const newData = [
-        ...prev.data,
+        ...prev.masters,
         { master: currentItem, start: "", finish: "", inputValue: "" },
       ];
 
       return {
         date: prev.date,
-        data: newData,
+        masters: newData,
       };
     });
   };
 
-  const pickedObject = pickingMasters
-    ? pickedMaster.master
-    : addTimeTableData.date;
+  const pickedObject = addTimeTableData.date;
   const onPress = pickingDate ? onPickDate : onPickMaster;
 
-  const getRenderItem = ({ item }) => (
-    <Animated.View entering={FadeIn} exiting={FadeOut}>
-      <AddItemConteiner
-        item={item}
-        pickedObject={pickedObject}
-        pickingDate={pickingDate}
-        onPress={onPress}
-      />
-    </Animated.View>
-  );
+  const getRenderItem = ({ item, index }) => {
+    return (
+      <Animated.View entering={FadeIn}>
+        <AddItemConteiner
+          item={item}
+          pickedObject={pickedObject}
+          pickingDate={pickingDate}
+          onPress={onPress}
+        />
+      </Animated.View>
+    );
+  };
   const getKey = (item) => (pickingDate ? item.rowDate : item.id);
-  // const filteredData = pickingDate
-  //   ? emptyDays.filter((item) => item.title.includes(searchValue))
-  //   : mastersList.filter((item) => item.name.includes(searchValue));
-
-  const filtredEmptyDays = emptyDays.filter((item) =>
-    item.title.includes(searchValue)
-  );
-
-  const filteredMatsersList = mastersList.filter((item) =>
-    item.name.includes(searchValue)
-  );
 
   const addMasterToTimetable = () => {
     setAddTimeTableData((prev) => {
@@ -341,25 +322,16 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
 
         {pickingDate ? (
           <>
-            <View style={addTableStyle.fullWidth}>
-              <SearchBar
-                value={searchValue}
-                setValue={setSearchValue}
-                styleWrapper={addTableStyle.searchBarWrapper}
-                styleInput={addTableStyle.fullWidth}
-              />
-            </View>
-
             <Animated.FlatList
               style={addTableStyle.paddingTopTen}
-              data={filtredEmptyDays}
+              data={emptyDays}
               keyExtractor={getKey}
               renderItem={getRenderItem}
               showsVerticalScrollIndicator={false}
             />
           </>
         ) : (
-          <View>
+          <View style={{ maxHeight: "100%" }}>
             <View
               style={{
                 backgroundColor: "#ffffff",
@@ -374,30 +346,44 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
               />
             </View>
 
-            {/* <TouchableOpacity onPress={addMasterToTimetable}>
-              <Animated.View
-                entering={FadeInUp}
-                style={[
-                  addTableStyle.rowDerection,
-                  addTableStyle.buttonConteiner,
-                ]}
+            <View
+              style={{
+                marginTop: 10,
+                backgroundColor: "#ffffff",
+                borderRadius: 15,
+                paddingHorizontal: 15,
+              }}
+            >
+              <Text
+                style={{
+                  marginTop: 10,
+                  marginBottom: 10,
+                  width: "100%",
+                  fontSize: 16,
+                  color: "#212121",
+                  marginBottom: 10,
+                }}
               >
-                <View style={addTableStyle.iconWrapper}>
-                  <MaterialIcons name="add-circle" size={24} color="#007afe" />
-                </View>
-                <View style={addTableStyle.button}>
-                  <Text style={addTableStyle.buttonText}>добавить мастера</Text>
-                </View>
-              </Animated.View>
-            </TouchableOpacity> */}
-            <Animated.FlatList
-              itemLayoutAnimation={Layout}
-              style={addTableStyle.paddingTopTen}
-              data={filteredMatsersList}
-              keyExtractor={getKey}
-              renderItem={getRenderItem}
-              showsVerticalScrollIndicator={false}
-            />
+                Мастера
+              </Text>
+              <View>
+                {mastersList.map((item, index) => {
+                  const lastElement =
+                    !pickingDate && index === mastersList.length - 1;
+                  return (
+                    <Animated.View key={getKey(item)} entering={FadeIn}>
+                      <AddItemConteiner
+                        item={item}
+                        pickedObject={pickedObject}
+                        pickingDate={pickingDate}
+                        onPress={onPress}
+                        lastElement={lastElement}
+                      />
+                    </Animated.View>
+                  );
+                })}
+              </View>
+            </View>
           </View>
         )}
       </View>

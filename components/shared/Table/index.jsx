@@ -1,8 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import Animated, { FadeInUp, FadeOut, Layout } from "react-native-reanimated";
-import { Context } from "../../../context";
+import Animated, { FadeInUp } from "react-native-reanimated";
 import table from "./style";
 
 const Table = ({
@@ -23,11 +22,8 @@ const Table = ({
     ],
   },
 }) => {
-  const { setVisibleAddTimetableModal } = React.useContext(Context);
-
   const handleEdit = () => {
     onEdit(item);
-    setVisibleAddTimetableModal(true);
   };
 
   return (
