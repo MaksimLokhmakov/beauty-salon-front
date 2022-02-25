@@ -7,5 +7,7 @@ export { default as Table } from "./shared/Table";
 export { default as SearchBar } from "./shared/SearchBar";
 export { default as AddAppointmentModel } from "./Modals/AddAppointmentsModal";
 export { default as AddTimeTableModal } from "./Modals/AddTimeTableModal";
-export { default as StatisticInfoSection } from "./StatisticInfoSection";
+export { default as StatisticInfoSection } from "./reportScreen/StatisticInfoSection";
+export { default as MasterBlock } from "./reportScreen/MasterBlock";
 export { default as ModalList } from "./Modals/ModalList";
+export { default as Label } from "./shared/Label";

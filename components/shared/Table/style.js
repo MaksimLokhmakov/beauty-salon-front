@@ -49,6 +49,7 @@ const table = StyleSheet.create({
   },
   rowDerection: {
     flexDirection: "row",
+    alignItems: "center",
   },
 });
 

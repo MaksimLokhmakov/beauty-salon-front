@@ -25,6 +25,7 @@ const Table = ({
   const handleEdit = () => {
     onEdit(item);
   };
+  const isNotEmpty = tableValues.data.length > 0;
 
   return (
     <>

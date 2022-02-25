@@ -23,7 +23,6 @@ const Timetable = () => {
     setReductItem(day);
     setVisibleAddTimetableModal(true);
   };
-
   const onRefresh = () => {
     setIsLoading(true);
     getTimeTable();
@@ -96,7 +95,10 @@ const Label = ({ children }) => (
 const timeTableStyle = StyleSheet.create({
   searchWrapper: { paddingBottom: 10, backgroundColor: "#fff" },
   flatListStyle: { paddingBottom: 20 },
-  tableWrapperStyle: { marginTop: 10, marginBottom: 0 },
+  tableWrapperStyle: {
+    marginTop: 10,
+    marginBottom: 0,
+  },
   wrapperColor: { backgroundColor: "#f1f3f4" },
 });
 

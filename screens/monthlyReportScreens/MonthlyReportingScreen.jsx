@@ -1,7 +1,12 @@
 import React from "react";
 import { View, Text, ScrollView, RefreshControl, Platform } from "react-native";
 import { Context } from "../../context";
-import { Table, StatisticInfoSection, ModalList } from "../../components";
+import {
+  Table,
+  StatisticInfoSection,
+  ModalList,
+  MasterBlock,
+} from "../../components";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import Screen from "../style";
 
@@ -33,11 +38,11 @@ const MonthlyReportingScreen = () => {
   return (
     <>
       <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ ...Screen.wrapper, backgroundColor: "#ebecef" }}
         contentContainerStyle={
           Platform.OS === "android" && Screen.androidPaddingTop
         }
-        showsVerticalScrollIndicator={false}
-        style={{ ...Screen.wrapper, backgroundColor: "#ebecef" }}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -55,79 +60,9 @@ const MonthlyReportingScreen = () => {
           )}
 
           {reportingPicker === "Мастера" &&
-            mastersStat.map((item, index) => {
-              const mastersDayInfoTableData = {
-                title: "Сегодня: ",
-                data: [
-                  {
-                    label: <Text style={{ color: "#C2185B" }}>время</Text>,
-                    value: <Text>{item.dayHours} ч.</Text>,
-                  },
-                  {
-                    label: <Text style={{ color: "#C2185B" }}>прибыль</Text>,
-                    value: <Text>{item.dayIncome} руб.</Text>,
-                  },
-                ],
-              };
-
-              const mastersMonthInfoTableData = {
-                title: "Месяц:",
-                data: [
-                  {
-                    label: <Text style={{ color: "#C2185B" }}>время</Text>,
-                    value: <Text>{item.monthHours} ч.</Text>,
-                  },
-                  {
-                    label: <Text style={{ color: "#C2185B" }}>прибыль</Text>,
-                    value: <Text>{item.monthIncome} руб.</Text>,
-                  },
-                ],
-              };
-              return (
-                <Animated.View
-                  entering={FadeIn.delay(50 * index)}
-                  exiting={FadeOut}
-                  key={item.master.id}
-                  style={{
-                    ...Screen.infoCardWrapper,
-                    paddingHorizontal: 10,
-                  }}
-                >
-                  <Text
-                    style={{ fontSize: 18, marginBottom: 10, marginLeft: 10 }}
-                  >
-                    {item.master.name}
-                  </Text>
-                  <View style={{ flexDirection: "row" }}>
-                    <View
-                      style={{
-                        ...Screen.infoCardWrapper,
-                        backgroundColor: "#f1f3f4",
-                        marginRight: 5,
-                        paddingHorizontal: 20,
-                      }}
-                    >
-                      <Table
-                        backgroundColor="#f1f3f4"
-                        tableValues={mastersDayInfoTableData}
-                      />
-                    </View>
-                    <View
-                      style={{
-                        ...Screen.infoCardWrapper,
-                        backgroundColor: "#f1f3f4",
-                        paddingHorizontal: 20,
-                      }}
-                    >
-                      <Table
-                        backgroundColor="#f1f3f4"
-                        tableValues={mastersMonthInfoTableData}
-                      />
-                    </View>
-                  </View>
-                </Animated.View>
-              );
-            })}
+            mastersStat.map((item, index) => (
+              <MasterBlock key={item.master.id} item={item} index={index} />
+            ))}
         </View>
       </ScrollView>
       <ModalList

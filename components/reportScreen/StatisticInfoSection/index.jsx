@@ -1,27 +1,28 @@
 import { View, Text } from "react-native";
 import React from "react";
-import Table from "../shared/Table";
+import Table from "../../shared/Table";
 import style from "./style";
-import Screen from "../../screens/style";
+import Label from "../.././shared/Label";
+import Screen from "../../../screens/style";
 
 const StatisticInfoSection = ({ stat, type }) => {
   const infoSectionTableData = {
     title: "Прибыль:",
     data: [
       {
-        label: <Text>доп. услуги</Text>,
+        label: <Label>доп. услуги</Label>,
         value: <Text>{stat.addonIncome} руб.</Text>,
       },
       {
-        label: <Text>иглы</Text>,
+        label: <Label>иглы</Label>,
         value: <Text>{stat.needleIncome} руб.</Text>,
       },
       {
-        label: <Text>приемы</Text>,
+        label: <Label>приемы</Label>,
         value: <Text>{stat.overallIncome} руб.</Text>,
       },
       {
-        label: <Text>общая</Text>,
+        label: <Label>общая</Label>,
         value: <Text>{stat.priceIncome} руб.</Text>,
       },
     ],
@@ -30,19 +31,19 @@ const StatisticInfoSection = ({ stat, type }) => {
     title: "Изол. иглы:",
     data: [
       {
-        label: <Text>№1</Text>,
+        label: <Label width={25}>№1</Label>,
         value: <Text>{stat.needles.isolated.first} шт.</Text>,
       },
       {
-        label: <Text>№2</Text>,
+        label: <Label width={25}>№2</Label>,
         value: <Text>{stat.needles.isolated.second} шт.</Text>,
       },
       {
-        label: <Text>№3</Text>,
+        label: <Label width={25}>№3</Label>,
         value: <Text>{stat.needles.isolated.third} шт.</Text>,
       },
       {
-        label: <Text>№4</Text>,
+        label: <Label width={25}>№4</Label>,
         value: <Text>{stat.needles.isolated.fourth} шт.</Text>,
       },
     ],
@@ -51,19 +52,19 @@ const StatisticInfoSection = ({ stat, type }) => {
     title: "Обыч. иглы:",
     data: [
       {
-        label: <Text>№1</Text>,
+        label: <Label width={25}>№1</Label>,
         value: <Text>{stat.needles.nonIsolated.first} шт.</Text>,
       },
       {
-        label: <Text>№2</Text>,
+        label: <Label width={25}>№2</Label>,
         value: <Text>{stat.needles.nonIsolated.second} шт.</Text>,
       },
       {
-        label: <Text>№3</Text>,
+        label: <Label width={25}>№3</Label>,
         value: <Text>{stat.needles.nonIsolated.third} шт.</Text>,
       },
       {
-        label: <Text>№4</Text>,
+        label: <Label width={25}>№4</Label>,
         value: <Text>{stat.needles.nonIsolated.fourth} шт.</Text>,
       },
     ],
@@ -72,15 +73,15 @@ const StatisticInfoSection = ({ stat, type }) => {
     title: "Кол-во доп. услуг:",
     data: [
       {
-        label: <Text>инъекционная анестезия</Text>,
+        label: <Label>инъекционная анестезия</Label>,
         value: <Text>{stat.addons.injection}</Text>,
       },
       {
-        label: <Text>аппликационная анестезия</Text>,
+        label: <Label>аппликационная анестезия</Label>,
         value: <Text>{stat.addons.ointment}</Text>,
       },
       {
-        label: <Text>окрашивание</Text>,
+        label: <Label>окрашивание</Label>,
         value: <Text>{stat.addons.coloring}</Text>,
       },
     ],
@@ -132,4 +133,4 @@ const StatisticInfoSection = ({ stat, type }) => {
   );
 };
 
-export default StatisticInfoSection;
+export default React.memo(StatisticInfoSection);

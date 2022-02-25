@@ -56,8 +56,6 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     });
   }, [visibleAddTimetableModal]);
 
-  console.log(item, "--- addTimeTableData:", addTimeTableData);
-
   const deleteMasterFromTimeTable = (master) => {
     setMastersList((prev) => [...prev, master]);
     setAddTimeTableData((prev) => {
@@ -199,8 +197,6 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
       .catch((e) => console.log(e));
   };
 
-  // console.log(" time", timeTable[0]);
-
   const onSubmit = () => {
     setEmptyDays((prev) =>
       prev.filter((item) => item.rowDate !== addTimeTableData.date.rowDate)
@@ -245,7 +241,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     });
   };
 
-  const onPickMaster = (currentItem) => {
+  const onPickMaster = React.useCallback((currentItem) => {
     setMastersList((prev) =>
       prev.filter((master) => master.id !== currentItem.id)
     );
@@ -260,10 +256,10 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
         masters: newData,
       };
     });
-  };
+  }, []);
 
   const pickedObject = addTimeTableData.date;
-  const onPress = pickingDate ? onPickDate : onPickMaster;
+  const onPress = onPickMaster;
 
   const getRenderItem = ({ item, index }) => {
     return (
