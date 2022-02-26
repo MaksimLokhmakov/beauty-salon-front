@@ -29,14 +29,33 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     visibleAddTimetableModal,
     setVisibleAddTimetableModal,
     masters,
-    timeTable,
     setTimeTable,
-    getTimeTable,
   } = React.useContext(Context);
   const [emptyDays, setEmptyDays] = React.useState([]);
 
   const [mastersList, setMastersList] = React.useState(masters);
   const [pickingDate, setPickingDate] = React.useState(false);
+
+  const clearMasters = masters.map((item) => {
+    return { id: item.id, name: item.name };
+  });
+  const propsMasters =
+    item.masters &&
+    item.masters.map((item) => {
+      return JSON.stringify(item.master);
+    });
+
+  const filtredMasters = clearMasters.filter(
+    (x) => propsMasters && !propsMasters.includes(JSON.stringify(x))
+  );
+
+  console.log("filtredMasters", filtredMasters);
+
+  // const initialMastersListData =
+  //   item.masters &&
+  //   item.masters.filter((item) => {
+  //     console.log(item.master);
+  //   });
 
   const initialTimetableData = {
     date: {},
@@ -47,13 +66,23 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     React.useState(initialTimetableData);
 
   React.useEffect(() => {
+    const propsMastersWithInputValue =
+      item.masters &&
+      item.masters.map((master) => {
+        if (!master.inputValue)
+          master.inputValue = master.start + " - " + master.finish;
+
+        return master;
+      });
+
     setAddTimeTableData({
       date: {
         rowDate: item.rawDate,
         title: item.title,
       },
-      masters: item.masters ? item.masters : [],
+      masters: propsMastersWithInputValue ? propsMastersWithInputValue : [],
     });
+    setMastersList(filtredMasters);
   }, [visibleAddTimetableModal]);
 
   const deleteMasterFromTimeTable = (master) => {
@@ -367,15 +396,14 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
                   const lastElement =
                     !pickingDate && index === mastersList.length - 1;
                   return (
-                    <Animated.View key={getKey(item)} entering={FadeIn}>
-                      <AddItemConteiner
-                        item={item}
-                        pickedObject={pickedObject}
-                        pickingDate={pickingDate}
-                        onPress={onPress}
-                        lastElement={lastElement}
-                      />
-                    </Animated.View>
+                    <AddItemConteiner
+                      key={getKey(item)}
+                      item={item}
+                      pickedObject={pickedObject}
+                      pickingDate={pickingDate}
+                      onPress={onPress}
+                      lastElement={lastElement}
+                    />
                   );
                 })}
               </View>
