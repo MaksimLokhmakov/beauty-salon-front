@@ -30,7 +30,7 @@ const Table = ({
   return (
     <>
       {tableValues.title && (
-        <Animated.View entering={FadeInUp} style={table.rowDerection}>
+        <Animated.View style={table.rowDerection}>
           <Text style={table.title}>{tableValues.title}</Text>
           {editable && (
             <TouchableOpacity onPress={handleEdit} style={table.iconWrapper}>
@@ -62,4 +62,4 @@ const Table = ({
   );
 };
 
-export default Table;
+export default React.memo(Table);

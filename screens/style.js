@@ -44,7 +44,7 @@ const Screen = StyleSheet.create({
     borderRadius: 16,
   },
   androidPaddingTop: {
-    paddingTop: 95,
+    paddingTop: 35,
   },
 });
 

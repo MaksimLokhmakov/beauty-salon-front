@@ -11,8 +11,7 @@ import { AppointmentsScreen, AppointmentScreen } from "../screens/index";
 import styleForHeader from "./style";
 
 const AppointmentsStack = ({ navigation }) => {
-  const { setVisibleAppointmentsModel, setSortVisibleAppointmentsList } =
-    React.useContext(Context);
+  const { setSortVisibleAppointmentsList } = React.useContext(Context);
   return (
     <Stack.Navigator initialRouteName="AppointmentsScreen">
       <Stack.Screen
@@ -22,11 +21,6 @@ const AppointmentsStack = ({ navigation }) => {
           headerTransparent: false,
           headerTitle: () => (
             <Text style={styleForHeader.mainPage}>Приемы</Text>
-          ),
-          headerRight: () => (
-            <TouchableOpacity onPress={() => setVisibleAppointmentsModel(true)}>
-              <Ionicons name="add" size={26} color="#C2185B" />
-            </TouchableOpacity>
           ),
           headerLeft: () => (
             <TouchableOpacity

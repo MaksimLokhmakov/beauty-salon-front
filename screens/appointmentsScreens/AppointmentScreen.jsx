@@ -7,7 +7,12 @@ import {
   Text,
 } from "react-native";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { AppointmentCard, PersonInfoHeader, Table } from "../../components";
+import {
+  AppointmentCard,
+  PersonInfoHeader,
+  Table,
+  Label,
+} from "../../components";
 import Screen from "../style";
 
 // TODO:  ДОБАВИТЬ ОБЩУЮ СУММУ ОПЛАТЫ ЗА ПРИЕМ
@@ -17,8 +22,15 @@ import Screen from "../style";
 
 const AppointmentScreen = ({ route }) => {
   const { appointment } = route.params;
+  const [normalNeedles, setNormalNeedles] = React.useState(null);
+  const [specialNeedles, setSpecialNeedles] = React.useState(null);
 
-  const phoneValue = () => (
+  const setNeedls = (setState, nullifyState, needle) => {
+    setState((prev) => (prev === needle ? null : needle));
+    nullifyState(null);
+  };
+
+  const phoneValue = (
     <TouchableOpacity
       onPress={() => Linking.openURL(`tel:${appointment.master.tel}`)}
     >
@@ -34,19 +46,134 @@ const AppointmentScreen = ({ route }) => {
     coloring: false,
   });
 
+  const masterTableInfo = {
+    title: "Мастер:",
+    data: [
+      {
+        label: <Label>имя/фам.</Label>,
+        value: <Text>{appointment.master.name}</Text>,
+      },
+      { label: <Label>сотовый</Label>, value: phoneValue },
+    ],
+  };
+
+  const needles = [1, 2, 3, 4];
+  const noneIsoletedNeedlesTebleData = {
+    title: "Обыч. иглы",
+    data: needles.map((needle) => {
+      return {
+        label: <Label>№{needle}</Label>,
+        value: (
+          <TouchableOpacity
+            onPress={() =>
+              setNeedls(setNormalNeedles, setSpecialNeedles, needle)
+            }
+          >
+            <FontAwesome5
+              style={{ marginRight: 5 }}
+              name="check"
+              size={18}
+              color={normalNeedles === needle ? "#5bdd8f" : "#ebecef"}
+            />
+          </TouchableOpacity>
+        ),
+      };
+    }),
+  };
+  const isolatedNeedlesTableData = {
+    title: "Изол. иглы",
+    data: needles.map((needle) => {
+      return {
+        label: <Label>№{needle}</Label>,
+        value: (
+          <TouchableOpacity
+            onPress={() =>
+              setNeedls(setSpecialNeedles, setNormalNeedles, needle)
+            }
+          >
+            <FontAwesome5
+              style={{ marginRight: 5 }}
+              name="check"
+              size={18}
+              color={specialNeedles === needle ? "#5bdd8f" : "#ebecef"}
+            />
+          </TouchableOpacity>
+        ),
+      };
+    }),
+  };
+
+  const addonsTableData = {
+    title: "Доп. услуги",
+    data: [
+      {
+        label: <Label>инъекционная анестезия</Label>,
+        value: (
+          <TouchableOpacity
+            onPress={() =>
+              setChecked((prev) => ({
+                ...prev,
+                injection: !prev.injection,
+              }))
+            }
+          >
+            <FontAwesome5
+              style={{ marginRight: 5 }}
+              name="check"
+              size={18}
+              color={checked.injection ? "#5bdd8f" : "#ebecef"}
+            />
+          </TouchableOpacity>
+        ),
+      },
+      {
+        label: <Label>аппликационная анестезия</Label>,
+        value: (
+          <TouchableOpacity
+            onPress={() =>
+              setChecked((prev) => ({
+                ...prev,
+                ointment: !prev.ointment,
+              }))
+            }
+          >
+            <FontAwesome5
+              style={{ marginRight: 5 }}
+              name="check"
+              size={18}
+              color={checked.ointment ? "#5bdd8f" : "#ebecef"}
+            />
+          </TouchableOpacity>
+        ),
+      },
+      {
+        label: <Label>окрашивание</Label>,
+        value: (
+          <TouchableOpacity
+            onPress={() =>
+              setChecked((prev) => ({
+                ...prev,
+                coloring: !prev.coloring,
+              }))
+            }
+          >
+            <FontAwesome5
+              style={{ marginRight: 5 }}
+              name="check"
+              size={18}
+              color={checked.coloring ? "#5bdd8f" : "#ebecef"}
+            />
+          </TouchableOpacity>
+        ),
+      },
+    ],
+  };
+
   //!  так передавать на сервер
   //!  "needle": {
   //! "type": "isolated/nonisolated"
   //! "number": "3"
   //!  }
-
-  const [normalNeedles, setNormalNeedles] = React.useState(null);
-  const [specialNeedles, setSpecialNeedles] = React.useState(null);
-
-  const setNeedls = (setState, nullifyState, needle) => {
-    setState((prev) => (prev === needle ? null : needle));
-    nullifyState(null);
-  };
 
   return (
     <ScrollView
@@ -55,14 +182,7 @@ const AppointmentScreen = ({ route }) => {
     >
       <PersonInfoHeader item={appointment.client} appointment />
       <View style={Screen.infoCardWrapper}>
-        <Table
-          numberOfRows={2}
-          title="Мастер:"
-          firstLabel={() => "имя/фам."}
-          firstValue={() => <Text>{appointment.master.name}</Text>}
-          secondLabel={() => "сотовый"}
-          secondValue={phoneValue}
-        />
+        <Table tableValues={masterTableInfo} />
       </View>
       <AppointmentCard item={appointment} />
 
@@ -73,199 +193,16 @@ const AppointmentScreen = ({ route }) => {
         }}
       >
         <View style={{ ...Screen.infoCardWrapper, marginRight: 5 }}>
-          <Table
-            numberOfRows={4}
-            title="Обыч. иглы"
-            firstLabel={() => "№1"}
-            firstValue={() => (
-              <TouchableOpacity
-                onPress={() =>
-                  setNeedls(setNormalNeedles, setSpecialNeedles, 1)
-                }
-              >
-                <FontAwesome5
-                  style={{ marginRight: 5 }}
-                  name="check"
-                  size={18}
-                  color={normalNeedles === 1 ? "#5bdd8f" : "#ebecef"}
-                />
-              </TouchableOpacity>
-            )}
-            secondLabel={() => "№2"}
-            secondValue={() => (
-              <TouchableOpacity
-                onPress={() =>
-                  setNeedls(setNormalNeedles, setSpecialNeedles, 2)
-                }
-              >
-                <FontAwesome5
-                  style={{ marginRight: 5 }}
-                  name="check"
-                  size={18}
-                  color={normalNeedles === 2 ? "#5bdd8f" : "#ebecef"}
-                />
-              </TouchableOpacity>
-            )}
-            thirdLabel={() => "№3"}
-            thirdValue={() => (
-              <TouchableOpacity
-                onPress={() =>
-                  setNeedls(setNormalNeedles, setSpecialNeedles, 3)
-                }
-              >
-                <FontAwesome5
-                  style={{ marginRight: 5 }}
-                  name="check"
-                  size={18}
-                  color={normalNeedles === 3 ? "#5bdd8f" : "#ebecef"}
-                />
-              </TouchableOpacity>
-            )}
-            fourthLabel={() => "№4"}
-            fourthValue={() => (
-              <TouchableOpacity
-                onPress={() =>
-                  setNeedls(setNormalNeedles, setSpecialNeedles, 4)
-                }
-              >
-                <FontAwesome5
-                  style={{ marginRight: 5 }}
-                  name="check"
-                  size={18}
-                  color={normalNeedles === 4 ? "#5bdd8f" : "#ebecef"}
-                />
-              </TouchableOpacity>
-            )}
-          />
+          <Table tableValues={noneIsoletedNeedlesTebleData} />
         </View>
 
         <View style={{ ...Screen.infoCardWrapper, marginLeft: 5 }}>
-          <Table
-            numberOfRows={4}
-            title="Изол. иглы"
-            firstLabel={() => "№1"}
-            firstValue={() => (
-              <TouchableOpacity
-                onPress={() =>
-                  setNeedls(setSpecialNeedles, setNormalNeedles, 1)
-                }
-              >
-                <FontAwesome5
-                  style={{ marginRight: 5 }}
-                  name="check"
-                  size={18}
-                  color={specialNeedles === 1 ? "#5bdd8f" : "#ebecef"}
-                />
-              </TouchableOpacity>
-            )}
-            secondLabel={() => "№2"}
-            secondValue={() => (
-              <TouchableOpacity
-                onPress={() =>
-                  setNeedls(setSpecialNeedles, setNormalNeedles, 2)
-                }
-              >
-                <FontAwesome5
-                  style={{ marginRight: 5 }}
-                  name="check"
-                  size={18}
-                  color={specialNeedles === 2 ? "#5bdd8f" : "#ebecef"}
-                />
-              </TouchableOpacity>
-            )}
-            thirdLabel={() => "№3"}
-            thirdValue={() => (
-              <TouchableOpacity
-                onPress={() =>
-                  setNeedls(setSpecialNeedles, setNormalNeedles, 3)
-                }
-              >
-                <FontAwesome5
-                  style={{ marginRight: 5 }}
-                  name="check"
-                  size={18}
-                  color={specialNeedles === 3 ? "#5bdd8f" : "#ebecef"}
-                />
-              </TouchableOpacity>
-            )}
-            fourthLabel={() => "№4"}
-            fourthValue={() => (
-              <TouchableOpacity
-                onPress={() =>
-                  setNeedls(setSpecialNeedles, setNormalNeedles, 4)
-                }
-              >
-                <FontAwesome5
-                  style={{ marginRight: 5 }}
-                  name="check"
-                  size={18}
-                  color={specialNeedles === 4 ? "#5bdd8f" : "#ebecef"}
-                />
-              </TouchableOpacity>
-            )}
-          />
+          <Table tableValues={isolatedNeedlesTableData} />
         </View>
       </View>
 
       <View style={Screen.infoCardWrapper}>
-        <Table
-          numberOfRows={3}
-          title="Доп. услуги"
-          firstLabel={() => "инъекционная анестезия"}
-          firstValue={() => (
-            <TouchableOpacity
-              onPress={() =>
-                setChecked((prev) => ({
-                  ...prev,
-                  injection: !prev.injection,
-                }))
-              }
-            >
-              <FontAwesome5
-                style={{ marginRight: 5 }}
-                name="check"
-                size={18}
-                color={checked.injection ? "#5bdd8f" : "#ebecef"}
-              />
-            </TouchableOpacity>
-          )}
-          secondLabel={() => "аппликационная анестезия"}
-          secondValue={() => (
-            <TouchableOpacity
-              onPress={() =>
-                setChecked((prev) => ({
-                  ...prev,
-                  ointment: !prev.ointment,
-                }))
-              }
-            >
-              <FontAwesome5
-                style={{ marginRight: 5 }}
-                name="check"
-                size={18}
-                color={checked.ointment ? "#5bdd8f" : "#ebecef"}
-              />
-            </TouchableOpacity>
-          )}
-          thirdLabel={() => "окрашивание"}
-          thirdValue={() => (
-            <TouchableOpacity
-              onPress={() =>
-                setChecked((prev) => ({
-                  ...prev,
-                  coloring: !prev.coloring,
-                }))
-              }
-            >
-              <FontAwesome5
-                style={{ marginRight: 5 }}
-                name="check"
-                size={18}
-                color={checked.coloring ? "#5bdd8f" : "#ebecef"}
-              />
-            </TouchableOpacity>
-          )}
-        />
+        <Table tableValues={addonsTableData} />
       </View>
     </ScrollView>
   );

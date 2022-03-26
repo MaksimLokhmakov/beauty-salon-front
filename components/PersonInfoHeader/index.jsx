@@ -2,9 +2,10 @@ import React from "react";
 import { View, Text, TouchableOpacity, Linking } from "react-native";
 import Avatar from "../shared/Avatar";
 import Table from "../shared/Table";
+import Label from ".././shared/Label";
 import HeaderInfo from "./style";
 
-const PersonInfoHeader = ({ item }) => {
+const PersonInfoHeader = ({ item, wrapperStyle = {} }) => {
   const phoneValue = (
     <TouchableOpacity onPress={() => Linking.openURL(`tel:${item.tel}`)}>
       <Text style={{ fontSize: 16, color: "#1976D2" }}>{item.tel}</Text>
@@ -24,18 +25,18 @@ const PersonInfoHeader = ({ item }) => {
   const tableData = {
     data: [
       {
-        label: <Text>сотовый </Text>,
+        label: <Label>сотовый </Label>,
         value: phoneValue,
       },
       {
-        label: <Text>{secondLabel}</Text>,
+        label: <Label>{secondLabel}</Label>,
         value: secondValue,
       },
     ],
   };
 
   return (
-    <View style={HeaderInfo.CardInfoWrapper}>
+    <View style={[HeaderInfo.CardInfoWrapper, wrapperStyle]}>
       <View style={HeaderInfo.rowDerection}>
         <Avatar fullName={item.name} width={85} height={85} size={36} />
         <View style={HeaderInfo.nameConteiner}>

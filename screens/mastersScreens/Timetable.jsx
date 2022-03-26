@@ -1,12 +1,18 @@
 import React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Context } from "../../context";
 import Animated, {
   Layout,
   FadeIn,
   FadeOutRight,
 } from "react-native-reanimated";
-import { Table, SearchBar, AddTimeTableModal } from "../../components";
+import {
+  Table,
+  SearchBar,
+  AddTimeTableModal,
+  Label,
+  AddAppointmentModel,
+} from "../../components";
 import Screen from "../style";
 
 const Timetable = () => {
@@ -15,9 +21,14 @@ const Timetable = () => {
   const [isLoading, setIsLoading] = React.useState(false);
   const [searchValue, setSearchValue] = React.useState("");
   const [reductItem, setReductItem] = React.useState(false);
+  const [currentModalProps, setCurrentModalProps] = React.useState();
+  const [visibleAppointmentsModal, setVisibleAppointmentsModel] =
+    React.useState(false);
   React.useEffect(() => {
-    getTimeTable();
+    onRefresh();
   }, []);
+
+  // console.log("timeTableScreen");
 
   const getEditDay = (day) => {
     setReductItem(day);
@@ -33,15 +44,34 @@ const Timetable = () => {
     return false;
   };
   const getKey = (item) => item.title;
+  const hideAddModal = (value) => setVisibleAppointmentsModel(value);
+  const openModel = () => setVisibleAppointmentsModel(true);
+  const onPressLabel = React.useCallback((item) => {
+    setCurrentModalProps(item);
+    openModel();
+  }, []);
   const getItemToRender = ({ item, index }) => {
+    const title = item.title;
+    const rawDate = item.rawDate;
+
     const tableItemData = item.masters.map((item) => {
+      const modalProps = {
+        title: title,
+        rawDate: rawDate,
+        master: item.master,
+      };
       return {
-        label: <Label>{item.master.name}</Label>,
+        label: (
+          <Label touchable onPress={onPressLabel} data={modalProps}>
+            {item.master.name}
+          </Label>
+        ),
         value: <Text>{item.start + " - " + item.finish}</Text>,
       };
     });
+
     const tableData = {
-      title: item.title,
+      title: title,
       data: tableItemData,
     };
 
@@ -78,19 +108,18 @@ const Timetable = () => {
         data={filtredData}
         keyExtractor={getKey}
         renderItem={getItemToRender}
+        initialNumToRender={15}
       />
 
+      <AddAppointmentModel
+        visible={visibleAppointmentsModal}
+        onClose={hideAddModal}
+        data={currentModalProps}
+      />
       <AddTimeTableModal item={reductItem} setItem={setReductItem} />
     </View>
   );
 };
-
-// *  отсюда будет происходить добавление
-const Label = ({ children }) => (
-  <TouchableOpacity>
-    <Text style={{ color: "#C2185B" }}>{children}</Text>
-  </TouchableOpacity>
-);
 
 const timeTableStyle = StyleSheet.create({
   searchWrapper: { paddingBottom: 10, backgroundColor: "#fff" },

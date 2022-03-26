@@ -23,7 +23,7 @@ const MadalHeader = ({
         <Text
           style={{
             ...style.sideText,
-            color: canBeAdded() ? "#C2185B" : "#8b979f76",
+            color: canBeAdded ? "#C2185B" : "#8b979f76",
             fontWeight: "600",
           }}
         >

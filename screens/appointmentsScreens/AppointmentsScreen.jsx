@@ -2,6 +2,7 @@ import React from "react";
 import { View, SectionList, Text, Platform } from "react-native";
 import { Context } from "../../context";
 import recenter from "../../utils/forSwipeable/recenter";
+import axios from "axios";
 import {
   PersonConteiner,
   SearchBar,
@@ -94,6 +95,10 @@ const AppointmentsScreen = ({ navigation }) => {
         }
       })
     );
+    axios
+      .delete(`orders/${id}`)
+      .then(() => console.log("YES"))
+      .catch((e) => console.log(e));
   };
   const onClose = () => setCurrentSwipeRef(null);
   // * SECTIONLIST
@@ -152,7 +157,6 @@ const AppointmentsScreen = ({ navigation }) => {
         stickySectionHeadersEnabled={true}
       />
 
-      <AddAppointmentModel />
       <ModalList
         sortValue={sortValue}
         list={listData}

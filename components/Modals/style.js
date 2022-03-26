@@ -9,9 +9,11 @@ const style = StyleSheet.create({
     backgroundColor: "#fff",
   },
   input: {
+    justifyContent: "center",
     width: "100%",
     height: 30,
     backgroundColor: "#fff",
+    fontSize: 16,
   },
 });
 

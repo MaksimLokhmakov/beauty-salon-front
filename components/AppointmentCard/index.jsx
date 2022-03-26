@@ -1,42 +1,72 @@
 import React from "react";
 import { View, Text } from "react-native";
 import Table from "../shared/Table";
+import Label from "../shared/Label";
 import Card from "./style";
 
 const AppointmentCard = ({ item }) => {
+  console.log("AppointmentCard");
+
+  const dateTableInfo = {
+    title: "Дата:",
+    data: [
+      {
+        label: <Label>число</Label>,
+        value: <Text>{item.start.split(" ")[0]}</Text>,
+      },
+    ],
+  };
+
+  const timeTableInfo = {
+    title: "Время:",
+    data: [
+      {
+        label: <Label>начало</Label>,
+        value: <Text>{item.start.split(" ")[1]}</Text>,
+      },
+      {
+        label: <Label>конец</Label>,
+        value: <Text>{item.finish.split(" ")[1]}</Text>,
+      },
+    ],
+  };
+
+  const areaTableInfo = {
+    title: "Зона:",
+    data: [
+      {
+        label: <Label>зона</Label>,
+        value: <Text>{item.area ? item.area : "Брови"}</Text>,
+      },
+    ],
+  };
+
+  const priceTableInfo = {
+    title: "Цена:",
+    data: [
+      {
+        label: <Label>цена</Label>,
+        value: <Text>{"-"}</Text>,
+      },
+    ],
+  };
+
   return (
     <>
       <View style={Card.Wrapper}>
-        <Table
-          width={50}
-          title="Дата:"
-          firstLabel={() => "число"}
-          firstValue={() => <Text>{item.start.split(" ")[0]}</Text>}
-        />
+        <Table tableValues={dateTableInfo} />
       </View>
+
       <View style={Card.Wrapper}>
-        <Table
-          numberOfRows={2}
-          title="Время:"
-          firstLabel={() => "начало"}
-          firstValue={() => <Text>{item.start.split(" ")[1]}</Text>}
-          secondLabel={() => "конец"}
-          secondValue={() => <Text>{item.finish.split(" ")[1]}</Text>}
-        />
+        <Table tableValues={timeTableInfo} />
       </View>
+
       <View style={Card.Wrapper}>
-        <Table
-          title="Зона:"
-          firstLabel={() => "зона"}
-          firstValue={() => <Text>{item.area ? item.area : "Брови"}</Text>}
-        />
+        <Table tableValues={areaTableInfo} />
       </View>
+
       <View style={Card.Wrapper}>
-        <Table
-          title="Цена:"
-          firstLabel={() => "цена"}
-          firstValue={() => <Text>{"-"}</Text>}
-        />
+        <Table tableValues={priceTableInfo} />
       </View>
     </>
   );

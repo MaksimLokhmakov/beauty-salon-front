@@ -1,28 +1,15 @@
 import React from "react";
-import { View, Modal, Text, TouchableOpacity, ScrollView } from "react-native";
-import Animated, {
-  Layout,
-  FadeIn,
-  FadeInUp,
-  FadeOut,
-} from "react-native-reanimated";
+import { View, Modal, Text, TouchableOpacity } from "react-native";
+import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
 import MaskInput from "react-native-mask-input";
 import axios from "axios";
 import { Context } from "../../../context";
 import Table from "../../shared/Table";
 import MadalHeader from "../../shared/ModalHeader";
-import SearchBar from "../../shared/SearchBar";
 import AddItemConteiner from "../../shared/AddItemConteiner";
 import CheckBox from "../../shared/CheckBox";
 import style from "../style";
 import addTableStyle from "./style";
-import Screen from "../../../screens/style";
-
-// TODO:  ВЫБОР ДАТЫ ! ГОТОВО
-// TODO:  ВЫБОР МАСТЕРА
-// TODO:  ВВОД ВРЕМЕНИ РАБОТЫ МАСТЕРА
-// TODO:
-// TODO:
 
 const AddTimeTableModal = ({ item = false, setItem }) => {
   const {
@@ -36,6 +23,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   const [mastersList, setMastersList] = React.useState(masters);
   const [pickingDate, setPickingDate] = React.useState(false);
 
+  // ? filtering the list of masters
   const clearMasters = masters.map((item) => {
     return { id: item.id, name: item.name };
   });
@@ -44,18 +32,9 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     item.masters.map((item) => {
       return JSON.stringify(item.master);
     });
-
   const filtredMasters = clearMasters.filter(
     (x) => propsMasters && !propsMasters.includes(JSON.stringify(x))
   );
-
-  console.log("filtredMasters", filtredMasters);
-
-  // const initialMastersListData =
-  //   item.masters &&
-  //   item.masters.filter((item) => {
-  //     console.log(item.master);
-  //   });
 
   const initialTimetableData = {
     date: {},
@@ -64,6 +43,8 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
 
   const [addTimeTableData, setAddTimeTableData] =
     React.useState(initialTimetableData);
+
+  console.log(addTimeTableData.masters);
 
   React.useEffect(() => {
     const propsMastersWithInputValue =
@@ -164,6 +145,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
             onChangeText={(e) => handleChangeInput(e, index)}
             keyboardType="numeric"
             autoFocus
+            maxLength={13}
             mask={inputMask}
           />
         </View>
@@ -185,51 +167,25 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     setAddTimeTableData(initialTimetableData);
   };
 
-  const requests = async () => {
-    return await axios
-      .put("/masters/timetable", {
+  const request = () => {
+    const clearMasters = addTimeTableData.masters.map((item) => {
+      return {
+        master: { id: item.master.id },
+        start: item.start,
+        finish: item.finish,
+      };
+    });
+
+    axios
+      .put(`/masters/timetable`, {
         rawDate: addTimeTableData.date.rowDate,
-        firstMaster:
-          Object.keys(firstMaster).length !== 0
-            ? {
-                id: firstMaster.id,
-                start: firstInputValue.split(" - ")[0],
-                finish: firstInputValue.split(" - ")[1],
-              }
-            : null,
-        secondMaster:
-          Object.keys(secondMaster).length !== 0
-            ? {
-                id: secondMaster.id,
-                start: secondInputValue.split(" - ")[0],
-                finish: secondInputValue.split(" - ")[1],
-              }
-            : null,
-        thirdMaster:
-          Object.keys(thirdMaster).length !== 0
-            ? {
-                id: thirdMaster.id,
-                start: thirdInputValue.split(" - ")[0],
-                finish: thirdInputValue.split(" - ")[1],
-              }
-            : null,
-        fourthMaster:
-          Object.keys(fourthMaster).length !== 0
-            ? {
-                id: fourthMaster.id,
-                start: fourthInputValue.split(" - ")[0],
-                finish: fourthInputValue.split(" - ")[1],
-              }
-            : null,
+        masters: clearMasters,
       })
       .then(() => console.log("YES"))
       .catch((e) => console.log(e));
   };
 
   const onSubmit = () => {
-    setEmptyDays((prev) =>
-      prev.filter((item) => item.rowDate !== addTimeTableData.date.rowDate)
-    );
     setVisibleAddTimetableModal(false);
 
     setTimeTable((prev) =>
@@ -243,6 +199,8 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
     );
 
     nullifyForm();
+
+    request();
   };
 
   const getEmptyDays = () => {
@@ -259,15 +217,6 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
   const onBack = (value) => {
     setVisibleAddTimetableModal(value);
     nullifyForm();
-  };
-
-  const onPickDate = (item) => {
-    setAddTimeTableData((prev) => {
-      return {
-        date: item,
-        masters: prev.masters,
-      };
-    });
   };
 
   const onPickMaster = React.useCallback((currentItem) => {
@@ -357,7 +306,8 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
           </>
         ) : (
           <View style={{ maxHeight: "100%" }}>
-            <View
+            <Animated.View
+              entering={FadeInUp.delay(100)}
               style={{
                 backgroundColor: "#ffffff",
                 borderRadius: 15,
@@ -369,9 +319,10 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
                 tableValues={tableAddTimeTableData}
                 backgroundColor="#fff"
               />
-            </View>
+            </Animated.View>
 
-            <View
+            <Animated.View
+              entering={FadeInUp.delay(150)}
               style={{
                 marginTop: 10,
                 backgroundColor: "#ffffff",
@@ -407,7 +358,7 @@ const AddTimeTableModal = ({ item = false, setItem }) => {
                   );
                 })}
               </View>
-            </View>
+            </Animated.View>
           </View>
         )}
       </View>

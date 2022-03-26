@@ -187,10 +187,6 @@ export default function App() {
   const [visibleMastersReductModal, setVisibleMastersReductModal] =
     React.useState(false);
 
-  const [visibleAppointmentsModal, setVisibleAppointmentsModel] =
-    React.useState(false);
-  const [visibleAppointmentsReductModal, setVisibleAppointmentsReductModal] =
-    React.useState(false);
   const [itemToDelete, setItemToDelete] = React.useState();
 
   return (
@@ -229,10 +225,6 @@ export default function App() {
           setVisibleMastersModel,
           visibleMastersReductModal,
           setVisibleMastersReductModal,
-          visibleAppointmentsModal,
-          setVisibleAppointmentsModel,
-          visibleAppointmentsReductModal,
-          setVisibleAppointmentsReductModal,
           clientsSearchValue,
           setClientsSearchValue,
         }}

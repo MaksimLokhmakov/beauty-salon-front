@@ -3,7 +3,13 @@ import { View, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import searchBar from "./style";
 
-const SearchBar = ({ value, setValue, styleWrapper = {}, styleInput = {} }) => {
+const SearchBar = ({
+  value,
+  setValue,
+  styleWrapper = {},
+  styleInput = {},
+  placeholder = "Поиск",
+}) => {
   const onChange = (e) => setValue(e);
   return (
     <View style={[searchBar.searchWrapper, styleWrapper]}>
@@ -16,7 +22,7 @@ const SearchBar = ({ value, setValue, styleWrapper = {}, styleInput = {} }) => {
         />
         <TextInput
           style={searchBar.searchInput}
-          placeholder="Поиск"
+          placeholder={placeholder}
           value={value}
           onChangeText={onChange}
         />
@@ -25,4 +31,4 @@ const SearchBar = ({ value, setValue, styleWrapper = {}, styleInput = {} }) => {
   );
 };
 
-export default SearchBar;
+export default React.memo(SearchBar);
