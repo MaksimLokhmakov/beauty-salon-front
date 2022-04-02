@@ -7,15 +7,18 @@ const Label = ({
   width = "auto",
   onPress,
   data,
+  style = {},
 }) => {
   console.log("Label");
   const press = () => onPress(data);
   return touchable ? (
     <TouchableOpacity onPress={press}>
-      <Text style={{ color: "#C2185B", width: width }}>{children}</Text>
+      <Text style={[{ color: "#C2185B", width: width }, style]}>
+        {children}
+      </Text>
     </TouchableOpacity>
   ) : (
-    <Text style={{ color: "#C2185B", width: width }}>{children}</Text>
+    <Text style={[{ color: "#C2185B", width: width }, style]}>{children}</Text>
   );
 };
 

@@ -2,10 +2,15 @@ import React from "react";
 import { View, Text, ScrollView, StyleSheet } from "react-native";
 import { Context } from "../../context";
 import axios from "axios";
-import { PersonInfoHeader, AddModal, Table } from "../../components/index";
+import {
+  PersonInfoHeader,
+  AddModal,
+  Table,
+  Label,
+} from "../../components/index";
 import Screen from "../style";
 
-const MasterScreen = ({ route, navigation }) => {
+const MasterScreen = ({ route }) => {
   const { visibleMastersReductModal } = React.useContext(Context);
   const { master } = route.params;
   const [current, setCurrent] = React.useState(master);
@@ -25,11 +30,11 @@ const MasterScreen = ({ route, navigation }) => {
     title: `Сегодня, ${statistic.date}:`,
     data: [
       {
-        label: <Text>время</Text>,
+        label: <Label>время</Label>,
         value: <Text style={localStyle.textGray}>{statistic.dayHours} ч.</Text>,
       },
       {
-        label: <Text>прибыль</Text>,
+        label: <Label>прибыль</Label>,
         value: (
           <Text style={localStyle.textGray}>{statistic.dayIncome} руб.</Text>
         ),
@@ -41,20 +46,20 @@ const MasterScreen = ({ route, navigation }) => {
     title: "Месяц:",
     data: [
       {
-        label: <Text>время</Text>,
+        label: <Label>время</Label>,
         value: (
           <Text style={localStyle.textGray}>{statistic.monthHours} ч.</Text>
         ),
       },
       {
-        label: <Text>прибыль</Text>,
+        label: <Label>прибыль</Label>,
         value: (
           <Text style={localStyle.textGray}>{statistic.monthIncome} руб.</Text>
         ),
       },
     ],
   };
-  console.log("ddd", statistic);
+  console.log("MasterScreen", statistic);
 
   return (
     <ScrollView

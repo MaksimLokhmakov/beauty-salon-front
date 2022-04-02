@@ -4,6 +4,7 @@ import { Context } from "../../context";
 import Animated, { Layout } from "react-native-reanimated";
 import recenter from "../../utils/forSwipeable/recenter";
 import { PersonConteiner, AddModal } from "../../components/index";
+import axios from "axios";
 import Screen from "../style";
 
 const MastersScreen = ({ navigation }) => {
@@ -39,10 +40,10 @@ const MastersScreen = ({ navigation }) => {
   };
   const deleteMaster = (currentItem) => {
     setMasters((prev) => prev.filter((item) => item.id !== currentItem.id));
-    // axios
-    // .delete(`/masters/${currentItem.id}`)
-    // .then(() => console.log("OK"))
-    // .catch((e) => console.log(e));
+    axios
+      .delete(`/masters/${currentItem.id}`)
+      .then(() => console.log("OK"))
+      .catch((e) => console.log(e));
   };
   const openDeleteModal = (currentItem) => {
     setItemToDelete(currentItem);
@@ -70,7 +71,6 @@ const MastersScreen = ({ navigation }) => {
       item={item}
       index={index}
       onPress={toMasterInfo}
-      openDeleteModal={openDeleteModal}
       onDelete={deleteMaster}
       setIsSwiping={setSwiping}
       onOpen={onOpen}

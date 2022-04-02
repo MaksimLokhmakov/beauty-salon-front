@@ -16,23 +16,31 @@ const PersonInfoHeader = ({ item, wrapperStyle = {} }) => {
       {(item.percent * 100).toFixed() + "%"}
     </Text>
   ) : (
-    <Text style={{ fontSize: 15, color: "#757575" }}>5</Text>
+    <Text style={{ fontSize: 15, color: "#757575" }}>{item.ordersCount}</Text>
   );
   const secondLabel = item.percent ? "процент " : "посещений";
   const nameSplit = item.name.split(" ");
   const firstName = nameSplit[0];
   const secondName = nameSplit[1] ? nameSplit[1] : "";
   const tableData = {
-    data: [
-      {
-        label: <Label>сотовый </Label>,
-        value: phoneValue,
-      },
-      {
-        label: <Label>{secondLabel}</Label>,
-        value: secondValue,
-      },
-    ],
+    data:
+      item.percent || item.ordersCount || item.ordersCount === 0
+        ? [
+            {
+              label: <Label>сотовый </Label>,
+              value: phoneValue,
+            },
+            {
+              label: <Label>{secondLabel}</Label>,
+              value: secondValue,
+            },
+          ]
+        : [
+            {
+              label: <Label>сотовый </Label>,
+              value: phoneValue,
+            },
+          ],
   };
 
   return (

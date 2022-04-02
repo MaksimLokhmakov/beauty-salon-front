@@ -1,6 +1,6 @@
 export { default as PersonInfoHeader } from "./PersonInfoHeader";
 export { default as PersonConteiner } from "./PersonConteiner";
-export { default as AppointmentCard } from "./AppointmentCard";
+export { default as AppointmentCard } from "./appointment/AppointmentCard";
 export { default as AddModal } from "./Modals/AddModal";
 export { default as Avatar } from "./shared/Avatar";
 export { default as Table } from "./shared/Table";
@@ -11,3 +11,4 @@ export { default as StatisticInfoSection } from "./reportScreen/StatisticInfoSec
 export { default as MasterBlock } from "./reportScreen/MasterBlock";
 export { default as ModalList } from "./Modals/ModalList";
 export { default as Label } from "./shared/Label";
+export { default as OrderCompletionInfo } from "./appointment/OrderCompletionInfo/OrderComplectionInfoWrapper";

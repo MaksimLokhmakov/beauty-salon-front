@@ -6,32 +6,34 @@ import {
   FlatList,
   TouchableOpacity,
   TextInput,
+  ScrollView,
 } from "react-native";
 import MadalHeader from "../../shared/ModalHeader";
 import Table from "../../shared/Table";
 import Label from "../../shared/Label";
 import SearchBar from "../../shared/SearchBar";
+import OrderCompletionInfo from "../../appointment/OrderCompletionInfo/OrderComplectionInfoWrapper";
 import AddItemConteiner from "../../shared/AddItemConteiner";
 import { Context } from "../../../context";
 import MaskInput from "react-native-mask-input";
 import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
 import Screen from "../../../screens/style";
 import style from "../style";
-import Card from "../../AppointmentCard/style";
+import Card from "../../appointment/AppointmentCard/style";
 import axios from "axios";
 
 const AddAppointmentModel = ({ visible, onClose, data }) => {
   const { getAppointments } = React.useContext(Context);
-  const [idleTime, setIdleTime] = React.useState([]);
 
+  const [idleTime, setIdleTime] = React.useState([]);
   const [currentClient, setCurrentClient] = React.useState({});
   const [duration, setDuration] = React.useState("");
   const [area, setArea] = React.useState("");
+  const [currentIdleTime, setCurrentIdleTime] = React.useState("");
 
   const title = data && data.title;
   const rawDate = data && data.rawDate;
   const masterName = data && data.master && data.master.name;
-  const [currentIdleTime, setCurrentIdleTime] = React.useState("");
   const handleIdleTimePick = (currentTime) => {
     setCurrentIdleTime(currentTime);
   };
@@ -39,6 +41,7 @@ const AddAppointmentModel = ({ visible, onClose, data }) => {
   const timeCompare = (firstTime, secondTime) => {
     // * если 2 параметр функции => 1 возвращает true
     // * формат времени "**:**"
+
     if (firstTime && secondTime) {
       const firstTimeSplit = firstTime.split(":");
       const secondTimeSplit = secondTime.split(":");
@@ -46,22 +49,28 @@ const AddAppointmentModel = ({ visible, onClose, data }) => {
       if (firstTimeSplit[1] >= 60 || secondTimeSplit[1] >= 60) return false;
 
       if (firstTime === secondTime) return true;
+
       if (firstTimeSplit[0] < secondTimeSplit[0]) return true;
+
       if (
         firstTimeSplit[0] === secondTimeSplit[0] &&
         firstTimeSplit[1] < secondTimeSplit[1]
       )
         return true;
     }
+
     return false;
   };
 
-  const isEnteredDurationCorrect =
-    duration.length === 13 &&
-    duration.split(" - ")[0] !== duration.split(" - ")[1] &&
-    timeCompare(duration.split(" - ")[0], duration.split(" - ")[1]) &&
-    timeCompare(currentIdleTime.start, duration.split(" - ")[0]) &&
-    timeCompare(duration.split(" - ")[1], currentIdleTime.finish);
+  const isEnteredDurationCorrect = React.useMemo(() => {
+    return (
+      duration.length === 13 &&
+      duration.split(" - ")[0] !== duration.split(" - ")[1] &&
+      timeCompare(duration.split(" - ")[0], duration.split(" - ")[1]) &&
+      timeCompare(currentIdleTime.start, duration.split(" - ")[0]) &&
+      timeCompare(duration.split(" - ")[1], currentIdleTime.finish)
+    );
+  }, [duration]);
 
   const isObjectNotEmpty = (obj) => {
     for (let key in obj) {
@@ -169,7 +178,8 @@ const AddAppointmentModel = ({ visible, onClose, data }) => {
 
     if (data && data.master) {
       for (let i in data.title) {
-        if (parseInt(data.title[i])) currentDay += data.title[i];
+        if (parseInt(data.title[i]) || parseInt(data.title[i]) === 0)
+          currentDay += data.title[i];
       }
 
       axios
@@ -178,9 +188,13 @@ const AddAppointmentModel = ({ visible, onClose, data }) => {
         .catch((err) => console.log(err));
     }
   }, [visible]);
-  const handleClientPick = (currentClient) => {
-    setCurrentClient(currentClient);
-  };
+
+  const handleClientPick = React.useCallback(
+    (currentClient) => {
+      setCurrentClient(currentClient);
+    },
+    [currentClient]
+  );
 
   const nullifyForm = () => {
     setCurrentIdleTime("");
@@ -316,12 +330,12 @@ const PickClientBlock = ({ handleClientPick }) => {
             entering={FadeIn}
             exiting={FadeOut}
             style={{
-              top: -500,
-              position: "absolute",
+              zIndex: 1,
+              top: -1000,
               right: -100,
-              width: "200%",
-              height: "5000%",
-              zIndex: 99,
+              position: "absolute",
+              width: "10000%",
+              height: "10000%",
               backgroundColor: "rgba(0,0,0,0.5)",
             }}
           />
@@ -394,7 +408,7 @@ const AddAppointmentForm = ({
   // console.log("masterClientTableData", masterClientTableData);
 
   return (
-    <View style={{ top: -10 }}>
+    <ScrollView style={{ height: "100%" }} showsVerticalScrollIndicator={false}>
       <View style={{ ...Screen.infoCardWrapper, flex: 0, height: 92 }}>
         <Table tableValues={dateTimeTableData} />
         <View style={{ position: "absolute", right: 10, bottom: 5 }}>
@@ -410,12 +424,21 @@ const AddAppointmentForm = ({
         <Table tableValues={areaTableData} />
       </View>
 
+      <OrderCompletionInfo
+        data={{
+          price: null,
+          needle: null,
+          addons: { injection: false, ointment: false, coloring: false },
+        }}
+        isEditable
+      />
+
       <View style={{ ...Screen.infoCardWrapper, flex: 0 }}>
-        <Table tableValues={masterClientTableData} />
+        <Table tableValues={masterClientTableData} isAnimated />
       </View>
 
       <PickClientBlock handleClientPick={handleClientPick} />
-    </View>
+    </ScrollView>
   );
 };
 

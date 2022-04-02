@@ -11,7 +11,7 @@ const MadalHeader = ({
   leftButton = "Отмена",
 }) => {
   const goBack = () => onBack(false);
-  const onSubmit = () => onComplete();
+  const onSubmit = () => canBeAdded && onComplete();
 
   return (
     <View style={style.header}>

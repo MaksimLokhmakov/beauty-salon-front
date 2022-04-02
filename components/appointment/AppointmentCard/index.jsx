@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text } from "react-native";
-import Table from "../shared/Table";
-import Label from "../shared/Label";
+import Table from "../../shared/Table";
+import Label from "../../shared/Label";
 import Card from "./style";
 
 const AppointmentCard = ({ item }) => {
@@ -41,16 +41,6 @@ const AppointmentCard = ({ item }) => {
     ],
   };
 
-  const priceTableInfo = {
-    title: "Цена:",
-    data: [
-      {
-        label: <Label>цена</Label>,
-        value: <Text>{"-"}</Text>,
-      },
-    ],
-  };
-
   return (
     <>
       <View style={Card.Wrapper}>
@@ -63,10 +53,6 @@ const AppointmentCard = ({ item }) => {
 
       <View style={Card.Wrapper}>
         <Table tableValues={areaTableInfo} />
-      </View>
-
-      <View style={Card.Wrapper}>
-        <Table tableValues={priceTableInfo} />
       </View>
     </>
   );

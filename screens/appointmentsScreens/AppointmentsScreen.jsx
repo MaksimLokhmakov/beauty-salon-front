@@ -3,12 +3,7 @@ import { View, SectionList, Text, Platform } from "react-native";
 import { Context } from "../../context";
 import recenter from "../../utils/forSwipeable/recenter";
 import axios from "axios";
-import {
-  PersonConteiner,
-  SearchBar,
-  AddAppointmentModel,
-  ModalList,
-} from "../../components";
+import { PersonConteiner, SearchBar, ModalList } from "../../components";
 import Screen from "../style";
 
 const AppointmentsScreen = ({ navigation }) => {
@@ -30,6 +25,8 @@ const AppointmentsScreen = ({ navigation }) => {
   React.useEffect(() => {
     refresh();
   }, []);
+
+  console.log("AppointmentsScreen");
 
   // ! ПЕРЕДЕЛАТЬ ПОИСК
   // ! UNACTIVE
@@ -102,9 +99,15 @@ const AppointmentsScreen = ({ navigation }) => {
   };
   const onClose = () => setCurrentSwipeRef(null);
   // * SECTIONLIST
-  const sectionHeader = ({ section: { title } }) => (
-    <Text style={Screen.sectionTitle}>{title}</Text>
-  );
+  const sectionHeader = ({ section: { title } }) => {
+    const unfinishedTitle = title === "Незавершенные";
+    const inProcess = title === "В процессе";
+    const color = unfinishedTitle ? "#fe3c30" : inProcess ? "#007aff" : "#212";
+
+    return (
+      <Text style={{ ...Screen.sectionTitle, color: color }}>{title}</Text>
+    );
+  };
   const sectionListItem = ({ item, index }) => {
     return (
       <PersonConteiner

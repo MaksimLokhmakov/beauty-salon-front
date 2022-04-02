@@ -46,40 +46,59 @@ const PersonConteiner = ({
   const swipeReleaseAnimationConfig = {
     toValue: { x: 0, y: 0 },
     duration: 150,
-    easing: Easing.elastic(0.5),
+    easing: Easing.elastic(0.05),
     useNativeDriver: false,
   };
-  const rightButtons = [
-    isAppointmentsScreen && (
-      <TouchableOpacity
-        onPress={onCall}
-        style={{
-          backgroundColor: "#00c900",
-          ...Person.swopeableButtons,
-        }}
-      >
-        <FontAwesome5 name="phone-alt" size={23} color="#fff" />
-      </TouchableOpacity>
-    ),
-    <TouchableOpacity
-      onPress={recenterSwipe}
-      style={{
-        backgroundColor: "#ef9a36",
-        ...Person.swopeableButtons,
-      }}
-    >
-      <FontAwesome5 name="pencil-alt" size={23} color="#fff" />
-    </TouchableOpacity>,
-    <TouchableOpacity
-      onPress={deleteItem}
-      style={{
-        backgroundColor: "#fe3c30",
-        ...Person.swopeableButtons,
-      }}
-    >
-      <FontAwesome5 name="trash-alt" size={23} color="#fff" />
-    </TouchableOpacity>,
-  ];
+  const rightButtons = !isAppointmentsScreen
+    ? [
+        <TouchableOpacity
+          onPress={recenterSwipe}
+          style={{
+            backgroundColor: "#ef9a36",
+            ...Person.swopeableButtons,
+          }}
+        >
+          <FontAwesome5 name="pencil-alt" size={23} color="#fff" />
+        </TouchableOpacity>,
+        <TouchableOpacity
+          onPress={deleteItem}
+          style={{
+            backgroundColor: "#fe3c30",
+            ...Person.swopeableButtons,
+          }}
+        >
+          <FontAwesome5 name="trash-alt" size={23} color="#fff" />
+        </TouchableOpacity>,
+      ]
+    : [
+        <TouchableOpacity
+          onPress={onCall}
+          style={{
+            backgroundColor: "#00c900",
+            ...Person.swopeableButtons,
+          }}
+        >
+          <FontAwesome5 name="phone-alt" size={23} color="#fff" />
+        </TouchableOpacity>,
+        <TouchableOpacity
+          onPress={recenterSwipe}
+          style={{
+            backgroundColor: "#ef9a36",
+            ...Person.swopeableButtons,
+          }}
+        >
+          <FontAwesome5 name="pencil-alt" size={23} color="#fff" />
+        </TouchableOpacity>,
+        <TouchableOpacity
+          onPress={deleteItem}
+          style={{
+            backgroundColor: "#fe3c30",
+            ...Person.swopeableButtons,
+          }}
+        >
+          <FontAwesome5 name="trash-alt" size={23} color="#fff" />
+        </TouchableOpacity>,
+      ];
 
   return (
     <Animated.View exiting={FadeOut} entering={FadeIn.delay(25 * index)}>
@@ -112,8 +131,8 @@ const PersonConteiner = ({
   );
 };
 
-function arePropsEqual(prevProps, nextProps) {
+const arePropsEqual = (prevProps, nextProps) => {
   return prevProps.item === nextProps.item;
-}
+};
 
 export default React.memo(PersonConteiner, arePropsEqual);

@@ -8,6 +8,7 @@ const Table = ({
   backgroundColor = "#fff",
   editable,
   onEdit,
+  isAnimated,
   item = false,
   tableValues = {
     data: [
@@ -44,7 +45,7 @@ const Table = ({
           const lastElement = tableValues.data.length - 1 !== index;
           return (
             <Animated.View
-              entering={FadeInUp}
+              entering={isAnimated && FadeInUp}
               style={table.rowDerection}
               key={index}
             >
