@@ -1,11 +1,15 @@
 import React from "react";
-import { View, Platform } from "react-native";
+import { View, Platform, FlatList } from "react-native";
 import { Context } from "../../context";
-import Animated, { Layout } from "react-native-reanimated";
 import recenter from "../../utils/forSwipeable/recenter";
-import { PersonConteiner, AddModal } from "../../components/index";
+import {
+  PersonConteiner,
+  AddModal,
+  PureListAnimation,
+} from "../../components/index";
 import axios from "axios";
 import Screen from "../style";
+import not_found from "../../assets/lottie/not_found.json";
 
 const MastersScreen = ({ navigation }) => {
   const {
@@ -86,18 +90,25 @@ const MastersScreen = ({ navigation }) => {
         Platform.OS === "android" && Screen.androidPaddingTop,
       ]}
     >
-      <Animated.FlatList
-        getItemLayout={getItemLayout}
-        initialNumToRender={15}
-        itemLayoutAnimation={Layout}
-        onScrollBeginDrag={handleScroll}
-        scrollEnabled={!isSwiping}
-        data={masters}
-        keyExtractor={flatListItemId}
-        onRefresh={refresh}
-        refreshing={isLoading}
-        renderItem={flatListItem}
-      />
+      {masters.length > 0 ? (
+        <FlatList
+          getItemLayout={getItemLayout}
+          initialNumToRender={15}
+          onScrollBeginDrag={handleScroll}
+          scrollEnabled={!isSwiping}
+          data={masters}
+          keyExtractor={flatListItemId}
+          onRefresh={refresh}
+          refreshing={isLoading}
+          renderItem={flatListItem}
+        />
+      ) : (
+        <PureListAnimation
+          animation={not_found}
+          titleText={"Нет результатов."}
+          secondaryText={`По запросу «${searchValue}» ничего не найдено.`}
+        />
+      )}
 
       <AddModal
         master={true}

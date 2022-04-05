@@ -1,65 +1,45 @@
 import React from "react";
-import {
-  View,
-  Modal,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-} from "react-native";
+import { View, Modal, Text, TextInput } from "react-native";
 import MadalHeader from "../../shared/ModalHeader";
-import Table from "../../shared/Table";
 import Label from "../../shared/Label";
-import SearchBar from "../../shared/SearchBar";
-import OrderCompletionInfo from "../../appointment/OrderCompletionInfo/OrderComplectionInfoWrapper";
-import AddItemConteiner from "../../shared/AddItemConteiner";
 import { Context } from "../../../context";
 import MaskInput from "react-native-mask-input";
-import Animated, { FadeIn, FadeOut } from "react-native-reanimated";
-import Screen from "../../../screens/style";
 import style from "../style";
-import Card from "../../appointment/AppointmentCard/style";
 import axios from "axios";
+
+import PickTimeBlock from "./PickTimeBlock";
+import Form from "./Form";
+import isObjectNotEmpty from "../../../utils/isObjectNotEmpty";
+import timeCompare from "../../../utils/timeCompare";
 
 const AddAppointmentModel = ({ visible, onClose, data }) => {
   const { getAppointments } = React.useContext(Context);
+
+  const [isSubmit, setIsSubmit] = React.useState(false);
 
   const [idleTime, setIdleTime] = React.useState([]);
   const [currentClient, setCurrentClient] = React.useState({});
   const [duration, setDuration] = React.useState("");
   const [area, setArea] = React.useState("");
   const [currentIdleTime, setCurrentIdleTime] = React.useState("");
+  // ?
+  const [currentNeedle, setCurrentNeedle] = React.useState({
+    needle: null,
+    type: NaN,
+  });
+  const [checkedAddons, setCheckedAddons] = React.useState({
+    injection: false,
+    ointment: false,
+    coloring: false,
+  });
+  const [price, setPrice] = React.useState("");
 
   const title = data && data.title;
   const rawDate = data && data.rawDate;
   const masterName = data && data.master && data.master.name;
+
   const handleIdleTimePick = (currentTime) => {
     setCurrentIdleTime(currentTime);
-  };
-
-  const timeCompare = (firstTime, secondTime) => {
-    // * если 2 параметр функции => 1 возвращает true
-    // * формат времени "**:**"
-
-    if (firstTime && secondTime) {
-      const firstTimeSplit = firstTime.split(":");
-      const secondTimeSplit = secondTime.split(":");
-
-      if (firstTimeSplit[1] >= 60 || secondTimeSplit[1] >= 60) return false;
-
-      if (firstTime === secondTime) return true;
-
-      if (firstTimeSplit[0] < secondTimeSplit[0]) return true;
-
-      if (
-        firstTimeSplit[0] === secondTimeSplit[0] &&
-        firstTimeSplit[1] < secondTimeSplit[1]
-      )
-        return true;
-    }
-
-    return false;
   };
 
   const isEnteredDurationCorrect = React.useMemo(() => {
@@ -71,14 +51,6 @@ const AddAppointmentModel = ({ visible, onClose, data }) => {
       timeCompare(duration.split(" - ")[1], currentIdleTime.finish)
     );
   }, [duration]);
-
-  const isObjectNotEmpty = (obj) => {
-    for (let key in obj) {
-      return true;
-    }
-
-    return false;
-  };
 
   const canBeAdded =
     isObjectNotEmpty(currentClient) && isEnteredDurationCorrect && area;
@@ -235,7 +207,7 @@ const AddAppointmentModel = ({ visible, onClose, data }) => {
         />
 
         {currentIdleTime ? (
-          <AddAppointmentForm
+          <Form
             areaTableData={areaTableData}
             masterClientTableData={masterClientTableData}
             dateTimeTableData={dateTimeTableData}
@@ -251,194 +223,6 @@ const AddAppointmentModel = ({ visible, onClose, data }) => {
         )}
       </View>
     </Modal>
-  );
-};
-
-const PickTimeBlock = ({ idleTime, handleTimePick }) => {
-  console.log(idleTime);
-  const pickTime = (currentTime) => {
-    handleTimePick(currentTime);
-  };
-
-  return (
-    <View
-      style={{ ...Card.Wrapper, flex: 0, paddingHorizontal: 15, zIndex: 0 }}
-    >
-      <View style={{ left: 0, top: -3 }}>
-        <Text style={{ color: "#C2185B" }}>Доступное время: </Text>
-      </View>
-      <FlatList
-        data={idleTime}
-        keyExtractor={(item) => item.start + item.finish}
-        renderItem={({ item, index }) => {
-          const lastElement = idleTime.length - 1 === index;
-
-          return (
-            <AddItemConteiner
-              onPress={pickTime}
-              item={item}
-              lastElement={lastElement}
-            />
-          );
-        }}
-      />
-    </View>
-  );
-};
-
-const PickClientBlock = ({ handleClientPick }) => {
-  const { clients } = React.useContext(Context);
-  const [currentClients, setCurrentClients] = React.useState(clients);
-  const [searchValue, setSearchValue] = React.useState("");
-  const [isPicking, setIsPicking] = React.useState(false);
-
-  const onPickClient = (currentClient) => {
-    const newClients = clients.filter((item) => item.id !== currentClient.id);
-    setCurrentClients(newClients);
-  };
-  const pickClient = (currentClient) => {
-    handleClientPick(currentClient);
-    onPickClient(currentClient);
-    setIsPicking(false);
-  };
-  const filteredClients = currentClients.filter((item) =>
-    item.name.includes(searchValue)
-  );
-
-  return (
-    <>
-      <View
-        style={{
-          ...Screen.infoCardWrapper,
-          flex: 0,
-          paddingHorizontal: 15,
-          height: "auto",
-        }}
-      >
-        <TouchableOpacity
-          onPress={() => setIsPicking(true)}
-          style={{ paddingBottom: 10 }}
-        >
-          <Text style={{ fontSize: 15, color: "#C2185B" }}>
-            Выбрать клиента
-          </Text>
-        </TouchableOpacity>
-
-        {isPicking && (
-          <Animated.View
-            onPress={() => setIsPicking(false)}
-            entering={FadeIn}
-            exiting={FadeOut}
-            style={{
-              zIndex: 1,
-              top: -1000,
-              right: -100,
-              position: "absolute",
-              width: "10000%",
-              height: "10000%",
-              backgroundColor: "rgba(0,0,0,0.5)",
-            }}
-          />
-        )}
-      </View>
-
-      <Modal visible={isPicking} transparent={true} animationType="slide">
-        <View
-          style={{
-            position: "absolute",
-            ...Screen.infoCardWrapper,
-            paddingTop: 30,
-            borderRadius: 40,
-            flex: 0,
-            width: "100%",
-            paddingHorizontal: 15,
-            height: "60%",
-            bottom: -10,
-            borderBottomEndRadius: 0,
-            borderBottomStartRadius: 0,
-          }}
-        >
-          <SearchBar
-            value={searchValue}
-            setValue={setSearchValue}
-            styleWrapper={{
-              top: -10,
-              width: "100%",
-            }}
-            styleInput={{ width: "100%" }}
-          />
-          <View
-            style={{
-              ...Screen.infoCardWrapper,
-              backgroundColor: "#f1f3f4",
-              flex: 0,
-            }}
-          >
-            <FlatList
-              data={filteredClients}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item, index }) => {
-                const lastElement = filteredClients.length - 1 === index;
-
-                return (
-                  <AddItemConteiner
-                    onPress={pickClient}
-                    item={item}
-                    lastElement={lastElement}
-                    animated={false}
-                  />
-                );
-              }}
-            />
-          </View>
-        </View>
-      </Modal>
-    </>
-  );
-};
-
-const AddAppointmentForm = ({
-  dateTimeTableData,
-  masterClientTableData,
-  areaTableData,
-  handleClientPick,
-  currentIdleTime,
-  isEnteredDurationCorrect,
-}) => {
-  // console.log("masterClientTableData", masterClientTableData);
-
-  return (
-    <ScrollView style={{ height: "100%" }} showsVerticalScrollIndicator={false}>
-      <View style={{ ...Screen.infoCardWrapper, flex: 0, height: 92 }}>
-        <Table tableValues={dateTimeTableData} />
-        <View style={{ position: "absolute", right: 10, bottom: 5 }}>
-          <Text
-            style={{ color: isEnteredDurationCorrect ? "#0bd45b" : "#999aa0" }}
-          >
-            {currentIdleTime.start + " - " + currentIdleTime.finish}
-          </Text>
-        </View>
-      </View>
-
-      <View style={{ ...Screen.infoCardWrapper, flex: 0 }}>
-        <Table tableValues={areaTableData} />
-      </View>
-
-      <OrderCompletionInfo
-        data={{
-          price: null,
-          needle: null,
-          addons: { injection: false, ointment: false, coloring: false },
-        }}
-        isEditable
-      />
-
-      <View style={{ ...Screen.infoCardWrapper, flex: 0 }}>
-        <Table tableValues={masterClientTableData} isAnimated />
-      </View>
-
-      <PickClientBlock handleClientPick={handleClientPick} />
-    </ScrollView>
   );
 };
 

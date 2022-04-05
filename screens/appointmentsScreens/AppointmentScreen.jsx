@@ -12,6 +12,7 @@ import {
   Table,
   Label,
   OrderCompletionInfo,
+  OrderCompletionModal,
 } from "../../components";
 import Screen from "../style";
 
@@ -22,6 +23,7 @@ import Screen from "../style";
 
 const AppointmentScreen = ({ route }) => {
   const { appointment } = route.params;
+  const [visible, setVisible] = React.useState(false);
 
   console.log(appointment);
 
@@ -60,18 +62,22 @@ const AppointmentScreen = ({ route }) => {
       <AppointmentCard item={appointment} />
 
       <OrderCompletionInfo
-        data={{
-          addons: appointment.addons,
-          price: appointment.price,
-          needle: appointment.needle,
-        }}
+        price={appointment.price}
+        checkedAddons={appointment.addons}
+        currentNeedle={appointment.needle}
       />
 
-      <TouchableOpacity onPress={() => console.log("Завершение")}>
+      <TouchableOpacity onPress={() => setVisible(true)}>
         <View style={{ ...Screen.infoCardWrapper, paddingBottom: 10 }}>
           <Label style={{ fontSize: 18 }}>Завершить прием</Label>
         </View>
       </TouchableOpacity>
+
+      <OrderCompletionModal
+        visible={visible}
+        setVisible={setVisible}
+        currentAppointment={appointment}
+      />
     </ScrollView>
   );
 };

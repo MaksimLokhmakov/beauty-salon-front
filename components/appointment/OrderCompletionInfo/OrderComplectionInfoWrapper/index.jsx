@@ -1,18 +1,32 @@
-import { View, Text } from "react-native";
 import React from "react";
 import Additional from "../Additional";
 import Needls from "../Needles";
 import Price from "../Price";
 
-const index = ({ data, isEditable = false }) => {
+const index = ({
+  price,
+  setPrice,
+  checkedAddons,
+  setCheckedAddons,
+  currentNeedle,
+  setCurrentNeedle,
+  isEditable = false,
+}) => {
   console.log("ORDERCOMPECTION");
-  console.log(data);
 
   return (
     <>
-      <Price value={data.price} isEditable={isEditable} />
-      <Needls needle={data.needle} isEditable={isEditable} />
-      <Additional addons={data.addons} isEditable={isEditable} />
+      <Price price={price} setPrice={setPrice} isEditable={isEditable} />
+      <Needls
+        currentNeedle={currentNeedle}
+        setCurrentNeedle={setCurrentNeedle}
+        isEditable={isEditable}
+      />
+      <Additional
+        checked={checkedAddons}
+        setChecked={setCheckedAddons}
+        isEditable={isEditable}
+      />
     </>
   );
 };

@@ -1,19 +1,16 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import { Context } from "../../context";
-import Animated, {
-  Layout,
-  FadeIn,
-  FadeOutRight,
-} from "react-native-reanimated";
 import {
   Table,
   SearchBar,
   AddTimeTableModal,
   Label,
   AddAppointmentModel,
+  PureListAnimation,
 } from "../../components";
 import Screen from "../style";
+import not_found from "../../assets/lottie/not_found.json";
 
 const Timetable = () => {
   const { getTimeTable, timeTable, setVisibleAddTimetableModal } =
@@ -28,8 +25,6 @@ const Timetable = () => {
     onRefresh();
   }, []);
 
-  // console.log("timeTableScreen");
-
   const getEditDay = (day) => {
     setReductItem(day);
     setVisibleAddTimetableModal(true);
@@ -40,7 +35,8 @@ const Timetable = () => {
     setIsLoading(false);
   };
   const onSearch = (item) => {
-    if (item.title.includes(searchValue)) return true;
+    if (item.title.toLowerCase().includes(searchValue.toLowerCase()))
+      return true;
     return false;
   };
   const getKey = (item) => item.title;
@@ -50,7 +46,7 @@ const Timetable = () => {
     setCurrentModalProps(item);
     openModel();
   }, []);
-  const getItemToRender = ({ item, index }) => {
+  const getItemToRender = ({ item }) => {
     const title = item.title;
     const rawDate = item.rawDate;
 
@@ -76,18 +72,14 @@ const Timetable = () => {
     };
 
     return (
-      <Animated.View
-        entering={FadeIn.delay(50 * index)}
-        exiting={FadeOutRight}
-        style={[Screen.infoCardWrapper, timeTableStyle.tableWrapperStyle]}
-      >
+      <View style={[Screen.infoCardWrapper, timeTableStyle.tableWrapperStyle]}>
         <Table
           editable
           onEdit={getEditDay}
           tableValues={tableData}
           item={item}
         />
-      </Animated.View>
+      </View>
     );
   };
 
@@ -99,17 +91,24 @@ const Timetable = () => {
         <SearchBar value={searchValue} setValue={setSearchValue} />
       </View>
 
-      <Animated.FlatList
-        itemLayoutAnimation={Layout}
-        showsVerticalScrollIndicator={false}
-        style={timeTableStyle.flatListStyle}
-        onRefresh={onRefresh}
-        refreshing={isLoading}
-        data={filtredData}
-        keyExtractor={getKey}
-        renderItem={getItemToRender}
-        initialNumToRender={15}
-      />
+      {filtredData.length === 0 && searchValue.length !== 0 ? (
+        <PureListAnimation
+          animation={not_found}
+          titleText={"Нет результатов."}
+          secondaryText={`По запросу «${searchValue}» ничего не найдено.`}
+        />
+      ) : (
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          style={timeTableStyle.flatListStyle}
+          onRefresh={onRefresh}
+          refreshing={isLoading}
+          data={filtredData}
+          keyExtractor={getKey}
+          renderItem={getItemToRender}
+          initialNumToRender={15}
+        />
+      )}
 
       <AddAppointmentModel
         visible={visibleAppointmentsModal}

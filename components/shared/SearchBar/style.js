@@ -5,6 +5,7 @@ const searchBar = StyleSheet.create({
     paddingTop: 10,
     width: "100%",
     alignItems: "center",
+    zIndex: 1,
   },
   searchRow: {
     flexDirection: "row",

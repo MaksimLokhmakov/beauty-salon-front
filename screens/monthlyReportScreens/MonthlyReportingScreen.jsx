@@ -1,8 +1,7 @@
 import React from "react";
-import { View, Text, ScrollView, RefreshControl, Platform } from "react-native";
+import { View, ScrollView, RefreshControl, Platform } from "react-native";
 import { Context } from "../../context";
 import {
-  Table,
   StatisticInfoSection,
   ModalList,
   MasterBlock,

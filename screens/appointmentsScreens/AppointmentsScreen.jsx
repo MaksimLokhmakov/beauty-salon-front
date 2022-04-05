@@ -3,8 +3,15 @@ import { View, SectionList, Text, Platform } from "react-native";
 import { Context } from "../../context";
 import recenter from "../../utils/forSwipeable/recenter";
 import axios from "axios";
-import { PersonConteiner, SearchBar, ModalList } from "../../components";
+import {
+  PersonConteiner,
+  SearchBar,
+  ModalList,
+  PureListAnimation,
+} from "../../components";
 import Screen from "../style";
+import not_found from "../../assets/lottie/not_found.json";
+import empty from "../../assets/lottie/6863-tenor.json";
 
 const AppointmentsScreen = ({ navigation }) => {
   const {
@@ -147,18 +154,35 @@ const AppointmentsScreen = ({ navigation }) => {
     >
       <SearchBar value={searchValue} setValue={setSearchValue} />
 
-      <SectionList
-        initialNumToRender={15}
-        onScrollBeginDrag={handleScroll}
-        scrollEnabled={!isSwiping}
-        sections={sections}
-        keyExtractor={sectionListItemKey}
-        onRefresh={refresh}
-        refreshing={isLoading}
-        renderItem={sectionListItem}
-        renderSectionHeader={sectionHeader}
-        stickySectionHeadersEnabled={true}
-      />
+      {sections.length === 0 ? (
+        <PureListAnimation
+          animation={searchValue.length !== 0 ? not_found : empty}
+          titleText={
+            searchValue.length !== 0 ? "Нет результатов." : "Записей нет!"
+          }
+          animationStyle={{ width: 350, height: 350 }}
+          titleStyle={{ fontSize: 20 }}
+          secondaryTextStyle={{ fontSize: 18 }}
+          secondaryText={
+            searchValue.length !== 0
+              ? `По запросу «${searchValue}» ничего не найдено.`
+              : "Кажется, можно отдохнуть..."
+          }
+        />
+      ) : (
+        <SectionList
+          initialNumToRender={15}
+          onScrollBeginDrag={handleScroll}
+          scrollEnabled={!isSwiping}
+          sections={sections}
+          keyExtractor={sectionListItemKey}
+          onRefresh={refresh}
+          refreshing={isLoading}
+          renderItem={sectionListItem}
+          renderSectionHeader={sectionHeader}
+          stickySectionHeadersEnabled={true}
+        />
+      )}
 
       <ModalList
         sortValue={sortValue}

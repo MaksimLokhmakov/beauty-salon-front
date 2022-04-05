@@ -12,3 +12,5 @@ export { default as MasterBlock } from "./reportScreen/MasterBlock";
 export { default as ModalList } from "./Modals/ModalList";
 export { default as Label } from "./shared/Label";
 export { default as OrderCompletionInfo } from "./appointment/OrderCompletionInfo/OrderComplectionInfoWrapper";
+export { default as OrderCompletionModal } from "./Modals/OrderCompletion";
+export { default as PureListAnimation } from "./PureListAnimation";

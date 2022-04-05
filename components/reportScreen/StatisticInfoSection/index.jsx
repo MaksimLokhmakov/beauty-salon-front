@@ -19,11 +19,11 @@ const StatisticInfoSection = ({ stat, type }) => {
       },
       {
         label: <Label>приемы</Label>,
-        value: <Text>{stat.overallIncome} руб.</Text>,
+        value: <Text>{stat.priceIncome} руб.</Text>,
       },
       {
         label: <Label>общая</Label>,
-        value: <Text>{stat.priceIncome} руб.</Text>,
+        value: <Text>{stat.overallIncome} руб.</Text>,
       },
     ],
   };

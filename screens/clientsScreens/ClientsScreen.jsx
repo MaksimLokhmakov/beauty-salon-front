@@ -1,11 +1,16 @@
 import React from "react";
-import { View, Platform } from "react-native";
+import { View, Platform, FlatList } from "react-native";
 import { Context } from "../../context";
-import Animated, { Layout } from "react-native-reanimated";
 import axios from "axios";
 import recenter from "../../utils/forSwipeable/recenter";
-import { PersonConteiner, AddModal, SearchBar } from "../../components";
+import {
+  PersonConteiner,
+  AddModal,
+  SearchBar,
+  PureListAnimation,
+} from "../../components";
 import Screen from "../style";
+import not_found from "../../assets/lottie/not_found.json";
 
 const ClientsScreen = ({ navigation }) => {
   const {
@@ -95,19 +100,26 @@ const ClientsScreen = ({ navigation }) => {
     >
       <SearchBar value={searchValue} setValue={setSearchValue} />
 
-      <Animated.FlatList
-        getItemLayout={getItemLayout}
-        initialNumToRender={15}
-        itemLayoutAnimation={Layout}
-        onScrollBeginDrag={handleScroll}
-        scrollEnabled={!isSwiping}
-        style={{ paddingTop: 10 }}
-        data={flatListDataWithSearch}
-        keyExtractor={flatListItemKey}
-        onRefresh={refresh}
-        refreshing={isLoading}
-        renderItem={flatListItem}
-      />
+      {flatListDataWithSearch.length === 0 ? (
+        <PureListAnimation
+          animation={not_found}
+          titleText={"Нет результатов."}
+          secondaryText={`По запросу «${searchValue}» ничего не найдено.`}
+        />
+      ) : (
+        <FlatList
+          getItemLayout={getItemLayout}
+          initialNumToRender={15}
+          onScrollBeginDrag={handleScroll}
+          scrollEnabled={!isSwiping}
+          style={{ paddingTop: 10 }}
+          data={flatListDataWithSearch}
+          keyExtractor={flatListItemKey}
+          onRefresh={refresh}
+          refreshing={isLoading}
+          renderItem={flatListItem}
+        />
+      )}
 
       <AddModal visible={visibleClientsModal} onDelete={deleteClient} />
     </View>

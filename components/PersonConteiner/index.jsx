@@ -101,7 +101,7 @@ const PersonConteiner = ({
       ];
 
   return (
-    <Animated.View exiting={FadeOut} entering={FadeIn.delay(25 * index)}>
+    <View>
       <Swipeable
         onRef={setRef}
         onSwipeStart={() => setIsSwiping(true)}
@@ -127,7 +127,7 @@ const PersonConteiner = ({
           </View>
         </TouchableOpacity>
       </Swipeable>
-    </Animated.View>
+    </View>
   );
 };
 

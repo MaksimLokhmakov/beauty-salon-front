@@ -3,10 +3,9 @@ import React from "react";
 import Label from "../../../shared/Label";
 import Table from "../../../shared/Table";
 import Screen from "../../../../screens/style";
+import Style from "./style";
 
-const index = ({ isEditable, value }) => {
-  const [price, setPrice] = React.useState(value);
-
+const index = ({ isEditable, price, setPrice }) => {
   const onPriceChange = (e) => setPrice(e);
 
   const priceTableInfo = {
@@ -16,16 +15,11 @@ const index = ({ isEditable, value }) => {
         label: <Label width={isEditable ? 50 : "auto"}>цена</Label>,
         value: isEditable ? (
           <TextInput
+            autoFocus
             value={price}
             onChangeText={onPriceChange}
             type="numeric"
-            style={{
-              justifyContent: "center",
-              width: "100%",
-              height: 30,
-              backgroundColor: "#fff",
-              fontSize: 16,
-            }}
+            style={Style.input}
           />
         ) : (
           <Text>{price !== null ? price : "-"}</Text>

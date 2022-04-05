@@ -4,12 +4,10 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import Label from "../../../shared/Label";
 import Table from "../../../shared/Table";
 import Screen from "../../../../screens/style";
-import localeStyle from "./style";
+import Style from "./style";
 
-const index = ({ isEditable, needle }) => {
-  const [currentNeedle, setCurrentNeedle] = React.useState(needle);
-
-  console.log("NEEDLES", needle);
+const index = ({ isEditable, currentNeedle, setCurrentNeedle }) => {
+  // const [currentNeedle, setCurrentNeedle] = React.useState(needle);
 
   const NEEDLE_TYPE = {
     isolated: "isolated",
@@ -19,7 +17,7 @@ const index = ({ isEditable, needle }) => {
 
   const onChangeNeedle = (currentNeedle, currentNeedleType) => {
     isEditable &&
-      setCurrentNeedle({ needle: currentNeedle, type: currentNeedleType });
+      setCurrentNeedle({ number: currentNeedle, type: currentNeedleType });
   };
 
   const noneIsoletedNeedlesTebleData = {
@@ -28,12 +26,13 @@ const index = ({ isEditable, needle }) => {
       const isPicked =
         currentNeedle !== null &&
         currentNeedle.type === NEEDLE_TYPE.nonisolated &&
-        currentNeedle.needle === needle;
+        currentNeedle.number === needle;
 
       return {
         label: <Label width={25}>№{needle}</Label>,
         value: (
           <TouchableOpacity
+            style={Style.iconWrapper}
             onPress={() => onChangeNeedle(needle, NEEDLE_TYPE.nonisolated)}
           >
             <FontAwesome5
@@ -53,12 +52,13 @@ const index = ({ isEditable, needle }) => {
       const isPicked =
         currentNeedle !== null &&
         currentNeedle.type === NEEDLE_TYPE.isolated &&
-        currentNeedle.needle === needle;
+        currentNeedle.number === needle;
 
       return {
         label: <Label width={25}>№{needle}</Label>,
         value: (
           <TouchableOpacity
+            style={Style.iconWrapper}
             onPress={() => onChangeNeedle(needle, NEEDLE_TYPE.isolated)}
           >
             <FontAwesome5
@@ -74,7 +74,7 @@ const index = ({ isEditable, needle }) => {
   };
 
   return (
-    <View style={localeStyle.wrapper}>
+    <View style={Style.wrapper}>
       <View style={{ ...Screen.infoCardWrapper, marginRight: 5 }}>
         <Table tableValues={noneIsoletedNeedlesTebleData} />
       </View>

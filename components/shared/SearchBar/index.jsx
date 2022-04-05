@@ -21,6 +21,8 @@ const SearchBar = ({
           color="#8993a0"
         />
         <TextInput
+          maxLength={20}
+          autoComplete="off"
           style={searchBar.searchInput}
           placeholder={placeholder}
           value={value}

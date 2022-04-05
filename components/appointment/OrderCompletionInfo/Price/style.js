@@ -1,10 +1,12 @@
 import { StyleSheet } from "react-native";
 
 const Style = StyleSheet.create({
-  wrapper: { flexDirection: "row", width: "100%" },
-  iconWrapper: {
-    height: 25,
+  input: {
     justifyContent: "center",
+    width: "100%",
+    height: 30,
+    backgroundColor: "#fff",
+    fontSize: 16,
   },
 });
 

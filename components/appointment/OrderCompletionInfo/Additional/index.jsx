@@ -5,10 +5,8 @@ import Label from "../../../shared/Label";
 import Table from "../../../shared/Table";
 import Screen from "../../../../screens/style";
 
-const index = ({ isEditable, addons }) => {
-  const [checked, setChecked] = React.useState(addons);
-
-  console.log("EDDITIONAL", addons);
+const index = ({ isEditable, checked, setChecked }) => {
+  // const [checked, setChecked] = React.useState(addons);
 
   const onPickAdditional = (type) => {
     isEditable &&
@@ -18,26 +16,33 @@ const index = ({ isEditable, addons }) => {
       }));
   };
 
-  const func = () => {
+  const getTableData = () => {
     const result = [];
+    function getType(key) {
+      switch (key) {
+        case "injection":
+          return "инъекционная анестезия";
+        case "ointment":
+          return "аппликационная анестезия";
+        case "coloring":
+          return "окрашивание";
+      }
+    }
 
     for (let key in checked) {
-      const addonType =
-        key === "injection"
-          ? "инъекционная анестезия"
-          : key === "ointment"
-          ? "аппликационная анестезия"
-          : "окрашивание";
-
+      const isChecked = checked[key] ? "#5bdd8f" : "#ebecef";
       result.push({
-        label: <Label>{addonType}</Label>,
+        label: <Label>{getType(key)}</Label>,
         value: (
-          <TouchableOpacity onPress={() => onPickAdditional(key)}>
+          <TouchableOpacity
+            style={{ height: 25, justifyContent: "center" }}
+            onPress={() => onPickAdditional(key)}
+          >
             <FontAwesome5
               style={{ marginRight: 5 }}
               name="check"
               size={18}
-              color={checked[key] ? "#5bdd8f" : "#ebecef"}
+              color={isChecked}
             />
           </TouchableOpacity>
         ),
@@ -49,7 +54,7 @@ const index = ({ isEditable, addons }) => {
 
   const addonsTableData = {
     title: "Доп. услуги",
-    data: func(),
+    data: getTableData(),
   };
 
   return (
